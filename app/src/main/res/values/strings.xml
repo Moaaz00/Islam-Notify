@@ -1,0 +1,229 @@
+<resources>
+    <string name="app_name">Islam Notify</string>
+    <string name="fajr_name">Fajr</string>
+    <string name="iqama_fajr_name">Iqama al-Fajr</string>
+    <string name="sunrise_name">Sunrise</string>
+    <string name="duha_name">Duha</string>
+    <string name="zuhr_name">Dhuhr</string>
+    <string name="jummah_name">Jumu\'ah</string>
+    <string name="iqama_zuhr_name">Iqama al-Dhuhr</string>
+    <string name="asr_name">Asr</string>
+    <string name="iqama_asr_name">Iqama al-Asr</string>
+    <string name="sunset_name">Maghrib</string>
+    <string name="iqama_sunset_name">Iqama al-Maghrib</string>
+    <string name="isha_name">Isha</string>
+    <string name="iqama_isha_name">Iqama al-Isha</string>
+    <string name="midnight_name">Midnight</string>
+    <string name="last_third_name">Last third</string>
+    <string name="locating_string">Locating...</string>
+    <string name="locating_unknown_string">Unknown</string>
+
+
+    <string name="remaining_string">Remaining</string>
+    <string name="remaining_hour_symbol">h</string>
+    <string name="remaining_minutes_symbol">m</string>
+    <string name="remaining_seconds_symbol">s</string>
+
+    <string name="sounds_fajr_notification_title">Fajr</string>
+    <string name="sounds_iqama_fajr_notification_title">the iqama of Fajr</string>
+    <string name="sounds_fajr_notification_subtitle">The Messenger of Allah (ﷺ) said: One who performs Isha prayer in congregation, is as if he has performed Salat for half of the night. And one who performs the Fajr prayer in congregation, is as if he has performed Salat the whole night.</string>
+
+    <string name="sounds_sunrise_notification_title">Sunrise</string>
+    <string name="sounds_sunrise_notification_subtitle">None has the right to be worshipped but Allah, Alone without partner, to Him belongs all that exists, and to Him is the praise, He gives life and causes death, and He is powerful over all things</string>
+
+    <string name="sounds_duha_notification_title">Duha</string>
+    <string name="sounds_duha_notification_subtitle">The Messenger of Allah (ﷺ) said: The prayer of those who are penitent is observed when your weaned camels feel the heat of the sun.</string>
+
+    <string name="sounds_zuhr_notification_title">Dhuhr</string>
+    <string name="sounds_iqama_zuhr_notification_title">the iqama of Dhuhr</string>
+    <string name="sounds_zuhr_notification_subtitle">The Messenger of Allah (ﷺ) said: The prayer in congregation is twenty seven times superior to the prayer offered by person alone.</string>
+
+    <string name="sounds_jummah_notification_title">Jumu\'ah</string>
+    <string name="sounds_jummah_notification_subtitle">The Messenger of Allah (ﷺ) said: The five Salat, and from one Jumu\'ah prayer to the (next) Jumu\'ah prayer, and from Ramadan to Ramadan are expiations for the (sins) committed in between; provided the major sins are not committed</string>
+
+    <string name="sounds_asr_notification_title">Asr</string>
+    <string name="sounds_iqama_asr_notification_title">the iqama of Asr</string>
+    <string name="sounds_asr_notification_subtitle">The Messenger of Allah (ﷺ) said: He who purified himself in his house, and then he walked to one of the houses of Allah for the sake of performing a Fard out of the Fara\'id of Allah, both his steps as one of them would obliterate his sin and the second one would raise his status.</string>
+
+    <string name="sounds_sunset_notification_title">Maghrib</string>
+    <string name="sounds_iqama_sunset_notification_title">the iqama of Maghrib</string>
+    <string name="sounds_sunset_notification_subtitle">The Messenger of Allah (ﷺ) said: Allah will prepare for him who goes to the mosque morning and in the afternoon an honorable place in Paradise with good hospitality for every morning and afternoon goings.</string>
+
+    <string name="sounds_isha_notification_title">Isha</string>
+    <string name="sounds_iqama_isha_notification_title">the iqama of Isha</string>
+    <string name="sounds_isha_notification_subtitle">The Messenger of Allah (ﷺ) said: One who performs Isha prayer in congregation, is as if he has performed Salat for half of the night. And one who performs the Fajr prayer in congregation, is as if he has performed Salat the whole night.</string>
+
+    <string name="sounds_midnight_notification_title">Midnight</string>
+    <string name="sounds_midnight_notification_subtitle">None has the right to be worshipped but Allah, Alone without partner, to Him belongs all that exists, and to Him is the praise, He gives life and causes death, and He is powerful over all things</string>
+
+    <string name="sounds_last_third_notification_title">the Last third</string>
+    <string name="sounds_last_third_notification_subtitle">Allah says regarding those who pray Qiyam al-Layl: No soul can imagine what delights are kept in store for them as a reward for what they used to do. [32:17]</string>
+
+    <string name="sounds_notification_starting_sentence">It\'s time for</string>
+    <string name="sounds_default_notification_title">It\'s time for prayer</string>
+    <string name="sounds_cancel_azan">Cancel</string>
+
+    <string name="muharram_name">Muharram</string>
+    <string name="safar_name">Safar</string>
+    <string name="rabi_al_awwal_name">Rabi al-Awwal</string>
+    <string name="rabi_al_thani_name">Rabi al-Thani</string>
+    <string name="jumada_al_awwal_name">Jumada al-Awwal</string>
+    <string name="jumada_al_akhirah_name">Jumada al-Akhirah</string>
+    <string name="rajab_name">Rajab</string>
+    <string name="shaban_name">Shaban</string>
+    <string name="ramadan_name">Ramadan</string>
+    <string name="shawwal_name">Shawwal</string>
+    <string name="dhu_al_qadah_name">Dhu al-Qadah</string>
+    <string name="dhu_al_hijjah_name">Dhu al-Hijjah</string>
+
+    <string-array name="hijri_months_names">
+        <item>@string/muharram_name</item>
+        <item>@string/safar_name</item>
+        <item>@string/rabi_al_awwal_name</item>
+        <item>@string/rabi_al_thani_name</item>
+        <item>@string/jumada_al_awwal_name</item>
+        <item>@string/jumada_al_akhirah_name</item>
+        <item>@string/rajab_name</item>
+        <item>@string/shaban_name</item>
+        <item>@string/ramadan_name</item>
+        <item>@string/shawwal_name</item>
+        <item>@string/dhu_al_qadah_name</item>
+        <item>@string/dhu_al_hijjah_name</item>
+    </string-array>
+
+
+    <string name="monday_fasting_title">Monday Fasting</string>
+    <string name="thursday_fasting_title">Thursday Fasting</string>
+    <string name="white_days_fasting_title">The White Days Fasting</string>
+    <string name="arfa_fasting_title">Day of Arafah Fasting</string>
+    <string name="tasua_fasting_title">Tasu\'a Fasting</string>
+    <string name="ashora_fasting_title">Ashura Fasting</string>
+    <string name="shawwal_fasting_title">Six Days of Shawwal Fasting</string>
+    <string name="ramadan_event_title">Month of Ramadan</string>
+    <string name="ramadan_last_10_days_event_title">The Last Ten Days of Ramadan</string>
+    <string name="dhu_al_hijjah_first_10_days_event_title">The First Ten Days of Dhu al-Hijjah</string>
+    <string name="eid_al_fitr_event_title">Eid Fitr Mubarak</string>
+    <string name="eid_al_adha_event_title">Eid Adha Mubarak</string>
+    <string name="friday_event_title">Blessed Friday</string>
+    <string name="muharram_event_title">Month of Muharram</string>
+    <string name="rajab_event_title">Month of Rajab</string>
+    <string name="dhu_al_qadah_event_title">Month of Dhu al-Qa\'dah</string>
+    <string name="dhu_al_hijjah_event_title">Month of Dhu al-Hijjah</string>
+
+    <string name="monday_thursday_fasting_subtitle">The Messenger of Allah (ﷺ) said: The deeds are presented on Monday and Thursday. Thus, I love for my deeds to be presented while I am fasting.</string>
+    <string name="white_days_fasting_subtitle">The Messenger of Allah (ﷺ) used to command the companions to fast the days of the white (nights): thirteenth, fourteenth and fifteenth of the month. He said: This is like keeping perpetual fast.</string>
+    <string name="arfa_fasting_subtitle">The Messenger of Allah (ﷺ) said: Fasting on the Day of Arafah, I hope from Allah, expiates for the sins of the year before and the year after.</string>
+    <string name="tasua_fasting_subtitle">The Messenger of Allah (ﷺ) said: When the next year comes, God willing, we would observe fast on the 9th.</string>
+    <string name="ashora_fasting_subtitle">The Messenger of Allah (ﷺ) said: Fasting the day of \'Ashura\', I hope, will expiate for the sins of the previous year.</string>
+    <string name="shawwal_fasting_subtitle">The Messenger of Allah (ﷺ) said: Whoever fasts during the month of Ramadan and then follows it with six days of Shawwal will be (rewarded) as if he had fasted the entire year.</string>
+    <string name="ramadan_event_subtitle">The Messenger of Allah (ﷺ) said: When the month of Ramadan starts, the gates of the heaven are opened and the gates of Hell are closed and the devils are chained.</string>
+    <string name="ramadan_last_10_days_event_subtitle">Allah says: The Night of Decree is better than a thousand months. [97:3]</string>
+    <string name="dhu_al_hijjah_first_10_days_event_subtitle">The Messenger of Allah (ﷺ) said: There are no days during which righteous deeds are more beloved to Allah than these days.</string>
+    <string name="eids_event_subtitle">Allah says: That is so. And whoever honours the symbols of Allah, it is certainly out of the piety of the heart. [22:32]</string>
+    <string name="friday_event_subtitle">The Messenger of Allah (ﷺ) said: If anyone recites sura al-Kahf (Quran, 18) on Friday, light will shine brightly for him till the next Friday.</string>
+    <string name="sacred_months_event_subtitle">Allah says regarding the sacred months: so do not wrong yourselves during them. [9:36]</string>
+
+    <string name="prayer_notification_channel_name">Prayer Times</string>
+    <string name="prayer_notification_channel_description">Always on prayer times notification</string>
+    <string name="events_notification_channel_name">Islamic Events</string>
+    <string name="events_notification_channel_description">Notify the user if today meets an islamic event</string>
+    <string name="sounds_notification_channel_name">Prayer Azan</string>
+    <string name="sounds_notification_channel_description">Notify the user at the times of azan and iqama</string>
+    <string name="others_notification_channel_name">Other</string>
+    <string name="notification_update_string">Updating the notification</string>
+
+    <string name="drawer_prayer_times_settings">Prayer Times</string>
+    <string name="drawer_iqama_settings">Iqama</string>
+    <string name="drawer_sounds_settings">Sounds</string>
+    <string name="drawer_events_settings">Events</string>
+    <string name="drawer_advanced_settings">Advanced Settings</string>
+    <string name="drawer_notification_settings">Always-On Notification</string>
+
+
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_calculation_header_title">Calculation Settings</string>
+    <string name="settings_time_adjustments_header_title">Time Adjustments</string>
+    <string name="settings_sounds_header_title">Sound Settings</string>
+    <string name="settings_notification_header_title">Notification Settings</string>
+    <string name="settings_events_header_title">Events Settings</string>
+    <string name="settings_preferences_header_title">Preferences</string>
+
+    <string name="settings_auto_calculation_title">Auto Calculation Method</string>
+    <string name="settings_auto_calculation_subtitle">Automatically determine method based on location</string>
+    <string name="settings_manual_calculation_title">Manual Calculation Method</string>
+    <string name="settings_calculation_method_egypt">Egyptian General Authority of Survey</string>
+    <string name="settings_calculation_method_muslim_league">Muslim World League</string>
+    <string name="settings_calculation_method_karachi">University of Islamic Sciences, Karachi</string>
+    <string name="settings_calculation_method_umm_al_qura">Umm al-Qura University, Makkah</string>
+    <string name="settings_calculation_method_dubai">Dubai (UAE)</string>
+    <string name="settings_calculation_method_moonsighting_committee">Moonsighting Committee</string>
+    <string name="settings_calculation_method_north_america">ISNA (Islamic Society of North America)</string>
+    <string name="settings_calculation_method_kuwait">Kuwait</string>
+    <string name="settings_calculation_method_qatar">Qatar</string>
+    <string name="settings_calculation_method_singapore">Singapore</string>
+    <string name="settings_calculation_method_turkey">Turkey (Diyanet)</string>
+
+    <string name="settings_prayer_time_offsets_title">Prayer Time Offsets</string>
+    <string name="settings_prayer_time_offsets_subtitle">Adjust azan, iqama, and sunnah times</string>
+
+    <string name="settings_hijri_date_offset_title">Hijri Date Adjustment</string>
+    <string name="settings_hijri_date_offset_subtitle_part1">Offset:</string>
+    <string name="settings_hijri_date_offset_subtitle_part2">day</string>
+
+
+    <string name="settings_enable_azan_sound_title">Azan Sounds</string>
+    <string name="settings_enable_azan_sound_subtitle">Play the azan at the scheduled prayer times</string>
+
+    <string name="settings_enable_iqama_sound_title">Iqama Sounds</string>
+    <string name="settings_enable_iqama_sound_subtitle">Play the iqama before the start of each prayer</string>
+
+    <string name="settings_azan_sound_title">Azan Sound</string>
+    <string name="settings_azan_sound_subtitle">Choose the azan sound</string>
+    <string name="settings_iqama_sound_title">Iqama Sound</string>
+    <string name="settings_iqama_sound_subtitle">Choose the iqama sound</string>
+    <string name="settings_notify_sound_title">Notify Sound</string>
+    <string name="settings_notify_sound_subtitle">Choose the notify sound</string>
+
+
+    <string name="settings_enable_notification_title">Always-on Notification</string>
+    <string name="settings_enable_notification_subtitle">Display prayer times and countdown for next prayer</string>
+
+    <string name="settings_notification_prayer_adjustments_title">Adjust Prayers</string>
+    <string name="settings_notification_prayer_adjustments_subtitle">Adjust which prayers to display in the countdown section</string>
+
+
+    <string name="settings_enable_events_title">Event Alerts</string>
+    <string name="settings_enable_events_subtitle">Receive notifications for upcoming islamic occasions</string>
+
+    <string name="settings_adjust_events_title">Adjust Events</string>
+    <string name="settings_adjust_events_subtitle">Receive notifications for upcoming islamic occasions</string>
+
+
+    <string name="settings_language_title">Language</string>
+    <string name="settings_language_auto_part">(Auto)</string>
+    <string name="settings_language_system_default">System Default</string>
+    <string name="settings_language_en">English</string>
+    <string name="settings_language_ar">Arabic</string>
+
+
+
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_choose_theme">Choose Theme</string>
+    <string name="settings_theme_green_dark">Green (Dark Mode)</string>
+    <string name="settings_theme_green_light">Green (Light Mode)</string>
+    <string name="settings_theme_pink_dark">Pink (Dark Mode)</string>
+    <string name="settings_theme_pink_light">Pink (Light Mode)</string>
+    <string name="settings_theme_blue_dark">Blue (Dark Mode)</string>
+    <string name="settings_theme_blue_light">Blue (Light Mode)</string>
+    <string name="settings_theme_yellow_dark">Yellow (Dark Mode)</string>
+    <string name="settings_theme_yellow_light">Yellow (Light Mode)</string>
+    <string name="settings_theme_brown_dark">Brown (Dark Mode)</string>
+    <string name="settings_theme_brown_light">Brown (Light Mode)</string>
+    <string name="settings_theme_red_dark">Brown (Dark Mode)</string>
+    <string name="settings_theme_red_light">Red (Light Mode)</string>
+
+    <string name="settings_unknown_place_holder">Unknown</string>
+
+    <string name="settings_dialog_apply">Apply</string>
+    <string name="settings_dialog_cancel">Cancel</string>
+</resources>

@@ -1,0 +1,9 @@
+package com.islamnotify.notification.util
+
+object NotificationUtils {
+    const val NOTIFICATION_MIDNIGHT_REQUEST_CODE = 1200
+    const val PRAYER_NOTIFICATION_ID = 2000
+
+    const val PRAYERS_WORK_REQUEST_TAG = "NOTIFICATION_FALLBACK_WORK_MANAGER"
+    const val MIDNIGHT_WORK_REQUEST_TAG = "NOTIFICATION_MIDNIGHT_FALLBACK_WORK_MANAGER"
+}

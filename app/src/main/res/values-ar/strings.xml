@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Islam Notify</string>
+    <string name="fajr_name">الفجر</string>
+    <string name="iqama_fajr_name">إقامة الفجر</string>
+    <string name="sunrise_name">الشروق</string>
+    <string name="duha_name">الضحي</string>
+    <string name="zuhr_name">الظهر</string>
+    <string name="jummah_name">الجمعة</string>
+    <string name="iqama_zuhr_name">إقامة الظهر</string>
+    <string name="asr_name">العصر</string>
+    <string name="iqama_asr_name">إقامة العصر</string>
+    <string name="sunset_name">المغرب</string>
+    <string name="iqama_sunset_name">إقامة المغرب</string>
+    <string name="isha_name">العشاء</string>
+    <string name="iqama_isha_name">إقامة العشاء</string>
+    <string name="midnight_name">منتصف الليل</string>
+    <string name="last_third_name">قيام الليل</string>
+
+    <string name="remaining_string">متبقي</string>
+    <string name="remaining_hour_symbol">س</string>
+    <string name="remaining_minutes_symbol">د</string>
+    <string name="remaining_seconds_symbol">ث</string>
+    <string name="locating_string">يتم تحديد الموقع...</string>
+    <string name="locating_unknown_string">غير معروف</string>
+
+
+
+    <string name="sounds_fajr_notification_title">أذان الفجر</string>
+    <string name="sounds_iqama_fajr_notification_title">إقامة الفجر</string>
+    <string name="sounds_fajr_notification_subtitle">قال رسول الله ﷺ : مَن صَلَّى العِشَاءَ في جَمَاعَةٍ فَكَأنَّما قَامَ نِصْفَ اللَّيْلِ، وَمَن صَلَّى الصُّبْحَ في جَمَاعَةٍ فَكَأنَّما صَلَّى اللَّيْلَ كُلَّهُ.</string>
+
+    <string name="sounds_sunrise_notification_title">الشروق</string>
+    <string name="sounds_sunrise_notification_subtitle">لا إله إلا الله وحده، لا شريك له، له الملك، وله الحمد، يحيي ويميت، وهو على كل شيء قدير</string>
+
+    <string name="sounds_duha_notification_title">الضحى</string>
+    <string name="sounds_duha_notification_subtitle">قال رسول الله ﷺ : صَلَاةُ الأوَّابِينَ حِينَ تَرْمَضُ الفِصَالُ.</string>
+
+    <string name="sounds_zuhr_notification_title">أذان الظهر</string>
+    <string name="sounds_iqama_zuhr_notification_title">إقامة الظهر</string>
+    <string name="sounds_zuhr_notification_subtitle">قال رسول الله ﷺ : صَلَاةُ الجَمَاعَةِ تَفْضُلُ صَلَاةَ الفَذِّ بسَبْعٍ وعِشْرِينَ دَرَجَةً.</string>
+
+    <string name="sounds_jummah_notification_title">أذان الجمعة</string>
+    <string name="sounds_jummah_notification_subtitle">قال رسول الله ﷺ : الصَّلَوَاتُ الخَمْسُ، وَالْجُمْعَةُ إلى الجُمْعَةِ، وَرَمَضَانُ إلى رَمَضَانَ، مُكَفِّرَاتٌ ما بيْنَهُنَّ إِذَا اجْتَنَبَ الكَبَائِرَ.</string>
+
+    <string name="sounds_asr_notification_title">أذان العصر</string>
+    <string name="sounds_iqama_asr_notification_title">إقامة العصر</string>
+    <string name="sounds_asr_notification_subtitle">قال رسول الله ﷺ : مَن تَطَهَّرَ في بَيْتِهِ، ثُمَّ مَشَى إلى بَيْتٍ مَن بُيُوتِ اللهِ لِيَقْضِيَ فَرِيضَةً مِن فَرَائِضِ اللهِ، كَانَتْ خَطْوَتَاهُ إحْدَاهُما تَحُطُّ خَطِيئَةً، وَالأُخْرَى تَرْفَعُ دَرَجَةً.</string>
+
+    <string name="sounds_sunset_notification_title">أذان المغرب</string>
+    <string name="sounds_iqama_sunset_notification_title">إقامة المغرب</string>
+    <string name="sounds_sunset_notification_subtitle">قال رسول الله ﷺ : مَن غَدَا إلى المَسْجِدِ ورَاحَ، أعَدَّ اللَّهُ له نُزُلَهُ مِنَ الجَنَّةِ كُلَّما غَدَا أوْ رَاحَ.</string>
+
+    <string name="sounds_isha_notification_title">أذان العشاء</string>
+    <string name="sounds_iqama_isha_notification_title">إقامة العشاء</string>
+    <string name="sounds_isha_notification_subtitle">قال رسول الله ﷺ : مَن صَلَّى العِشَاءَ في جَمَاعَةٍ فَكَأنَّما قَامَ نِصْفَ اللَّيْلِ، وَمَن صَلَّى الصُّبْحَ في جَمَاعَةٍ فَكَأنَّما صَلَّى اللَّيْلَ كُلَّهُ.</string>
+
+    <string name="sounds_midnight_notification_title">منتصف الليل</string>
+    <string name="sounds_midnight_notification_subtitle">لا إله إلا الله وحده، لا شريك له، له الملك، وله الحمد، يحيي ويميت، وهو على كل شيء قدير</string>
+
+    <string name="sounds_last_third_notification_title">قيام الليل</string>
+    <string name="sounds_last_third_notification_subtitle">قال الله تعالى : تَتَجَافَى جُنُوبُهُمْ عَنِ الْمَضَاجِعِ يَدْعُونَ رَبَّهُمْ خَوْفًا وَطَمَعًا وَمِمَّا رَزَقْنَاهُمْ يُنْفِقُونَ فَلَا تَعْلَمُ نَفْسٌ مَا أُخْفِيَ لَهُمْ مِنْ قُرَّةِ أَعْيُنٍ جَزَاءً بِمَا كَانُوا يَعْمَلُونَ [السجدة:١٦-١٧]</string>
+
+    <string name="sounds_notification_starting_sentence">حان الآن موعد</string>
+    <string name="sounds_default_notification_title">حان الآن موعد الصلاة</string>
+    <string name="sounds_cancel_azan">إلغاء</string>
+
+
+    <string name="muharram_name">مُحَرَّم</string>
+    <string name="safar_name">صَفَر</string>
+    <string name="rabi_al_awwal_name">رَبِيع الأَوَّل</string>
+    <string name="rabi_al_thani_name">رَبِيع الثَّانِي</string>
+    <string name="jumada_al_awwal_name">جُمَادَى الأَوَّل</string>
+    <string name="jumada_al_akhirah_name">جُمَادَى الآخِرَة</string>
+    <string name="rajab_name">رَجَب</string>
+    <string name="shaban_name">شَعْبَان</string>
+    <string name="ramadan_name">رَمَضَان</string>
+    <string name="shawwal_name">شَوَّال</string>
+    <string name="dhu_al_qadah_name">ذِي القِعْدَة</string>
+    <string name="dhu_al_hijjah_name">ذِي الحِجَّة</string>
+
+    <string-array name="hijri_months_names">
+        <item>@string/muharram_name</item>
+        <item>@string/safar_name</item>
+        <item>@string/rabi_al_awwal_name</item>
+        <item>@string/rabi_al_thani_name</item>
+        <item>@string/jumada_al_awwal_name</item>
+        <item>@string/jumada_al_akhirah_name</item>
+        <item>@string/rajab_name</item>
+        <item>@string/shaban_name</item>
+        <item>@string/ramadan_name</item>
+        <item>@string/shawwal_name</item>
+        <item>@string/dhu_al_qadah_name</item>
+        <item>@string/dhu_al_hijjah_name</item>
+    </string-array>
+
+
+    <string name="monday_fasting_title">صيام يوم الإثنين</string>
+    <string name="thursday_fasting_title">صيام يوم الخميس</string>
+    <string name="monday_thursday_fasting_subtitle">قال رسول الله ﷺ : تُعرَضُ الأعمالُ يومَ الاثنينِ والخميسِ فأحبُّ أن يُعرَضَ عملي وأنا صائمٌ.</string>
+    <string name="white_days_fasting_title">صيام الأيام البِيض</string>
+    <string name="white_days_fasting_subtitle">عن مِلْحَانَ الْقَيْسِيُّ: كانَ رسولُ اللَّهِ -صلَّى اللَّهُ علَيهِ وسلَّمَ- يأمرُنا أن نصومَ البيضَ ثَلاثَ عشرةَ وأربعَ عشرةَ وخَمسَ عَشرةَ قالَ وقالَ هُنَّ كَهَيئةِ الدَّهرِ</string>
+    <string name="arfa_fasting_title">صيام يوم عرفة</string>
+    <string name="arfa_fasting_subtitle">قال رسول الله ﷺ : صيام يوم عرفة أحتسب على الله أن يكفر السنة التي قبله والسنة التي بعده.</string>
+    <string name="tasua_fasting_title">صيام يوم تاسوعاء</string>
+    <string name="tasua_fasting_subtitle">قال رسول الله ﷺ : فَإِذَا كانَ العَامُ المُقْبِلُ -إنْ شَاءَ اللَّهُ- صُمْنَا اليومَ التَّاسِعَ.</string>
+    <string name="ashora_fasting_title">صيام يوم عاشوراء</string>
+    <string name="ashora_fasting_subtitle">سُئِلَ  رسول الله ﷺ عن صوم عاشوراء فقال: يُكَفِّرُ السَّنَةَ المَاضِيَةَ.</string>
+    <string name="shawwal_fasting_title">صيام الست من شوال</string>
+    <string name="shawwal_fasting_subtitle">قال رسول الله ﷺ : من صام رمضانَ وأتبعَهُ بستٍّ من شوالَ فكأنما صام الدهرَ.</string>
+    <string name="ramadan_event_title">شهر رمضان</string>
+    <string name="ramadan_event_subtitle">قال رسول الله ﷺ : إِذا جَاءَ رَمَضَانُ، فُتِّحَتْ أَبْوَابُ الجنَّةِ، وغُلِّقَت أَبْوَابُ النَّارِ، وصُفِّدتِ الشياطِينُ.</string>
+    <string name="ramadan_last_10_days_event_title">العشر الأواخر من شهر رمضان</string>
+    <string name="ramadan_last_10_days_event_subtitle">قال الله تعالى : لَيْلَةُ الْقَدْرِ خَيْرٌ مِّنْ أَلْفِ شَهْرٍ [القدر:٣]</string>
+    <string name="dhu_al_hijjah_first_10_days_event_title">العشر الأوائل من شهر ذي الحجة</string>
+    <string name="dhu_al_hijjah_first_10_days_event_subtitle">قال رسول الله ﷺ : ما من أيامٍ أعْظَمُ عندَ اللهِ ولَا أَحَبُّ إلى اللهِ العملُ فيهِنَّ مِنْ أَيَّامِ العشْرِ.</string>
+    <string name="eid_al_fitr_event_title">عيد فطر مبارك</string>
+    <string name="eid_al_adha_event_title">عيد أضحى مبارك</string>
+    <string name="eids_event_subtitle">قال الله تعالى : ذَٰلِكَ وَمَن يُعَظِّمْ شَعَائِرَ اللَّهِ فَإِنَّهَا مِن تَقْوَى الْقُلُوبِ [الحج:٣٢]</string>
+    <string name="friday_event_title">جمعة مباركة</string>
+    <string name="friday_event_subtitle">قال رسول الله ﷺ : من قرأ سورةَ الكهفِ في يومِ الجمعةِ ، أضاء له من النورِ ما بين الجمُعتَينِ.</string>
+    <string name="muharram_event_title">شهر محرم</string>
+    <string name="rajab_event_title">شهر رجب</string>
+    <string name="dhu_al_qadah_event_title">شهر ذي القعدة</string>
+    <string name="dhu_al_hijjah_event_title">شهر ذي الحجة</string>
+    <string name="sacred_months_event_subtitle">قال الله تعالى عن الأشهر الحُرُم: فَلا تَظْلِمُوا فِيهِنَّ أَنْفُسَكُمْ [التوبة:٣٦]</string>
+
+    <string name="prayer_notification_channel_name">أوقات الصلاة</string>
+    <string name="prayer_notification_channel_description">إشعار دائم بأوقات الصلاة</string>
+    <string name="events_notification_channel_name">تذكيرات إسلامية</string>
+    <string name="events_notification_channel_description">تذكير المستخدم إذا كان اليوم يوافق مناسبة إسلامية</string>
+    <string name="sounds_notification_channel_name">أذان الصلاة</string>
+    <string name="sounds_notification_channel_description">تذكير المستخدم بأذان و إقامة الصلاة</string>
+    <string name="others_notification_channel_name">أخري</string>
+    <string name="notification_update_string">جاري تحديث الإشعار</string>
+    <string name="drawer_prayer_times_settings">مواقيت الصلاة</string>
+    <string name="drawer_iqama_settings">الإقامة</string>
+    <string name="drawer_sounds_settings">الأصوات</string>
+    <string name="drawer_events_settings">التنبيهات</string>
+    <string name="drawer_advanced_settings">الإعدادات المتقدمة</string>
+    <string name="drawer_notification_settings">الإشعار الدائم</string>
+
+
+    <string name="settings_screen_title">الإعدادات</string>
+    <string name="settings_calculation_header_title">إعدادات الحساب</string>
+    <string name="settings_time_adjustments_header_title">تعديلات الوقت</string>
+    <string name="settings_sounds_header_title">إعدادات الصوت</string>
+    <string name="settings_notification_header_title">إعدادات الإشعارات</string>
+    <string name="settings_events_header_title">إعدادات المناسبات</string>
+    <string name="settings_preferences_header_title">التفضيلات</string>
+
+    <string name="settings_auto_calculation_title">طريقة الحساب التلقائية</string>
+    <string name="settings_auto_calculation_subtitle">تحديد طريقة الحساب تلقائياً بناءً على موقعك</string>
+    <string name="settings_manual_calculation_title">طريقة الحساب اليدوية</string>
+    <string name="settings_calculation_method_egypt">الهيئة المصرية العامة للمساحة</string>
+    <string name="settings_calculation_method_muslim_league">رابطة العالم الإسلامي</string>
+    <string name="settings_calculation_method_karachi">جامعة العلوم الإسلامية بكراتشي</string>
+    <string name="settings_calculation_method_umm_al_qura">جامعة أم القرى، مكة المكرمة</string>
+    <string name="settings_calculation_method_dubai">دبي (الإمارات العربية المتحدة)</string>
+    <string name="settings_calculation_method_moonsighting_committee">لجنة رؤية الهلال</string>
+    <string name="settings_calculation_method_north_america">إسنا (الجمعية الإسلامية لأمريكا الشمالية)</string>
+    <string name="settings_calculation_method_kuwait">الكويت</string>
+    <string name="settings_calculation_method_qatar">قطر</string>
+    <string name="settings_calculation_method_singapore">سنغافورة (MUIS)</string>
+    <string name="settings_calculation_method_turkey">تركيا (رئاسة الشؤون الدينية)</string>
+
+    <string name="settings_prayer_time_offsets_title">تعديل مواقيت الصلاة</string>
+    <string name="settings_prayer_time_offsets_subtitle">تعديل أوقات الأذان، الإقامة، والسنن</string>
+
+    <string name="settings_hijri_date_offset_title">تعديل التاريخ الهجري</string>
+    <string name="settings_hijri_date_offset_subtitle_part1">الفرق:</string>
+    <string name="settings_hijri_date_offset_subtitle_part2">يوم</string>
+
+
+    <string name="settings_enable_azan_sound_title">أصوات الأذان</string>
+    <string name="settings_enable_azan_sound_subtitle">تشغيل الأذان عند دخول وقت الصلاة</string>
+
+    <string name="settings_enable_iqama_sound_title">أصوات الإقامة</string>
+    <string name="settings_enable_iqama_sound_subtitle">تشغيل صوت الإقامة قبل بدء كل صلاة</string>
+
+    <string name="settings_azan_sound_title">صوت الأذان</string>
+    <string name="settings_azan_sound_subtitle">اختر صوت الأذان</string>
+    <string name="settings_iqama_sound_title">صوت الإقامة</string>
+    <string name="settings_iqama_sound_subtitle">اختر صوت الإقامة</string>
+    <string name="settings_notify_sound_title">صوت التنبيه</string>
+    <string name="settings_notify_sound_subtitle">اختر صوت التنبيه</string>
+
+
+    <string name="settings_enable_notification_title">أشعار بمواقيت الصلاة</string>
+    <string name="settings_enable_notification_subtitle">عرض مواقيت الصلاة والعد التنازلي للصلاة القادمة</string>
+
+    <string name="settings_notification_prayer_adjustments_title">تعديل الصلوات</string>
+    <string name="settings_notification_prayer_adjustments_subtitle">اختر الصلوات التي تظهر في قسم العد التنازلي</string>
+
+
+    <string name="settings_enable_events_title">الإشعار بالمناسبات الإسلامية</string>
+    <string name="settings_enable_events_subtitle">إرسال إشعارات بالمناسبات الإسلامية القادمة</string>
+
+    <string name="settings_adjust_events_title">تعديل المناسبات</string>
+    <string name="settings_adjust_events_subtitle">إختيار المناسبات الإسلامية المراد الإشعار بها</string>
+
+
+    <string name="settings_language_title">اللغة</string>
+    <string name="settings_language_auto_part">(تلقائي)</string>
+    <string name="settings_language_system_default">لغة النظام</string>
+    <string name="settings_language_en">English (الإنجليزية)</string>
+    <string name="settings_language_ar">العربية</string>
+
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_choose_theme">إختيار المظهر</string>
+    <string name="settings_theme_green_dark">الأخضر (الوضع الداكن)</string>
+    <string name="settings_theme_green_light">الأخضر (الوضع الفاتح)</string>
+    <string name="settings_theme_pink_dark">الوردي (الوضع الداكن)</string>
+    <string name="settings_theme_pink_light">الوردي (الوضع الفاتح)</string>
+    <string name="settings_theme_blue_dark">الأزرق (الوضع الداكن)</string>
+    <string name="settings_theme_blue_light">الأزرق (الوضع الفاتح)</string>
+    <string name="settings_theme_yellow_dark">الأصفر (الوضع الداكن)</string>
+    <string name="settings_theme_yellow_light">الأصفر (الوضع الفاتح)</string>
+    <string name="settings_theme_brown_dark">البني (الوضع الداكن)</string>
+    <string name="settings_theme_brown_light">البني (الوضع الفاتح)</string>
+    <string name="settings_theme_red_dark">الأحمر (الوضع الداكن)</string>
+    <string name="settings_theme_red_light">الأحمر (الوضع الفاتح)</string>
+
+    <string name="settings_unknown_place_holder">غير معروف</string>
+
+    <string name="settings_dialog_apply">تطبيق</string>
+    <string name="settings_dialog_cancel">إلغاء</string>
+
+</resources>
