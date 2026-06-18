@@ -53,7 +53,6 @@ import androidx.navigation.compose.dialog
 import androidx.navigation.compose.rememberNavController
 import com.islamnotify.main.presentation.MainScreenContent
 import com.islamnotify.main.presentation.MainViewModel
-import com.islamnotify.settings.TestScreenContent
 import com.islamnotify.settings.presentation.Manrope
 import com.islamnotify.settings.presentation.MasterSettingsScreen
 import com.islamnotify.settings.presentation.SettingsEvent
