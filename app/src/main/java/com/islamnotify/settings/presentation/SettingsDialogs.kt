@@ -42,9 +42,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.batoulapps.adhan2.CalculationMethod
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.ui.theme.AppThemeTypes
+
+fun CalculationMethod.toDisplayString(context: Context): String {
+    return when (this) {
+        CalculationMethod.EGYPTIAN -> context.getString(R.string.settings_calculation_method_egypt)
+        CalculationMethod.NORTH_AMERICA -> context.getString(R.string.settings_calculation_method_north_america)
+        CalculationMethod.MUSLIM_WORLD_LEAGUE -> context.getString(R.string.settings_calculation_method_muslim_league)
+        CalculationMethod.MOON_SIGHTING_COMMITTEE -> context.getString(R.string.settings_calculation_method_moonsighting_committee)
+        CalculationMethod.SINGAPORE -> context.getString(R.string.settings_calculation_method_singapore)
+        CalculationMethod.DUBAI -> context.getString(R.string.settings_calculation_method_dubai)
+        CalculationMethod.KARACHI -> context.getString(R.string.settings_calculation_method_karachi)
+        CalculationMethod.KUWAIT -> context.getString(R.string.settings_calculation_method_kuwait)
+        CalculationMethod.QATAR -> context.getString(R.string.settings_calculation_method_qatar)
+        CalculationMethod.TURKEY -> context.getString(R.string.settings_calculation_method_turkey)
+        CalculationMethod.UMM_AL_QURA -> context.getString(R.string.settings_calculation_method_umm_al_qura)
+        else -> context.getString(R.string.settings_unknown_place_holder)
+    }
+}
 
 object SettingsDialogs {
 
@@ -234,6 +252,36 @@ object SettingsDialogs {
     }
 
 
+
+    @Composable
+    fun CalculationMethodSelectionDialog(
+        initialMethod: CalculationMethod,
+        onDismiss: () -> Unit,
+        onConfirm: (CalculationMethod) -> Unit
+    ) {
+        val context = LocalContext.current
+        val supportedMethods = listOf(
+            CalculationMethod.MUSLIM_WORLD_LEAGUE,
+            CalculationMethod.EGYPTIAN,
+            CalculationMethod.KARACHI,
+            CalculationMethod.UMM_AL_QURA,
+            CalculationMethod.DUBAI,
+            CalculationMethod.MOON_SIGHTING_COMMITTEE,
+            CalculationMethod.KUWAIT,
+            CalculationMethod.QATAR,
+            CalculationMethod.SINGAPORE,
+            CalculationMethod.TURKEY,
+            CalculationMethod.NORTH_AMERICA,
+        )
+        SingleSelectDialog(
+            title = context.getLocalizedContext().getString(R.string.settings_calculation_method_dialog_title),
+            items = supportedMethods,
+            selectedItem = initialMethod,
+            itemLabel = { method -> method.toDisplayString(context.getLocalizedContext()) },
+            onDismiss = onDismiss,
+            onConfirm = onConfirm
+        )
+    }
 
     @Composable
     fun ThemeSelectionDialog(

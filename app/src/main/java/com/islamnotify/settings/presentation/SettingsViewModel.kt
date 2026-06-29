@@ -3,6 +3,7 @@ package com.islamnotify.settings.presentation
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -65,13 +66,22 @@ class SettingsViewModel @Inject constructor(
 
         // get language
         val locales = AppCompatDelegate.getApplicationLocales()
-        val language: String = if (locales.isEmpty) {
-            Locale.getDefault().language.mapToString(localizedContext, true)
+        val currentLanguageOption: LanguageOption
+        val language: String
+        if (locales.isEmpty) {
+            currentLanguageOption = LanguageOption.AUTO
+            language = localizedContext.getString(R.string.settings_language_system_default)
         } else {
-            locales.get(0)?.language?.mapToString(localizedContext, false)
+            val langCode = locales.get(0)?.language
+            currentLanguageOption = when (langCode) {
+                "en" -> LanguageOption.ENGLISH
+                "ar" -> LanguageOption.ARABIC
+                else -> LanguageOption.AUTO
+            }
+            language = langCode?.mapToString(localizedContext, false)
                 ?: context.getString(R.string.settings_unknown_place_holder)
         }
-        _uiState.update { it.copy(language = language) }
+        _uiState.update { it.copy(language = language, currentLanguageOption = currentLanguageOption) }
 
 
         // TODO: To be done dynamically
@@ -96,13 +106,18 @@ class SettingsViewModel @Inject constructor(
                     )
                     it.copy(
                         isAutoCalcEnabled = prayerConfig.isAutoCalculationMethodEnabled,
-                        autoCalcMethod = prayerConfig.autoCalculationMethod?.mapToString(
+                        autoCalcMethod = prayerConfig.autoCalculationMethod?.toDisplayString(
                             localizedContext
                         ),
-                        calculationMethod = prayerConfig.manualCalculationMethod?.mapToString(
+                        calculationMethod = prayerConfig.manualCalculationMethod.toDisplayString(
                             localizedContext
-                        )
-                            ?: context.getString(R.string.settings_unknown_place_holder)
+                        ),
+                        currentManualMethod = prayerConfig.manualCalculationMethod,
+                        showNextSunrise = prayerConfig.showNextSunrise,
+                        showNextDuha = prayerConfig.showNextDuha,
+                        showNextIqama = prayerConfig.showNextIqama,
+                        showNextMidnight = prayerConfig.showNextMidnight,
+                        showNextLastThird = prayerConfig.showNextLastThird
                     )
                 }
             } catch (e: Exception) {
@@ -115,11 +130,8 @@ class SettingsViewModel @Inject constructor(
             val config = calendarRepository.getConfig()
             _uiState.update {
                 it.copy(
-                    hijriDateAdjustment = "${localizedContext.getString(R.string.settings_hijri_date_offset_subtitle_part1)} ${config.hijriOffset} ${
-                        localizedContext.getString(
-                            R.string.settings_hijri_date_offset_subtitle_part2
-                        )
-                    }"
+                    currentHijriOffset = config.hijriOffset,
+                    hijriDateAdjustment = formatHijriSubtitle(config.hijriOffset, localizedContext)
                 )
             }
         }
@@ -146,7 +158,7 @@ class SettingsViewModel @Inject constructor(
         // Collect Events Flow
         viewModelScope.launch {
             eventsWork.getEventFlags().collect { flags ->
-                _uiState.update { it.copy(isEventsEnabled = flags.isAllEnabled) }
+                _uiState.update { it.copy(isEventsEnabled = flags.isAllEnabled, eventFlags = flags) }
             }
         }
 
@@ -160,22 +172,37 @@ class SettingsViewModel @Inject constructor(
     }
 
 
-    private fun CalculationMethod.mapToString(context: Context): String {
-        return when (this) {
-            CalculationMethod.EGYPTIAN -> context.getString(R.string.settings_calculation_method_egypt)
-            CalculationMethod.NORTH_AMERICA -> context.getString(R.string.settings_calculation_method_north_america)
-            CalculationMethod.MUSLIM_WORLD_LEAGUE -> context.getString(R.string.settings_calculation_method_muslim_league)
-            CalculationMethod.MOON_SIGHTING_COMMITTEE -> context.getString(R.string.settings_calculation_method_moonsighting_committee)
-            CalculationMethod.SINGAPORE -> context.getString(R.string.settings_calculation_method_singapore)
-            CalculationMethod.DUBAI -> context.getString(R.string.settings_calculation_method_dubai)
-            CalculationMethod.KARACHI -> context.getString(R.string.settings_calculation_method_karachi)
-            CalculationMethod.KUWAIT -> context.getString(R.string.settings_calculation_method_kuwait)
-            CalculationMethod.QATAR -> context.getString(R.string.settings_calculation_method_qatar)
-            CalculationMethod.TURKEY -> context.getString(R.string.settings_calculation_method_turkey)
-            CalculationMethod.UMM_AL_QURA -> context.getString(R.string.settings_calculation_method_umm_al_qura)
-            else -> context.getString(R.string.settings_unknown_place_holder)
+    fun onHijriOffsetChanged(offset: Int) {
+        val localizedContext = context.getLocalizedContext()
+        _uiState.update {
+            it.copy(
+                currentHijriOffset = offset,
+                hijriDateAdjustment = formatHijriSubtitle(offset, localizedContext)
+            )
         }
+        viewModelScope.launch {
+            calendarRepository.saveConfig { it.copy(hijriOffset = offset) }
+        }
+    }
 
+    private fun formatHijriSubtitle(offset: Int, context: Context): String {
+        return "${context.getString(R.string.settings_hijri_date_offset_subtitle_part1)} $offset ${context.getString(R.string.settings_hijri_date_offset_subtitle_part2)}"
+    }
+
+    fun onManualCalculationMethodChanged(method: CalculationMethod) {
+        val localizedContext = context.getLocalizedContext()
+        _uiState.update {
+            it.copy(
+                currentManualMethod = method,
+                calculationMethod = method.toDisplayString(localizedContext)
+            )
+        }
+        viewModelScope.launch {
+            prayerDataUseCase.savePrayerConfig {
+                it.copy(manualCalculationMethod = method)
+            }
+            notificationWork.startWork()
+        }
     }
 
     fun AppThemeTypes.mapToString(context: Context): String {
@@ -270,6 +297,63 @@ class SettingsViewModel @Inject constructor(
             preferencesRepository.saveConfig {
                 it.copy(theme = theme)
             }
+        }
+    }
+
+    fun onPrayerVisibilityFlagsChanged(transform: (PrayerConfig) -> PrayerConfig) {
+        val partial = PrayerConfig(
+            showNextSunrise = _uiState.value.showNextSunrise,
+            showNextDuha = _uiState.value.showNextDuha,
+            showNextIqama = _uiState.value.showNextIqama,
+            showNextMidnight = _uiState.value.showNextMidnight,
+            showNextLastThird = _uiState.value.showNextLastThird
+        )
+        val updated = transform(partial)
+        _uiState.update {
+            it.copy(
+                showNextSunrise = updated.showNextSunrise,
+                showNextDuha = updated.showNextDuha,
+                showNextIqama = updated.showNextIqama,
+                showNextMidnight = updated.showNextMidnight,
+                showNextLastThird = updated.showNextLastThird
+            )
+        }
+        viewModelScope.launch {
+            prayerDataUseCase.savePrayerConfig(transform)
+            notificationWork.startWork()
+        }
+    }
+
+    fun onLanguageChanged(option: LanguageOption) {
+        _uiState.update { it.copy(currentLanguageOption = option) }
+        val localeList = when (option) {
+            LanguageOption.ENGLISH -> LocaleListCompat.create(Locale("en"))
+            LanguageOption.ARABIC -> LocaleListCompat.create(Locale("ar"))
+            LanguageOption.AUTO -> LocaleListCompat.getEmptyLocaleList()
+        }
+        AppCompatDelegate.setApplicationLocales(localeList)
+    }
+
+    fun onEventsSelectionChanged(flags: EventFlags) {
+        _uiState.update { it.copy(eventFlags = flags) }
+        viewModelScope.launch {
+            eventsWork.toggleFlag(EventsPreferenceKeys.MONDAY_FASTING, flags.mondayFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.THURSDAY_FASTING, flags.thursdayFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.WHITE_DAYS_FASTING, flags.whiteDaysFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.ARFA_FASTING, flags.arafaFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.TSUA_FASTING, flags.tasuaFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.ASHORA_FASTING, flags.ashoraFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.SHAWWAL_FASTING, flags.shawwalFasting)
+            eventsWork.toggleFlag(EventsPreferenceKeys.RAMADAN_EVENT, flags.ramadanEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.RAMADAN_LAST_10_DAYS_EVENT, flags.ramdanLast10DaysEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.DHU_AL_HIJJA_FIRST_10_DAYS_EVENT, flags.dhuAlHijjahFirst10DaysEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.FRIDAY_EVENT, flags.fridayEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.EID_AL_FITR_EVENT, flags.eidAlFitrEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.EID_AL_ADHA_EVENT, flags.eidAlAdhaEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.MUHARRAM_EVENT, flags.muharramEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.RAJAB_EVENT, flags.rajabEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.DHU_AL_QIDA_EVENT, flags.dhuAlQidaEvent)
+            eventsWork.toggleFlag(EventsPreferenceKeys.DHU_AL_HIJJA_EVENT, flags.dhuAlHijjahEvent)
         }
     }
 

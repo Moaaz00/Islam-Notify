@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Islam Notify</string>
     <string name="fajr_name">الفجر</string>
+    <string name="iqama_name">الإقامة</string>
     <string name="iqama_fajr_name">إقامة الفجر</string>
     <string name="sunrise_name">الشروق</string>
     <string name="duha_name">الضحي</string>
@@ -166,9 +167,13 @@
     <string name="settings_calculation_method_qatar">قطر</string>
     <string name="settings_calculation_method_singapore">سنغافورة (MUIS)</string>
     <string name="settings_calculation_method_turkey">تركيا (رئاسة الشؤون الدينية)</string>
+    <string name="settings_calculation_method_dialog_title">طريقة الحساب</string>
 
     <string name="settings_prayer_time_offsets_title">تعديل مواقيت الصلاة</string>
     <string name="settings_prayer_time_offsets_subtitle">تعديل أوقات الأذان، الإقامة، والسنن</string>
+    <string name="settings_offset_main_prayers_header">أوقات الصلاة الرئيسية</string>
+    <string name="settings_offset_iqama_header">أوقات الإقامة</string>
+    <string name="settings_offset_additional_header">أوقات إضافية</string>
 
     <string name="settings_hijri_date_offset_title">تعديل التاريخ الهجري</string>
     <string name="settings_hijri_date_offset_subtitle_part1">الفرق:</string>

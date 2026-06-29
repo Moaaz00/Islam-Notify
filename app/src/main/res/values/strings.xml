@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Islam Notify</string>
     <string name="fajr_name">Fajr</string>
+    <string name="iqama_name">Iqama</string>
     <string name="iqama_fajr_name">Iqama al-Fajr</string>
     <string name="sunrise_name">Sunrise</string>
     <string name="duha_name">Duha</string>
@@ -165,9 +166,13 @@
     <string name="settings_calculation_method_qatar">Qatar</string>
     <string name="settings_calculation_method_singapore">Singapore</string>
     <string name="settings_calculation_method_turkey">Turkey (Diyanet)</string>
+    <string name="settings_calculation_method_dialog_title">Calculation Method</string>
 
     <string name="settings_prayer_time_offsets_title">Prayer Time Offsets</string>
     <string name="settings_prayer_time_offsets_subtitle">Adjust azan, iqama, and sunnah times</string>
+    <string name="settings_offset_main_prayers_header">Main Prayers</string>
+    <string name="settings_offset_iqama_header">Iqama Times</string>
+    <string name="settings_offset_additional_header">Additional Times</string>
 
     <string name="settings_hijri_date_offset_title">Hijri Date Adjustment</string>
     <string name="settings_hijri_date_offset_subtitle_part1">Offset:</string>
@@ -221,7 +226,7 @@
     <string name="settings_theme_yellow_light">Yellow (Light Mode)</string>
     <string name="settings_theme_brown_dark">Brown (Dark Mode)</string>
     <string name="settings_theme_brown_light">Brown (Light Mode)</string>
-    <string name="settings_theme_red_dark">Brown (Dark Mode)</string>
+    <string name="settings_theme_red_dark">Red (Dark Mode)</string>
     <string name="settings_theme_red_light">Red (Light Mode)</string>
 
     <string name="settings_unknown_place_holder">Unknown</string>

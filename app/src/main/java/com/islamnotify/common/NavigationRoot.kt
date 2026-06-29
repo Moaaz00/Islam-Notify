@@ -55,17 +55,24 @@ import com.islamnotify.main.presentation.MainScreenContent
 import com.islamnotify.main.presentation.MainViewModel
 import com.islamnotify.settings.presentation.Manrope
 import com.islamnotify.settings.presentation.MasterSettingsScreen
+import com.islamnotify.settings.presentation.LanguageOption
 import com.islamnotify.settings.presentation.SettingsEvent
+import com.islamnotify.settings.presentation.SettingsUiState
 import com.islamnotify.settings.presentation.SettingsViewModel
 import com.islamnotify.ui.theme.AppThemeTypes
 import kotlinx.serialization.Serializable
 import com.islamnotify.R
 import com.islamnotify.alarms.presentation.AlarmAppNavigation
 import com.islamnotify.common.AppUtils.getLocalizedContext
-import com.islamnotify.settings.presentation.PrayerOffsetAdjustmentsScreen.PrayerTimesOffsetScreen
+import com.islamnotify.settings.presentation.PrayerOffsetViewModel
+import com.islamnotify.settings.presentation.PrayerTimesOffsetScreen
+import com.islamnotify.settings.presentation.SettingsDialogs.CalculationMethodSelectionDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.MultiSelectDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.SingleSelectDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.ThemeSelectionDialog
+import com.islamnotify.events.domain.EventFlags
+import com.islamnotify.events.domain.EventsPreferenceKeys
+import com.islamnotify.prayer_times.domain.model.PrayerConfig
 
 @Composable
 fun NavigationRoot() {
@@ -206,18 +213,16 @@ fun NavigationRoot() {
         }
 
 
-        //Calculation Dialog
+        // Calculation Method Dialog
         dialog<CalculationMethodDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
-            SingleSelectDialog(
-                title = "Calculation Methods",
-                items = listOf("Egyptian", "umm al qura", "other"),
-                selectedItem = viewModel.uiState.collectAsState().value.language,
-                itemLabel = { it },
+            val state = viewModel.uiState.collectAsState()
+            CalculationMethodSelectionDialog(
+                initialMethod = state.value.currentManualMethod,
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { lang ->
-                    /* viewModel.onLanguageChanged(lang) */
+                onConfirm = { method ->
+                    viewModel.onManualCalculationMethodChanged(method)
                     navController.popBackStack()
                 }
             )
@@ -225,43 +230,61 @@ fun NavigationRoot() {
 
 
         composable<PrayerTimesOffset> {
-            PrayerTimesOffsetScreen()
+            val viewModel: PrayerOffsetViewModel = hiltViewModel()
+            val config = viewModel.config.collectAsState()
+            PrayerTimesOffsetScreen(
+                config = config.value,
+                onOffsetChanged = { transform -> viewModel.onOffsetChanged(transform) },
+                onBackClick = { navController.popBackStack() }
+            )
         }
 
         composable<AlarmScreen>{
             AlarmAppNavigation()
         }
 
-        //Hijri offsets Dialog
+        // Hijri Date Offset Dialog
         dialog<HijriOffsetDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
+            val state = viewModel.uiState.collectAsState()
             SingleSelectDialog(
-                title = "Hijri Date Offsets",
-                items = listOf("-2", "-1", "0","1","2"),
-                selectedItem = viewModel.uiState.collectAsState().value.language,
-                itemLabel = { it },
+                title = stringResource(R.string.settings_hijri_date_offset_title),
+                items = listOf(-2, -1, 0, 1, 2),
+                selectedItem = state.value.currentHijriOffset,
+                itemLabel = { offset -> if (offset > 0) "+$offset" else "$offset" },
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { lang ->
-                    /* viewModel.onLanguageChanged(lang) */
+                onConfirm = { offset ->
+                    viewModel.onHijriOffsetChanged(offset)
                     navController.popBackStack()
                 }
             )
         }
 
 
- // Notification Prayer Dialog
+        // Notification Prayer Dialog
         dialog<NotificationPrayerAdjustmentsDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+            val allItems = PrayerVisibilityType.entries
             MultiSelectDialog(
-                title = "Notify for Prayers",
-                items = listOf("Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"),
-                initialSelectedItems = setOf("Fajr", "Maghrib"), // Get from VM
-                itemLabel = { it },
+                title = stringResource(R.string.settings_notification_prayer_adjustments_title),
+                items = allItems,
+                initialSelectedItems = allItems.filter { it.isEnabled(state.value) }.toSet(),
+                itemLabel = { context.getString(it.labelRes) },
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { selectedSet ->
-                    // viewModel.onUpdateNotificationPrayers(selectedSet)
+                onConfirm = { selectedItems ->
+                    viewModel.onPrayerVisibilityFlagsChanged { config ->
+                        config.copy(
+                            showNextSunrise = PrayerVisibilityType.SUNRISE in selectedItems,
+                            showNextDuha = PrayerVisibilityType.DUHA in selectedItems,
+                            showNextIqama = PrayerVisibilityType.IQAMA in selectedItems,
+                            showNextMidnight = PrayerVisibilityType.MIDNIGHT in selectedItems,
+                            showNextLastThird = PrayerVisibilityType.LAST_THIRD in selectedItems
+                        )
+                    }
                     navController.popBackStack()
                 }
             )
@@ -368,14 +391,36 @@ fun NavigationRoot() {
         dialog<EventsDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+            val allItems = EventType.entries
             MultiSelectDialog(
-                title = "Events Adjustments",
-                items = listOf("Monday", "thursday", "White Days", "Ramadan", "Eid"),
-                initialSelectedItems = setOf("White Days", "Monday"), // Get from VM
-                itemLabel = { it },
+                title = stringResource(R.string.settings_adjust_events_title),
+                items = allItems,
+                initialSelectedItems = allItems.filter { it.getter(state.value.eventFlags) }.toSet(),
+                itemLabel = { context.getString(it.labelRes) },
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { selectedSet ->
-                    // viewModel.onUpdateNotificationPrayers(selectedSet)
+                onConfirm = { selectedItems ->
+                    val newFlags = state.value.eventFlags.copy(
+                        mondayFasting = EventType.MONDAY_FASTING in selectedItems,
+                        thursdayFasting = EventType.THURSDAY_FASTING in selectedItems,
+                        whiteDaysFasting = EventType.WHITE_DAYS_FASTING in selectedItems,
+                        arafaFasting = EventType.ARFA_FASTING in selectedItems,
+                        tasuaFasting = EventType.TASUA_FASTING in selectedItems,
+                        ashoraFasting = EventType.ASHORA_FASTING in selectedItems,
+                        shawwalFasting = EventType.SHAWWAL_FASTING in selectedItems,
+                        ramadanEvent = EventType.RAMADAN in selectedItems,
+                        ramdanLast10DaysEvent = EventType.RAMADAN_LAST_10_DAYS in selectedItems,
+                        dhuAlHijjahFirst10DaysEvent = EventType.DHU_AL_HIJJAH_FIRST_10_DAYS in selectedItems,
+                        fridayEvent = EventType.FRIDAY in selectedItems,
+                        eidAlFitrEvent = EventType.EID_AL_FITR in selectedItems,
+                        eidAlAdhaEvent = EventType.EID_AL_ADHA in selectedItems,
+                        muharramEvent = EventType.MUHARRAM in selectedItems,
+                        rajabEvent = EventType.RAJAB in selectedItems,
+                        dhuAlQidaEvent = EventType.DHU_AL_QIDA in selectedItems,
+                        dhuAlHijjahEvent = EventType.DHU_AL_HIJJAH in selectedItems
+                    )
+                    viewModel.onEventsSelectionChanged(newFlags)
                     navController.popBackStack()
                 }
             )
@@ -385,14 +430,16 @@ fun NavigationRoot() {
         dialog<LanguageDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
             SingleSelectDialog(
-                title = "Select Language",
-                items = listOf("English", "Arabic", "French"),
-                selectedItem = viewModel.uiState.collectAsState().value.language,
-                itemLabel = { it },
+                title = stringResource(R.string.settings_language_title),
+                items = LanguageOption.entries,
+                selectedItem = state.value.currentLanguageOption,
+                itemLabel = { option -> option.toDisplayString(context) },
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { lang ->
-                    /* viewModel.onLanguageChanged(lang) */
+                onConfirm = { option ->
+                    viewModel.onLanguageChanged(option)
                     navController.popBackStack()
                 }
             )
@@ -467,3 +514,47 @@ data object LanguageDialog
 @Keep
 @Serializable
 data object AlarmScreen
+
+private fun LanguageOption.toDisplayString(context: Context): String {
+    return when (this) {
+        LanguageOption.ENGLISH -> context.getString(R.string.settings_language_en)
+        LanguageOption.ARABIC -> context.getString(R.string.settings_language_ar)
+        LanguageOption.AUTO -> context.getString(R.string.settings_language_system_default)
+    }
+}
+
+private enum class PrayerVisibilityType(val labelRes: Int) {
+    SUNRISE(R.string.sunrise_name),
+    DUHA(R.string.duha_name),
+    IQAMA(R.string.iqama_name),
+    MIDNIGHT(R.string.midnight_name),
+    LAST_THIRD(R.string.last_third_name),
+}
+
+private fun PrayerVisibilityType.isEnabled(state: SettingsUiState) = when (this) {
+    PrayerVisibilityType.SUNRISE -> state.showNextSunrise
+    PrayerVisibilityType.DUHA -> state.showNextDuha
+    PrayerVisibilityType.IQAMA -> state.showNextIqama
+    PrayerVisibilityType.MIDNIGHT -> state.showNextMidnight
+    PrayerVisibilityType.LAST_THIRD -> state.showNextLastThird
+}
+
+private enum class EventType(val labelRes: Int, val getter: (EventFlags) -> Boolean) {
+    MONDAY_FASTING(R.string.monday_fasting_title, { it.mondayFasting }),
+    THURSDAY_FASTING(R.string.thursday_fasting_title, { it.thursdayFasting }),
+    WHITE_DAYS_FASTING(R.string.white_days_fasting_title, { it.whiteDaysFasting }),
+    ARFA_FASTING(R.string.arfa_fasting_title, { it.arafaFasting }),
+    TASUA_FASTING(R.string.tasua_fasting_title, { it.tasuaFasting }),
+    ASHORA_FASTING(R.string.ashora_fasting_title, { it.ashoraFasting }),
+    SHAWWAL_FASTING(R.string.shawwal_fasting_title, { it.shawwalFasting }),
+    RAMADAN(R.string.ramadan_event_title, { it.ramadanEvent }),
+    RAMADAN_LAST_10_DAYS(R.string.ramadan_last_10_days_event_title, { it.ramdanLast10DaysEvent }),
+    DHU_AL_HIJJAH_FIRST_10_DAYS(R.string.dhu_al_hijjah_first_10_days_event_title, { it.dhuAlHijjahFirst10DaysEvent }),
+    FRIDAY(R.string.friday_event_title, { it.fridayEvent }),
+    EID_AL_FITR(R.string.eid_al_fitr_event_title, { it.eidAlFitrEvent }),
+    EID_AL_ADHA(R.string.eid_al_adha_event_title, { it.eidAlAdhaEvent }),
+    MUHARRAM(R.string.muharram_event_title, { it.muharramEvent }),
+    RAJAB(R.string.rajab_event_title, { it.rajabEvent }),
+    DHU_AL_QIDA(R.string.dhu_al_qadah_event_title, { it.dhuAlQidaEvent }),
+    DHU_AL_HIJJAH(R.string.dhu_al_hijjah_event_title, { it.dhuAlHijjahEvent }),
+}
