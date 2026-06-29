@@ -3,6 +3,8 @@ package com.islamnotify.main.presentation
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.islamnotify.R
@@ -283,6 +285,15 @@ class MainViewModel @Inject constructor(
                 vibrationPattern = null
             }
 
+            val alarmChannel = NotificationChannel(
+                AppUtils.ALARM_NOTIFICATION_CHANNEL,
+                localizedContext.getString(R.string.alarm_notification_channel_name),
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                setSound(null, null)
+                enableVibration(true)
+            }
+
             // Register the channel with the system
             context.getSystemService(NotificationManager::class.java).apply {
                 createNotificationChannels(
@@ -290,7 +301,8 @@ class MainViewModel @Inject constructor(
                         prayersChannel,
                         eventsChannel,
                         mediaChannel,
-                        othersChannel
+                        othersChannel,
+                        alarmChannel
                     )
                 )
             }

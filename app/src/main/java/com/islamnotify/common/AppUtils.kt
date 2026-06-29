@@ -37,6 +37,8 @@ object AppUtils {
     const val SOUNDS_NOTIFICATION_CHANNEL_ID = "SOUNDS_NOTIFICATION_CHANNEL_ID"
     const val OTHERS_NOTIFICATION_CHANNEL_ID = "OTHERS_NOTIFICATION_CHANNEL_ID"
 
+    const val ALARM_NOTIFICATION_CHANNEL = "ALARM_NOTIFICATION_CHANNEL"
+
     fun Context.getLocalizedContext(): Context {
         val locales: LocaleListCompat = AppCompatDelegate.getApplicationLocales()
         if (locales.isEmpty) return this

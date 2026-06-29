@@ -98,7 +98,7 @@ class SoundsMediaService() : Service() {
     override fun onCreate() {
         super.onCreate()
         val filter = IntentFilter(CANCEL_AZAN_ACTION)
-        ContextCompat.registerReceiver(this, cancelAzanReceiver, filter, RECEIVER_NOT_EXPORTED)
+        ContextCompat.registerReceiver(this, cancelAzanReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -556,16 +556,16 @@ class SoundsMediaService() : Service() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         scope.cancel()
         cleanUp()
         this.unregisterReceiver(cancelAzanReceiver)
+        super.onDestroy()
     }
 
     override fun onTimeout(startId: Int) {
-        super.onTimeout(startId)
         scope.cancel()
         cleanUp()
+        super.onTimeout(startId)
     }
 }
 

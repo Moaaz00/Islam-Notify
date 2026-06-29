@@ -126,7 +126,8 @@ fun MainScreenContent(
     date: String,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
+    onAlarmScreenClicked: () -> Unit
 ) {
     val context = LocalContext.current
 //    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -200,7 +201,10 @@ fun MainScreenContent(
                 onMenuClick = {
                     onSettingsClick()
                     /*scope.launch { drawerState.open() }*/
-                }, // Open drawer here
+                },
+                onAlarmClicked = {
+                    onAlarmScreenClicked()
+                },
                 modifier = Modifier.wrapContentHeight()
             )
 
@@ -244,6 +248,7 @@ fun HeaderSection(
     locationName: String,
     nextPrayerName: String,
     onMenuClick: () -> Unit,
+    onAlarmClicked: () -> Unit,
     nextPrayerTime: String,
     countDown: CountDownDataModel,
     modifier: Modifier = Modifier
@@ -313,17 +318,14 @@ fun HeaderSection(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(
-                        top = 8.dp
-                    ), // Add vertical padding
+                    .padding(top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // LOCATION SIDE: Wrapped in a subtle "Pill"
+                // 1. LOCATION SIDE: Wrapped in a subtle "Pill"
                 Surface(
-                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f), // Very subtle transparent white
+                    color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
                     shape = CircleShape
-//                , onClick = { /* Optional: Change location */ }
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -333,14 +335,14 @@ fun HeaderSection(
                             painter = painterResource(R.drawable.ic_location_pin),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(14.dp) // Smaller icon looks more elegant here
+                            modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = locationName,
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontFamily = MainFont,
-                            fontSize = 12.sp, // Slightly bigger text for balance
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
@@ -348,23 +350,36 @@ fun HeaderSection(
                     }
                 }
 
-                // SETTINGS SIDE: Downsize the icon, keep the touch target
-                IconButton(
-                    onClick = { onMenuClick() },
-                    modifier = Modifier
-                        .size(40.dp)
-//                        .background(
-//                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
-//                            shape = CircleShape
-//                        )
-                    // Slightly smaller button
+                // 2. BUTTONS SIDE: Grouped together to align at the end of the screen
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp) // Space between the two buttons
                 ) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_settings),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary,
-                        modifier = Modifier.size(20.dp) // Reduced from 24dp to 20dp
-                    )
+                    // Hourglass Button
+                    IconButton(
+                        onClick = { onAlarmClicked() },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_hourglass),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+
+                    // Settings Button (placed at the absolute end)
+                    IconButton(
+                        onClick = { onMenuClick() },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_settings),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
                 }
             }
 

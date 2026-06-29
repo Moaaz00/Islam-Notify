@@ -130,6 +130,9 @@
     <string name="sounds_notification_channel_name">Prayer Azan</string>
     <string name="sounds_notification_channel_description">Notify the user at the times of azan and iqama</string>
     <string name="others_notification_channel_name">Other</string>
+    <string name="alarm_notification_channel_name">Alarms</string>
+    <string name="alarm_notification_title">The Alarm is being played</string>
+
     <string name="notification_update_string">Updating the notification</string>
 
     <string name="drawer_prayer_times_settings">Prayer Times</string>
@@ -204,7 +207,6 @@
     <string name="settings_language_system_default">System Default</string>
     <string name="settings_language_en">English</string>
     <string name="settings_language_ar">Arabic</string>
-
 
 
     <string name="settings_theme_title">Theme</string>

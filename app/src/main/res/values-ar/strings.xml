@@ -132,6 +132,9 @@
     <string name="sounds_notification_channel_name">أذان الصلاة</string>
     <string name="sounds_notification_channel_description">تذكير المستخدم بأذان و إقامة الصلاة</string>
     <string name="others_notification_channel_name">أخري</string>
+    <string name="alarm_notification_title">يتم تشغيل المنبه</string>
+
+    <string name="alarm_notification_channel_name">المنبهات</string>
     <string name="notification_update_string">جاري تحديث الإشعار</string>
     <string name="drawer_prayer_times_settings">مواقيت الصلاة</string>
     <string name="drawer_iqama_settings">الإقامة</string>

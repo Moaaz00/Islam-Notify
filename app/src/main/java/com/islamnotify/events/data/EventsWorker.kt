@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.islamnotify.R
 import com.islamnotify.android.AlarmReceiver
+import com.islamnotify.calendar.domain.CalendarRepository
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.events.domain.EventFlags
@@ -38,7 +39,8 @@ class EventsWorker @AssistedInject constructor(
     @Assisted val workerParams: WorkerParameters,
     val prayerDataUseCase: PrayerDataUseCase,
     val alarmManager: AlarmManager,
-    val dataStore: EventsDataStore
+    val dataStore: EventsDataStore,
+    val calendarRepository: CalendarRepository
 ) : CoroutineWorker(context, workerParams) {
 
 

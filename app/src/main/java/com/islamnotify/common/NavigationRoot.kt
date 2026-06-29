@@ -60,6 +60,7 @@ import com.islamnotify.settings.presentation.SettingsViewModel
 import com.islamnotify.ui.theme.AppThemeTypes
 import kotlinx.serialization.Serializable
 import com.islamnotify.R
+import com.islamnotify.alarms.presentation.AlarmAppNavigation
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.settings.presentation.PrayerOffsetAdjustmentsScreen.PrayerTimesOffsetScreen
 import com.islamnotify.settings.presentation.SettingsDialogs.MultiSelectDialog
@@ -121,6 +122,9 @@ fun NavigationRoot() {
                 onRefresh = { viewModel.refreshData() },
                 onSettingsClick = {
                     navController.navigate(Screen.Settings)
+                },
+                onAlarmScreenClicked = {
+                    navController.navigate(AlarmScreen)
                 }
             )
         }
@@ -222,6 +226,10 @@ fun NavigationRoot() {
 
         composable<PrayerTimesOffset> {
             PrayerTimesOffsetScreen()
+        }
+
+        composable<AlarmScreen>{
+            AlarmAppNavigation()
         }
 
         //Hijri offsets Dialog
@@ -455,3 +463,7 @@ data object ThemeDialog
 @Keep
 @Serializable
 data object LanguageDialog
+
+@Keep
+@Serializable
+data object AlarmScreen

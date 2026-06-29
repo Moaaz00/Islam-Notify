@@ -12,6 +12,11 @@ import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import com.islamnotify.prayer_times.util.PrayerUtils.toPrayersEntities
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.DayOfWeek
+import java.time.temporal.TemporalAdjusters
 
 class PrayerDataUseCase @Inject constructor(
     val prayerDataRepository: PrayerDataRepository,
@@ -164,6 +169,32 @@ class PrayerDataUseCase @Inject constructor(
             is LocationResult.Stale -> prayerDataRepository.getPrayerConfig(locationResult.locationData.countryCode)
             else -> prayerDataRepository.getPrayerConfig(null)
         }
+    }
+
+    fun calculatePrayerMillisForNextDayX(todayPrayerMillis: Long, targetDay: DayOfWeek): Long {
+        val zoneId = ZoneId.systemDefault()
+        val currentTime = System.currentTimeMillis()
+
+        // 1. Convert the baseline prayer millisecond timestamp to a ZonedDateTime
+        val todayPrayerZdt = Instant.ofEpochMilli(todayPrayerMillis).atZone(zoneId)
+        val currentDay = todayPrayerZdt.dayOfWeek
+
+        // 2. Adjust the date to the correct target day of the week
+        val targetZdt = if (targetDay == currentDay) {
+            if (todayPrayerMillis <= currentTime) {
+                // Already passed today: shift exactly 1 week forward
+                todayPrayerZdt.plusWeeks(1)
+            } else {
+                // Still in the future today: keep today's scheduled time
+                todayPrayerZdt
+            }
+        } else {
+            // Adjust to the next chronological occurrence of the target day of the week
+            todayPrayerZdt.with(TemporalAdjusters.next(targetDay))
+        }
+
+        // 3. Convert back to epoch milliseconds for the AlarmManager
+        return targetZdt.toInstant().toEpochMilli()
     }
 
 }

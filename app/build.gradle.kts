@@ -7,7 +7,7 @@ plugins {
 //    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.serialization)
 
-    id("kotlin-kapt")
+    alias(libs.plugins.google.devtools.ksp)
     id("com.google.dagger.hilt.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
@@ -60,6 +60,7 @@ android {
 
 dependencies {
 
+    implementation(libs.androidx.activity.ktx)
     val composeBom = "2025.12.01"
     implementation(platform("androidx.compose:compose-bom:$composeBom"))
 //    implementation("androidx.compose.foundation:foundation")
@@ -70,7 +71,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     val lifecycleVersion = "2.9.4"
-    val roomVersion = "2.8.3"
     val hiltVersion = "2.57.2"
     val workVersion = "2.11.0"
     val coroutinesVersion = "1.10.2"
@@ -83,9 +83,10 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
 
-    implementation("androidx.room:room-runtime:$roomVersion")
-    kapt("androidx.room:room-compiler:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion") // coroutines support
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler) // KSP replaces kapt for Room
+
 
     implementation("androidx.work:work-runtime-ktx:$workVersion")
 
@@ -93,10 +94,10 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
     implementation("com.google.dagger:hilt-android:$hiltVersion")
-    kapt("com.google.dagger:hilt-compiler:$hiltVersion")
+    ksp("com.google.dagger:hilt-compiler:$hiltVersion") // Changed from kapt to ksp
 
     implementation("androidx.hilt:hilt-work:1.3.0")
-    kapt("androidx.hilt:hilt-compiler:1.3.0")
+    ksp("androidx.hilt:hilt-compiler:1.3.0") // Changed from kapt to ksp
 
     implementation(libs.play.services.location)
     implementation("com.google.maps.android:maps-compose:4.4.1")
@@ -126,6 +127,7 @@ dependencies {
 
     // If using Hilt for ViewModels
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.androidx.compose.material.icons.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
