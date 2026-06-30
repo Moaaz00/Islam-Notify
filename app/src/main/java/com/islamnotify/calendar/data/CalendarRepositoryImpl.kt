@@ -47,11 +47,14 @@ class CalendarRepositoryImpl @Inject constructor(
         val formatedYear = numberFormat.format(year.toLong())
 
         return DateModel(
-            dayOfMonth = formatedDayOfMonth,
+            formatedDayOfMonth = formatedDayOfMonth,
             dayOfWeek = dayOfWeek,
             monthName = monthName,
-            monthNumber = "$monthNumber",
-            year = formatedYear
+            formatedMonthNumber = "$monthNumber",
+            formatedYear = formatedYear,
+            dayOfMonth = dayOfMonth,
+            monthNumber = monthNumber,
+            year = year
         )
     }
 

@@ -1,9 +1,12 @@
 package com.islamnotify.calendar.domain
 
 data class DateModel(
-    var dayOfMonth: String,
+    var formatedDayOfMonth: String,
     var dayOfWeek: String,
-    var monthNumber: String,
+    var formatedMonthNumber: String,
     var monthName: String,
-    var year: String
+    var formatedYear: String,
+    var dayOfMonth: Int,
+    var monthNumber: Int,
+    var year: Int
 )

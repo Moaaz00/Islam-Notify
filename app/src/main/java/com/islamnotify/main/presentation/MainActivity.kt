@@ -67,17 +67,24 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import com.islamnotify.common.NavigationRoot
+import com.islamnotify.intro.presentation.IntroActivity
 import com.islamnotify.main.domain.MainPreferencesConfig
+import com.islamnotify.main.domain.MainPreferencesRepository
 import com.islamnotify.settings.presentation.SettingsViewModel
 import com.islamnotify.sounds.domain.SoundStates
 import com.islamnotify.ui.theme.AppThemeTypes
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
     private val settingsViewModel: SettingsViewModel by viewModels()
+
+    @Inject
+    lateinit var mainPreferencesRepository: MainPreferencesRepository
 
     // 1. Define the permission launcher
     private val locationPermissionLauncher: ActivityResultLauncher<Array<String>> =
@@ -120,6 +127,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // On first launch, hand off to the onboarding flow before doing any other setup.
+        val showIntro = runBlocking { mainPreferencesRepository.getConfig().first().showIntro }
+        if (showIntro) {
+            startActivity(Intent(this, IntroActivity::class.java))
+            finish()
+            return
+        }
+
         enableEdgeToEdge()
 //        viewModel.startThemeState()
 //        runBlocking {

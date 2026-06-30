@@ -263,4 +263,44 @@
 
     <string name="settings_dialog_apply">Apply</string>
     <string name="settings_dialog_cancel">Cancel</string>
+
+    <!-- Intro / Onboarding -->
+    <string name="intro_welcome_title">Welcome!</string>
+    <string name="intro_welcome_body">Welcome to Islam Notify. The fastest way to know prayer times, through the always-on notification feature.</string>
+
+    <string name="intro_feature_title">Always-on Notification</string>
+    <string name="intro_feature_body">The app shows the time remaining until the next prayer, and all prayer times when you expand the notification.</string>
+
+    <string name="intro_permissions_title">A few permissions</string>
+    <string name="intro_permissions_subtitle">We need these to show accurate prayer times and keep notifications running reliably.</string>
+
+    <string name="intro_perm_required">Required</string>
+    <string name="intro_perm_optional">Optional</string>
+    <string name="intro_perm_grant">Grant</string>
+    <string name="intro_perm_open_settings">Settings</string>
+
+    <string name="intro_perm_location_title">Location</string>
+    <string name="intro_perm_location_subtitle">To determine your prayer times.</string>
+    <string name="intro_perm_notification_title">Notifications</string>
+    <string name="intro_perm_notification_subtitle">To use the always-on notification and event reminders.</string>
+    <string name="intro_perm_battery_title">Background Activity</string>
+    <string name="intro_perm_battery_subtitle">So notifications keep working reliably in the background.</string>
+
+    <string name="intro_battery_sheet_title">Allow background activity</string>
+    <string name="intro_battery_sheet_description">To keep prayer notifications accurate, set this app\'s battery usage to \"Unrestricted\".</string>
+    <string name="intro_battery_sheet_step1">Open the \"Battery\" option.</string>
+    <string name="intro_battery_sheet_step2">Select \"Unrestricted\".</string>
+    <string name="intro_battery_sheet_open_settings">Open App Settings</string>
+
+    <string name="intro_skip_warning_title">Skip permissions?</string>
+    <string name="intro_skip_warning_message">You may lose some features without granting the requested permissions. Do you want to continue?</string>
+    <string name="intro_skip_confirm">Continue</string>
+    <string name="intro_skip_cancel">Cancel</string>
+
+    <string name="intro_ready_title">You\'re ready!</string>
+    <string name="intro_ready_body">You can now use the app. You can review and adjust the prayer times to match your country.</string>
+
+    <string name="intro_next">Next</string>
+    <string name="intro_finish">Finish</string>
+    <string name="intro_back">Back</string>
 </resources>

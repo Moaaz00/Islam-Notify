@@ -1,121 +1,180 @@
 package com.islamnotify.intro.presentation
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.core.content.ContextCompat
 import com.islamnotify.main.domain.PermissionDialogs
+import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.ui.theme.IslamNotifyTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IntroActivity : ComponentActivity() {
+
+    private val viewModel: IntroViewModel by viewModels()
+
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        viewModel.onPermissionResult(PermissionDialogs.LOCATION, granted)
+    }
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        viewModel.onPermissionResult(PermissionDialogs.NOTIFICATION, granted)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val initialTheme = viewModel.initialTheme()
+
         setContent {
-            IslamNotifyTheme {
-                val viewModel: IntroViewModel by viewModels()
-                val permissionDialogsQueue = viewModel.visiblePermissionDialogQueue
+            val uiState by viewModel.uiState.collectAsState()
 
-                val notificationPermissionLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestPermission(),
-                    onResult = { isGranted ->
-                        viewModel.onPermissionResult(
-                            permission = PermissionDialogs.NOTIFICATION,
-                            isGranted = isGranted
-                        )
-                    }
+            IslamNotifyTheme(themeType = initialTheme) {
+                IntroScreen(
+                    uiState = uiState,
+                    showNotificationRow = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU,
+                    isPermanentlyDeclined = ::isPermanentlyDeclined,
+                    onPageChange = viewModel::setPage,
+                    onGrantLocation = ::requestLocation,
+                    onGrantNotification = ::requestNotification,
+                    onGrantBattery = viewModel::showBatterySheet,
+                    onOpenBatterySettings = {
+                        viewModel.dismissBatterySheet()
+                        openAppDetailsSettings()
+                    },
+                    onDismissBatterySheet = viewModel::dismissBatterySheet,
+                    onShowSkipWarning = viewModel::showSkipWarning,
+                    onDismissSkipWarning = viewModel::dismissSkipWarning,
+                    onFinish = { viewModel.completeIntro(::goToMainActivity) }
                 )
-
-                val locationPermissionLauncher = rememberLauncherForActivityResult(
-                    contract = ActivityResultContracts.RequestMultiplePermissions(),
-                    onResult = { perms ->
-                        perms.forEach { permission ->
-                            viewModel.onPermissionResult(
-                                permission = when (permission.key) {
-                                    Manifest.permission.POST_NOTIFICATIONS -> PermissionDialogs.NOTIFICATION
-                                    Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION -> PermissionDialogs.LOCATION
-                                    Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS -> PermissionDialogs.BATTERY
-                                    else -> null
-                                },
-                                isGranted = permission.value
-                            )
-                        }
-                    }
-                )
-
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Button(onClick = {
-
-                    }) {
-                        Text("Location")
-                    }
-
-                    Button(onClick = {
-                        notificationPermissionLauncher.launch(
-                            Manifest.permission.POST_NOTIFICATIONS
-                        )
-                    }) {
-                        Text("Notification")
-                    }
-
-                    Button(onClick = {
-
-                    }) {
-                        Text("Battery")
-                    }
-                }
-
-                permissionDialogsQueue.reversed().forEach { permission ->
-                    DeniedPermissionDialog(
-                        permissionTextProvider = when (permission) {
-                            PermissionDialogs.LOCATION -> LocationPermissionTextProvider()
-                            PermissionDialogs.BATTERY -> BatteryPermissionTextProvider()
-                            PermissionDialogs.NOTIFICATION -> BatteryPermissionTextProvider()
-                        },
-                        isPermanentlyDeclined = !shouldShowRequestPermissionRationale(
-                            when (permission) {
-                                PermissionDialogs.LOCATION -> Manifest.permission.ACCESS_COARSE_LOCATION
-                                PermissionDialogs.BATTERY -> Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                                PermissionDialogs.NOTIFICATION -> Manifest.permission.POST_NOTIFICATIONS
-                            }
-                        ),
-                        onDismiss = { viewModel.dismissDialog() },
-                        onOkClick = {
-                            viewModel.dismissDialog()
-                            val permissions = mutableListOf<String>()
-                            when(permission){
-                                PermissionDialogs.BATTERY -> permissions.add(Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
-                                PermissionDialogs.LOCATION -> {
-                                    permissions.add(Manifest.permission.ACCESS_FINE_LOCATION)
-                                    permissions.add (Manifest.permission.ACCESS_FINE_LOCATION)
-                                }
-                                PermissionDialogs.NOTIFICATION -> permissions.add(Manifest.permission.POST_NOTIFICATIONS)
-                            }
-
-                        },
-                        onGoToAppSettingsClick = {},
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        // Re-check live permission state, e.g. after the user returns from a settings screen.
+        viewModel.refreshPermissionStates(
+            location = hasLocationPermission(),
+            notification = hasNotificationPermission(),
+            battery = isIgnoringBatteryOptimizations()
+        )
+    }
 
+    // --- Permission requests ---
+
+    private fun requestLocation() {
+        if (isPermanentlyDeclined(PermissionDialogs.LOCATION)) {
+            openAppDetailsSettings()
+            return
+        }
+        locationPermissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
+        viewModel.markRequested(PermissionDialogs.LOCATION)
+    }
+
+    private fun requestNotification() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+
+        if (isPermanentlyDeclined(PermissionDialogs.NOTIFICATION)) {
+            openNotificationSettings()
+            return
+        }
+        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        viewModel.markRequested(PermissionDialogs.NOTIFICATION)
+    }
+
+    /**
+     * A permission is "permanently declined" when it has been requested before but the system
+     * no longer offers a rationale dialog (the user chose "Don't ask again", or denied twice on
+     * Android 11+). In that state the only path left is the app settings screen.
+     */
+    private fun isPermanentlyDeclined(permission: PermissionDialogs): Boolean {
+        return when (permission) {
+            PermissionDialogs.LOCATION -> {
+                viewModel.uiState.value.locationRequested &&
+                        !shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)
+            }
+
+            PermissionDialogs.NOTIFICATION -> {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return false
+                viewModel.uiState.value.notificationRequested &&
+                        !shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)
+            }
+
+            // Battery uses the settings screen directly, never the runtime-permission flow.
+            PermissionDialogs.BATTERY -> false
+        }
+    }
+
+    // --- Permission state checks ---
+
+    private fun hasLocationPermission(): Boolean {
+        val fine = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            this, Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fine || coarse
+    }
+
+    private fun hasNotificationPermission(): Boolean {
+        // Notifications are always allowed by default below Android 13.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return true
+        return ContextCompat.checkSelfPermission(
+            this, Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun isIgnoringBatteryOptimizations(): Boolean {
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        return powerManager.isIgnoringBatteryOptimizations(packageName)
+    }
+
+    // --- Navigation to system screens ---
+
+    private fun openAppDetailsSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        }
+        startActivity(intent)
+    }
+
+    private fun openNotificationSettings() {
+        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+            putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+        }
+        startActivity(intent)
+    }
+
+    private fun goToMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }

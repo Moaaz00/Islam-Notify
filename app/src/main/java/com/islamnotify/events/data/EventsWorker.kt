@@ -30,7 +30,6 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.chrono.HijrahDate
-import java.time.temporal.ChronoField
 import java.util.concurrent.TimeUnit
 
 @HiltWorker
@@ -113,12 +112,13 @@ class EventsWorker @AssistedInject constructor(
         val eventsList = mutableListOf<EventsData>()
 
         val date: LocalDate = LocalDate.now()
-        val hijriDate = HijrahDate.from(date)
-        val hDayOfMonth = hijriDate.get(ChronoField.DAY_OF_MONTH)
-        val hMonth = hijriDate.get(ChronoField.MONTH_OF_YEAR)
+        val dateModel = calendarRepository.getHijriDate()
+        val hDayOfMonth = dateModel.dayOfMonth
+        val hMonth = dateModel.monthNumber
+        val hYear = dateModel.year
 
-        val isRamadan = (hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),8) && hMonth == 8) || hMonth == 9
-        val isFirstEid = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),9) && hMonth == 9
+        val isRamadan = (hDayOfMonth == lastDayOfHijriMonth(hYear,8) && hMonth == 8) || hMonth == 9
+        val isFirstEid = hDayOfMonth == lastDayOfHijriMonth(hYear,9) && hMonth == 9
         val isSecondEid = (hDayOfMonth in 9..12) && hMonth == 12
         val isAcceptableFasting = !isRamadan && !isFirstEid && !isSecondEid
 
@@ -227,7 +227,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.ramadan_event_title,
             subtitleResId = R.string.ramadan_event_subtitle,
             requestCode = EventsUtils.RAMADAN_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),8) && hMonth == 8,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,8) && hMonth == 8,
             triggerTime = sunset,
             isEnabled = eventFlags.ramadanEvent
         )
@@ -248,7 +248,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.dhu_al_hijjah_first_10_days_event_title,
             subtitleResId = R.string.dhu_al_hijjah_first_10_days_event_subtitle,
             requestCode = EventsUtils.DHU_AL_HIJJA_FIRST_10_DAYS_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),11) && hMonth == 11,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,11) && hMonth == 11,
             triggerTime = sunset,
             isEnabled = eventFlags.dhuAlHijjahFirst10DaysEvent
         )
@@ -258,7 +258,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.eid_al_fitr_event_title,
             subtitleResId = R.string.eids_event_subtitle,
             requestCode = EventsUtils.EID_AL_FITR_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),9) && hMonth == 9,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,9) && hMonth == 9,
             triggerTime = isha,
             isEnabled = eventFlags.eidAlFitrEvent
         )
@@ -288,7 +288,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.muharram_event_title,
             subtitleResId = R.string.sacred_months_event_subtitle,
             requestCode = EventsUtils.MUHARRAM_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),12) && hMonth == 12,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,12) && hMonth == 12,
             triggerTime = sunset,
             isEnabled = eventFlags.muharramEvent
         )
@@ -298,7 +298,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.rajab_event_title,
             subtitleResId = R.string.sacred_months_event_subtitle,
             requestCode = EventsUtils.RAJAB_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),6) && hMonth == 6,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,6) && hMonth == 6,
             triggerTime = sunset,
             isEnabled = eventFlags.rajabEvent
         )
@@ -308,7 +308,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.dhu_al_qadah_event_title,
             subtitleResId = R.string.sacred_months_event_subtitle,
             requestCode = EventsUtils.DHU_AL_QIDA_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),10) && hMonth == 10,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,10) && hMonth == 10,
             triggerTime = sunset,
             isEnabled = eventFlags.dhuAlQidaEvent
         )
@@ -318,7 +318,7 @@ class EventsWorker @AssistedInject constructor(
             titleResId = R.string.dhu_al_hijjah_event_title,
             subtitleResId = R.string.sacred_months_event_subtitle,
             requestCode = EventsUtils.DHU_AL_HIJJA_REQUEST_CODE_NOTIFICATION_ID,
-            isToday = hDayOfMonth == lastDayOfHijriMonth(hijriDate.get(ChronoField.YEAR),11) && hMonth == 11,
+            isToday = hDayOfMonth == lastDayOfHijriMonth(hYear,11) && hMonth == 11,
             triggerTime = sunset,
             isEnabled = eventFlags.dhuAlHijjahEvent
         )

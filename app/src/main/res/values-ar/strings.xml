@@ -264,4 +264,43 @@
     <string name="settings_dialog_apply">تطبيق</string>
     <string name="settings_dialog_cancel">إلغاء</string>
 
+    <!-- Intro / Onboarding -->
+    <string name="intro_welcome_title">أهلاً وسهلاً!</string>
+    <string name="intro_welcome_body">مرحباً بكم في تطبيق Islam Notify. أسرع طريقة لمعرفة مواقيت الصلاة عن طريق ميزة (الإشعار الدائم).</string>
+
+    <string name="intro_feature_title">ميزة الإشعار الدائم</string>
+    <string name="intro_feature_body">يعرض التطبيق الوقت المتبقي للصلاة القادمة، وجميع أوقات الصلاة عند فتح الإشعار.</string>
+
+    <string name="intro_permissions_title">بعض الأذونات</string>
+    <string name="intro_permissions_subtitle">نحتاج هذه الأذونات لعرض مواقيت صلاة دقيقة والحفاظ على عمل الإشعارات بشكل موثوق.</string>
+
+    <string name="intro_perm_required">مطلوب</string>
+    <string name="intro_perm_optional">اختياري</string>
+    <string name="intro_perm_grant">السماح</string>
+    <string name="intro_perm_open_settings">الإعدادات</string>
+
+    <string name="intro_perm_location_title">الموقع</string>
+    <string name="intro_perm_location_subtitle">لمعرفة مواقيت الصلاة الخاصة بك.</string>
+    <string name="intro_perm_notification_title">الإشعارات</string>
+    <string name="intro_perm_notification_subtitle">لاستخدام ميزة الإشعار الدائم والتذكير بالمناسبات.</string>
+    <string name="intro_perm_battery_title">العمل في الخلفية</string>
+    <string name="intro_perm_battery_subtitle">حتى تستمر الإشعارات في العمل بشكل موثوق في الخلفية.</string>
+
+    <string name="intro_battery_sheet_title">السماح بالعمل في الخلفية</string>
+    <string name="intro_battery_sheet_description">للحفاظ على دقة إشعارات الصلاة، اضبط استهلاك البطارية لهذا التطبيق على \"غير مقيّد\".</string>
+    <string name="intro_battery_sheet_step1">افتح خيار \"البطارية\".</string>
+    <string name="intro_battery_sheet_step2">اختر \"غير مقيّد\".</string>
+    <string name="intro_battery_sheet_open_settings">فتح إعدادات التطبيق</string>
+
+    <string name="intro_skip_warning_title">تخطّي الأذونات؟</string>
+    <string name="intro_skip_warning_message">قد تفقد بعض المزايا عند عدم السماح بالأذونات المطلوبة، هل ترغب في المتابعة؟</string>
+    <string name="intro_skip_confirm">متابعة</string>
+    <string name="intro_skip_cancel">إلغاء</string>
+
+    <string name="intro_ready_title">أنت جاهز!</string>
+    <string name="intro_ready_body">أنت الآن جاهز لاستخدام التطبيق. يمكنك مراجعة مواعيد الصلاة والتعديل عليها لتوافق بلدك.</string>
+
+    <string name="intro_next">التالي</string>
+    <string name="intro_finish">الإنهاء</string>
+    <string name="intro_back">السابق</string>
 </resources>

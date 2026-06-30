@@ -259,7 +259,7 @@ class NotificationWorkHandler(
 
 //        val date = AppUtils.getHijriDate(context, false)
         val dateData = calendarRepository.getHijriDate()
-        val date = "${dateData.dayOfMonth} ${dateData.monthName} ${dateData.year}"
+        val date = "${dateData.formatedDayOfMonth} ${dateData.monthName} ${dateData.formatedYear}"
         val locationName = locationData.locationName ?: String()
         val fajrTime = prayerEntities.fajr.time.formatPrayerTimes(context)
         val sunriseTime = prayerEntities.sunrise.time.formatPrayerTimes(context)

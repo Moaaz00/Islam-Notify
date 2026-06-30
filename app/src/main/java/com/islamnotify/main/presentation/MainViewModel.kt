@@ -146,7 +146,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val hijriData = calendarRepository.getHijriDate()
             _hijriDate.value =
-                "${hijriData.dayOfWeek}, ${hijriData.dayOfMonth} ${hijriData.monthName} ${hijriData.year}"
+                "${hijriData.dayOfWeek}, ${hijriData.formatedDayOfMonth} ${hijriData.monthName} ${hijriData.formatedYear}"
 
             if (notificationWork.isEnabled().first()) {
                 startNotificationWork()
@@ -186,7 +186,7 @@ class MainViewModel @Inject constructor(
 
             val hijriData = calendarRepository.getHijriDate()
             _hijriDate.value =
-                "${hijriData.dayOfWeek}, ${hijriData.dayOfMonth} ${hijriData.monthName} ${hijriData.year}"
+                "${hijriData.dayOfWeek}, ${hijriData.formatedDayOfMonth} ${hijriData.monthName} ${hijriData.formatedYear}"
 
             startNotificationWork()
 
