@@ -31,4 +31,5 @@ sealed class SettingsEvent {
 
     // Global
     object OnBackClick : SettingsEvent()
+    object OnMarkNotificationPermRequested : SettingsEvent()
 }

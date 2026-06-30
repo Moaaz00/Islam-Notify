@@ -327,4 +327,18 @@
     <string name="dialog_permissions_battery_desc">Prevent the system from delaying Azan and other features. Go to \"Battery\" then select \"Unrestricted\".</string>
     <string name="dialog_permissions_dont_ask">Don\'t Ask Again</string>
     <string name="dialog_permissions_cancel">Cancel</string>
+
+    <!-- Permission Request Dialog -->
+    <string name="dialog_perm_notification_title">Notification Permission Required</string>
+    <string name="dialog_perm_notification_rationale">Notification permission is needed for features like always-on notification and events. Do you want to grant it?</string>
+    <string name="dialog_perm_notification_permanent">Notification permission is needed for features like always-on notification and events. You can grant it from app settings.</string>
+    <string name="dialog_perm_location_title">Location Permission Required</string>
+    <string name="dialog_perm_location_rationale">Location permission is required to get prayer times for your location. Do you want to grant it?</string>
+    <string name="dialog_perm_location_permanent">Location permission is required to get prayer times for your location. You can grant it from app settings.</string>
+    <string name="dialog_perm_battery_title">Battery Permission Required</string>
+    <string name="dialog_perm_battery_rationale">Battery permission is required for background features. Do you want to grant it?</string>
+    <string name="dialog_perm_battery_permanent">Battery permission is required for background features. You can grant it from app settings.</string>
+    <string name="dialog_perm_ok">OK</string>
+    <string name="dialog_perm_grant">Open Settings</string>
+    <string name="dialog_perm_cancel">Cancel</string>
 </resources>

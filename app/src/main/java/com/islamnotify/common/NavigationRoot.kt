@@ -240,6 +240,10 @@ fun NavigationRoot() {
                         is SettingsEvent.OnClickManageNotifications -> {
                             navController.navigate(NotificationPrayerAdjustmentsDialog)
                         }
+
+                        is SettingsEvent.OnMarkNotificationPermRequested -> {
+                            viewModel.markNotificationPermRequested()
+                        }
                     }
                 }
             )

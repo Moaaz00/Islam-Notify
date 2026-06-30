@@ -327,4 +327,18 @@
     <string name="dialog_permissions_battery_desc">لمنع تأخير الأذان و العديد من المزايا الأخري. إذهب إلي \"البطارية\" ثم إضغط \"غير مقيد\".</string>
     <string name="dialog_permissions_dont_ask">لا تسألني مجدداً</string>
     <string name="dialog_permissions_cancel">إلغاء</string>
+
+    <!-- Permission Request Dialog -->
+    <string name="dialog_perm_notification_title">إذن الإشعارات مطلوب</string>
+    <string name="dialog_perm_notification_rationale">إذن الإشعارات مطلوب لميزات مثل الإشعار الدائم والمناسبات. هل تريد السماح به؟</string>
+    <string name="dialog_perm_notification_permanent">إذن الإشعارات مطلوب لميزات مثل الإشعار الدائم والمناسبات. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_location_title">إذن الموقع مطلوب</string>
+    <string name="dialog_perm_location_rationale">إذن الموقع مطلوب لمعرفة مواقيت الصلاة الخاصة بك. هل تريد السماح به؟</string>
+    <string name="dialog_perm_location_permanent">إذن الموقع مطلوب لمعرفة مواقيت الصلاة الخاصة بك. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_battery_title">إذن البطارية مطلوب</string>
+    <string name="dialog_perm_battery_rationale">إذن البطارية مطلوب لتفعيل الميزات التي تعمل في الخلفية. هل تريد السماح به؟</string>
+    <string name="dialog_perm_battery_permanent">إذن البطارية مطلوب لتفعيل الميزات التي تعمل في الخلفية. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_ok">موافق</string>
+    <string name="dialog_perm_grant">فتح الإعدادات</string>
+    <string name="dialog_perm_cancel">إلغاء</string>
 </resources>

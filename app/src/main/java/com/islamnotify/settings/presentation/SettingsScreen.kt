@@ -19,8 +19,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.intro.presentation.DeniedPermissionDialog
+import com.islamnotify.intro.presentation.NotificationPermissionTextProvider
 
 // 1. TYPOGRAPHY SYSTEM
 // Centralizing fonts ensures consistency across the whole app
@@ -33,6 +46,57 @@ fun MasterSettingsScreen(
     settingsUiState: State<SettingsUiState>,
     onEvent: (SettingsEvent) -> Unit
 ) {
+    val context = LocalContext.current
+
+    var showNotificationPermDialog by remember { mutableStateOf(false) }
+    var isNotificationPermPermanentlyDeclined by remember { mutableStateOf(false) }
+
+    val notificationPermLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        onEvent(SettingsEvent.OnMarkNotificationPermRequested)
+        if (granted) onEvent(SettingsEvent.OnToggleNotification(true))
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME &&
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+            ) {
+                val granted = ContextCompat.checkSelfPermission(
+                    context, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+                if (!granted && settingsUiState.value.isNotificationEnabled) {
+                    onEvent(SettingsEvent.OnToggleNotification(false))
+                }
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
+    if (showNotificationPermDialog) {
+        DeniedPermissionDialog(
+            permissionTextProvider = NotificationPermissionTextProvider(),
+            isPermanentlyDeclined = isNotificationPermPermanentlyDeclined,
+            onDismiss = { showNotificationPermDialog = false },
+            onOkClick = {
+                showNotificationPermDialog = false
+                onEvent(SettingsEvent.OnMarkNotificationPermRequested)
+                notificationPermLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            },
+            onGoToAppSettingsClick = {
+                showNotificationPermDialog = false
+                context.startActivity(
+                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                    }
+                )
+            }
+        )
+    }
+
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -142,7 +206,39 @@ fun MasterSettingsScreen(
                         title = stringResource(R.string.settings_enable_notification_title),
                         subtitle = stringResource(R.string.settings_enable_notification_subtitle),
                         isChecked = settingsUiState.value.isNotificationEnabled,
-                        onCheckedChange = { onEvent(SettingsEvent.OnToggleNotification(it)) }
+                        onCheckedChange = { enabled ->
+                            if (!enabled) {
+                                onEvent(SettingsEvent.OnToggleNotification(false))
+                            } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                onEvent(SettingsEvent.OnToggleNotification(true))
+                            } else {
+                                val granted = ContextCompat.checkSelfPermission(
+                                    context, Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED
+                                if (granted) {
+                                    onEvent(SettingsEvent.OnToggleNotification(true))
+                                } else {
+                                    val showRationale = (context as? android.app.Activity)
+                                        ?.shouldShowRequestPermissionRationale(
+                                            Manifest.permission.POST_NOTIFICATIONS
+                                        ) ?: false
+                                    when {
+                                        showRationale -> {
+                                            isNotificationPermPermanentlyDeclined = false
+                                            showNotificationPermDialog = true
+                                        }
+                                        settingsUiState.value.hasRequestedNotificationPerm -> {
+                                            isNotificationPermPermanentlyDeclined = true
+                                            showNotificationPermDialog = true
+                                        }
+                                        else -> {
+                                            isNotificationPermPermanentlyDeclined = false
+                                            showNotificationPermDialog = true
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     )
 
                     SettingsNavigationItem(
@@ -233,10 +329,7 @@ fun SettingsToggleItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable {
-//                checked = isChecked
-                onCheckedChange(isChecked)
-            }
+            .clickable { onCheckedChange(!isChecked) }
     ) {
         Row(
             modifier = Modifier

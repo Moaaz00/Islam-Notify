@@ -275,6 +275,10 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
+    fun markNotificationPermRequested() {
+        _uiState.update { it.copy(hasRequestedNotificationPerm = true) }
+    }
+
     fun onToggleNotification(enabled: Boolean) {
         _uiState.update { it.copy(isNotificationEnabled = enabled) }
         viewModelScope.launch {

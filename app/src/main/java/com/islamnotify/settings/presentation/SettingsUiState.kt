@@ -30,5 +30,6 @@ data class SettingsUiState(
     val eventFlags: EventFlags = EventFlags(),
     val currentLanguageOption: LanguageOption = LanguageOption.AUTO,
     val language: String = String(),
-    val theme: String = String()
+    val theme: String = String(),
+    val hasRequestedNotificationPerm: Boolean = false
 )

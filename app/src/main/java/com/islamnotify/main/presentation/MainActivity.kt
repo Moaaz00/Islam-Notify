@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
 //            viewModel.loadInitialData()
 //        }
 
-        checkPermissionsAndFetch()
+        //checkPermissionsAndFetch()
 // OBSERVE notification work state
 //        lifecycleScope.launchWhenStarted {
 //            viewModel.notificationState.collect { state ->

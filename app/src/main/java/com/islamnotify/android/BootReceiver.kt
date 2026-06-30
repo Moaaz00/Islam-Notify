@@ -18,7 +18,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class BootReceiver : BroadcastReceiver() {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Inject lateinit var notificationWork: NotificationWork
     @Inject lateinit var eventsWork: EventsWork
     @Inject lateinit var soundsWork: SoundsWork
@@ -26,7 +25,7 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action.equals(Intent.ACTION_BOOT_COMPLETED) || intent?.action.equals(Intent.ACTION_MY_PACKAGE_REPLACED)){
             val pendingResult = goAsync()
-            scope.launch {
+            CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
                 try {
                     val isEnabled = notificationWork.isEnabled().first()
                     if (isEnabled) {

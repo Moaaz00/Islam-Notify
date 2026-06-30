@@ -17,7 +17,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TimeChangedReceiver : BroadcastReceiver() {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     @Inject
     lateinit var notificationWork: NotificationWork
     @Inject
@@ -28,7 +27,7 @@ class TimeChangedReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action.equals(Intent.ACTION_TIME_CHANGED) || intent?.action.equals(Intent.ACTION_TIMEZONE_CHANGED)) {
             val pendingResult = goAsync()
-            scope.launch {
+            CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
                 try {
                     val isEnabled = notificationWork.isEnabled().first()
                     if (isEnabled) {
