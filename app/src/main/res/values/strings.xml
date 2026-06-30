@@ -173,6 +173,7 @@
     <string name="settings_offset_main_prayers_header">Main Prayers</string>
     <string name="settings_offset_iqama_header">Iqama Times</string>
     <string name="settings_offset_additional_header">Additional Times</string>
+    <string name="settings_offset_adjust_all">All</string>
 
     <string name="settings_hijri_date_offset_title">Hijri Date Adjustment</string>
     <string name="settings_hijri_date_offset_subtitle_part1">Offset:</string>
@@ -228,6 +229,35 @@
     <string name="settings_theme_brown_light">Brown (Light Mode)</string>
     <string name="settings_theme_red_dark">Red (Dark Mode)</string>
     <string name="settings_theme_red_light">Red (Light Mode)</string>
+    <string name="settings_theme_section_dark">Dark Mode</string>
+    <string name="settings_theme_section_light">Light Mode</string>
+    <string name="settings_theme_color_green">Green</string>
+    <string name="settings_theme_color_pink">Pink</string>
+    <string name="settings_theme_color_blue">Blue</string>
+    <string name="settings_theme_color_yellow">Yellow</string>
+    <string name="settings_theme_color_brown">Brown</string>
+    <string name="settings_theme_color_red">Red</string>
+
+    <!-- Sound picker display names -->
+    <string name="sound_azhan_alminshawy">Al-Minshawy</string>
+    <string name="sound_full_azhan_alminshawy">Al-Minshawy (Full)</string>
+    <string name="sound_azhan_alhusary">Al-Husary</string>
+    <string name="sound_full_azhan_alhusary">Al-Husary (Full)</string>
+    <string name="sound_azhan_adham_alsharqawy">Adham Al-Sharqawy</string>
+    <string name="sound_full_azhan_adham_alsharqawy">Adham Al-Sharqawy (Full)</string>
+    <string name="sound_azhan_mashary_alafasy">Mashary Al-Afasy</string>
+    <string name="sound_full_azhan_mashary_alafasy">Mashary Al-Afasy (Full)</string>
+    <string name="sound_azhan_nasser_alqatamy">Nasser Al-Qatamy</string>
+    <string name="sound_full_azhan_nasser_alqatamy">Nasser Al-Qatamy (Full)</string>
+    <string name="sound_iqama_alhusary">Al-Husary</string>
+    <string name="sound_iqama_mashary_alafasy">Mashary Al-Afasy</string>
+    <string name="sound_iqama_nasser_alqatamy">Nasser Al-Qatamy</string>
+    <string name="sound_iqama_hashem_alsaqqaf">Hashem Al-Saqqaf</string>
+    <string name="sound_iqama_yasser_aldousary">Yasser Al-Dousary</string>
+    <string name="sound_notify_1">Notify Sound 1</string>
+    <string name="sound_notify_2">Notify Sound 2</string>
+    <string name="sound_notify_3">Notify Sound 3</string>
+    <string name="sound_notify_4">Notify Sound 4</string>
 
     <string name="settings_unknown_place_holder">Unknown</string>
 

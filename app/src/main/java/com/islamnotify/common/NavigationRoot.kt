@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -69,7 +67,11 @@ import com.islamnotify.settings.presentation.PrayerTimesOffsetScreen
 import com.islamnotify.settings.presentation.SettingsDialogs.CalculationMethodSelectionDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.MultiSelectDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.SingleSelectDialog
+import com.islamnotify.settings.presentation.SettingsDialogs.SoundPickerDialog
 import com.islamnotify.settings.presentation.SettingsDialogs.ThemeSelectionDialog
+import com.islamnotify.sounds.domain.AZAN_SOUNDS
+import com.islamnotify.sounds.domain.IQAMA_SOUNDS
+import com.islamnotify.sounds.domain.NOTIFY_SOUNDS
 import com.islamnotify.events.domain.EventFlags
 import com.islamnotify.events.domain.EventsPreferenceKeys
 import com.islamnotify.prayer_times.domain.model.PrayerConfig
@@ -295,93 +297,52 @@ fun NavigationRoot() {
         dialog<AzanSoundPickerDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
-            SingleSelectDialog(
-                title = "Choose Sound azan",
-                items = listOf("Default", "Al-Minshawy", "Al-Husary", "Adhan Mecca"),
-                selectedItem = "Default",
-                itemLabel = { it },
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+            SoundPickerDialog(
+                title = context.getLocalizedContext().getString(R.string.settings_azan_sound_title),
+                items = AZAN_SOUNDS,
+                selectedRawResId = state.value.azanSoundResId,
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { sound -> navController.popBackStack() },
-                topContent = {
-                    Button(
-                        onClick = { /* Handle file picker */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.onSecondary
-                        )
-                    ) {
-                        Icon(painterResource(R.drawable.ic_add), contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Add Custom Sound", fontFamily = Manrope)
-                    }
+                onConfirm = { rawResId ->
+                    viewModel.onSelectAzanSound(rawResId)
+                    navController.popBackStack()
                 }
             )
         }
-
 
         // Iqama Sound Picker
         dialog<IqamaSoundPickerDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
-            SingleSelectDialog(
-                title = "Choose Sound iqama",
-                items = listOf("Default", "Al-Minshawy", "Al-Husary", "Adhan Mecca"),
-                selectedItem = "Default",
-                itemLabel = { it },
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+            SoundPickerDialog(
+                title = context.getLocalizedContext().getString(R.string.settings_iqama_sound_title),
+                items = IQAMA_SOUNDS,
+                selectedRawResId = state.value.iqamaSoundResId,
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { sound -> navController.popBackStack() },
-                topContent = {
-                    Button(
-                        onClick = { /* Handle file picker */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.onSecondary
-                        )
-                    ) {
-                        Icon(painterResource(R.drawable.ic_add), contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Add Custom Sound", fontFamily = Manrope)
-                    }
+                onConfirm = { rawResId ->
+                    viewModel.onSelectIqamaSound(rawResId)
+                    navController.popBackStack()
                 }
             )
         }
-
 
         // Notify Sound Picker
         dialog<NotifySoundPickerDialog> {
             val viewModel: SettingsViewModel =
                 hiltViewModel(navController.getBackStackEntry(Screen.Settings))
-            SingleSelectDialog(
-                title = "Choose Sound notify",
-                items = listOf("Default", "Al-Minshawy", "Al-Husary", "Adhan Mecca"),
-                selectedItem = "Default",
-                itemLabel = { it },
+            val state = viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+            SoundPickerDialog(
+                title = context.getLocalizedContext().getString(R.string.settings_notify_sound_title),
+                items = NOTIFY_SOUNDS,
+                selectedRawResId = state.value.notifySoundResId,
                 onDismiss = { navController.popBackStack() },
-                onConfirm = { sound -> navController.popBackStack() },
-                topContent = {
-                    Button(
-                        onClick = { /* Handle file picker */ },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.onSecondary
-                        )
-                    ) {
-                        Icon(painterResource(R.drawable.ic_add), contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Add Custom Sound", fontFamily = Manrope)
-                    }
+                onConfirm = { rawResId ->
+                    viewModel.onSelectNotifySound(rawResId)
+                    navController.popBackStack()
                 }
             )
         }

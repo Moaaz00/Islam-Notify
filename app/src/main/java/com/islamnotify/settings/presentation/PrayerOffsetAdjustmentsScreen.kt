@@ -1,6 +1,11 @@
 package com.islamnotify.settings.presentation
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -21,6 +26,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -39,6 +50,7 @@ fun PrayerTimesOffsetScreen(
     onOffsetChanged: ((PrayerConfig) -> PrayerConfig) -> Unit,
     onBackClick: () -> Unit
 ) {
+    val defaults = PrayerConfig()
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
@@ -76,6 +88,44 @@ fun PrayerTimesOffsetScreen(
         ) {
             item {
                 SettingsSection(title = stringResource(R.string.settings_offset_main_prayers_header)) {
+                    AdjustAllRow(
+                        onDecrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    fajrOffset = (c.fajrOffset - 1).coerceIn(-60, 60),
+                                    sunriseOffset = (c.sunriseOffset - 1).coerceIn(-60, 60),
+                                    zuhrOffset = (c.zuhrOffset - 1).coerceIn(-60, 60),
+                                    asrOffset = (c.asrOffset - 1).coerceIn(-60, 60),
+                                    sunsetOffset = (c.sunsetOffset - 1).coerceIn(-60, 60),
+                                    ishaOffset = (c.ishaOffset - 1).coerceIn(-60, 60)
+                                )
+                            }
+                        },
+                        onReset = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    fajrOffset = defaults.fajrOffset,
+                                    sunriseOffset = defaults.sunriseOffset,
+                                    zuhrOffset = defaults.zuhrOffset,
+                                    asrOffset = defaults.asrOffset,
+                                    sunsetOffset = defaults.sunsetOffset,
+                                    ishaOffset = defaults.ishaOffset
+                                )
+                            }
+                        },
+                        onIncrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    fajrOffset = (c.fajrOffset + 1).coerceIn(-60, 60),
+                                    sunriseOffset = (c.sunriseOffset + 1).coerceIn(-60, 60),
+                                    zuhrOffset = (c.zuhrOffset + 1).coerceIn(-60, 60),
+                                    asrOffset = (c.asrOffset + 1).coerceIn(-60, 60),
+                                    sunsetOffset = (c.sunsetOffset + 1).coerceIn(-60, 60),
+                                    ishaOffset = (c.ishaOffset + 1).coerceIn(-60, 60)
+                                )
+                            }
+                        }
+                    )
                     OffsetRow(
                         name = stringResource(R.string.fajr_name),
                         value = config.fajrOffset,
@@ -112,6 +162,41 @@ fun PrayerTimesOffsetScreen(
 
             item {
                 SettingsSection(title = stringResource(R.string.settings_offset_iqama_header)) {
+                    AdjustAllRow(
+                        onDecrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    iqamaFajrOffset = (c.iqamaFajrOffset - 1).coerceIn(-60, 60),
+                                    iqamaZuhrOffset = (c.iqamaZuhrOffset - 1).coerceIn(-60, 60),
+                                    iqamaAsrOffset = (c.iqamaAsrOffset - 1).coerceIn(-60, 60),
+                                    iqamaSunsetOffset = (c.iqamaSunsetOffset - 1).coerceIn(-60, 60),
+                                    iqamaIshaOffset = (c.iqamaIshaOffset - 1).coerceIn(-60, 60)
+                                )
+                            }
+                        },
+                        onReset = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    iqamaFajrOffset = defaults.iqamaFajrOffset,
+                                    iqamaZuhrOffset = defaults.iqamaZuhrOffset,
+                                    iqamaAsrOffset = defaults.iqamaAsrOffset,
+                                    iqamaSunsetOffset = defaults.iqamaSunsetOffset,
+                                    iqamaIshaOffset = defaults.iqamaIshaOffset
+                                )
+                            }
+                        },
+                        onIncrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    iqamaFajrOffset = (c.iqamaFajrOffset + 1).coerceIn(-60, 60),
+                                    iqamaZuhrOffset = (c.iqamaZuhrOffset + 1).coerceIn(-60, 60),
+                                    iqamaAsrOffset = (c.iqamaAsrOffset + 1).coerceIn(-60, 60),
+                                    iqamaSunsetOffset = (c.iqamaSunsetOffset + 1).coerceIn(-60, 60),
+                                    iqamaIshaOffset = (c.iqamaIshaOffset + 1).coerceIn(-60, 60)
+                                )
+                            }
+                        }
+                    )
                     OffsetRow(
                         name = stringResource(R.string.iqama_fajr_name),
                         value = config.iqamaFajrOffset,
@@ -143,6 +228,35 @@ fun PrayerTimesOffsetScreen(
 
             item {
                 SettingsSection(title = stringResource(R.string.settings_offset_additional_header)) {
+                    AdjustAllRow(
+                        onDecrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    duhaSunriseOffset = (c.duhaSunriseOffset - 1).coerceIn(-60, 60),
+                                    midnightOffset = (c.midnightOffset - 1).coerceIn(-60, 60),
+                                    lastThirdOffset = (c.lastThirdOffset - 1).coerceIn(-60, 60)
+                                )
+                            }
+                        },
+                        onReset = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    duhaSunriseOffset = defaults.duhaSunriseOffset,
+                                    midnightOffset = defaults.midnightOffset,
+                                    lastThirdOffset = defaults.lastThirdOffset
+                                )
+                            }
+                        },
+                        onIncrement = {
+                            onOffsetChanged { c ->
+                                c.copy(
+                                    duhaSunriseOffset = (c.duhaSunriseOffset + 1).coerceIn(-60, 60),
+                                    midnightOffset = (c.midnightOffset + 1).coerceIn(-60, 60),
+                                    lastThirdOffset = (c.lastThirdOffset + 1).coerceIn(-60, 60)
+                                )
+                            }
+                        }
+                    )
                     OffsetRow(
                         name = stringResource(R.string.duha_name),
                         value = config.duhaSunriseOffset,
@@ -164,6 +278,111 @@ fun PrayerTimesOffsetScreen(
 
             item { Spacer(Modifier.navigationBarsPadding()) }
         }
+    }
+}
+
+@Composable
+private fun RepeatingIconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    var didRepeat by remember { mutableStateOf(false) }
+    val currentOnClick by rememberUpdatedState(onClick)
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            didRepeat = false
+            delay(400L)
+            didRepeat = true
+            while (true) {
+                currentOnClick()
+                delay(80L)
+            }
+        } else {
+            // Reset after onClick fires (onClick fires before this coroutine runs)
+            // so the next single click is not suppressed
+            didRepeat = false
+        }
+    }
+
+    IconButton(
+        onClick = { if (!didRepeat) currentOnClick() },
+        modifier = modifier,
+        interactionSource = interactionSource,
+        content = content
+    )
+}
+
+@Composable
+private fun AdjustAllRow(
+    onDecrement: () -> Unit,
+    onReset: () -> Unit,
+    onIncrement: () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
+                .padding(start = 16.dp, end = 4.dp, top = 6.dp, bottom = 6.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.settings_offset_adjust_all),
+                fontFamily = Manrope,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                RepeatingIconButton(
+                    onClick = onDecrement,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_remove),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                Box(
+                    modifier = Modifier.widthIn(min = 56.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    IconButton(
+                        onClick = onReset,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_refresh),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    }
+                }
+                RepeatingIconButton(
+                    onClick = onIncrement,
+                    modifier = Modifier.size(40.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_add),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+        }
+        SettingDivider()
     }
 }
 
@@ -198,7 +417,7 @@ private fun OffsetRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                IconButton(
+                RepeatingIconButton(
                     onClick = { onValueChange((value - 1).coerceIn(-60, 60)) },
                     modifier = Modifier.size(40.dp)
                 ) {
@@ -220,7 +439,7 @@ private fun OffsetRow(
                     modifier = Modifier.widthIn(min = 56.dp)
                 )
 
-                IconButton(
+                RepeatingIconButton(
                     onClick = { onValueChange((value + 1).coerceIn(-60, 60)) },
                     modifier = Modifier.size(40.dp)
                 ) {

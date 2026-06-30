@@ -121,15 +121,15 @@ fun MasterSettingsScreen(
                     )
                     SettingsNavigationItem(
                         title = stringResource(R.string.settings_azan_sound_title),
-                        subtitle = stringResource(R.string.settings_azan_sound_subtitle),
+                        subtitle = settingsUiState.value.azanSoundName.ifEmpty { stringResource(R.string.settings_azan_sound_subtitle) },
                         onClick = { onEvent(SettingsEvent.OnClickAzanSoundPicker) })
                     SettingsNavigationItem(
                         title = stringResource(R.string.settings_iqama_sound_title),
-                        subtitle = stringResource(R.string.settings_iqama_sound_subtitle),
+                        subtitle = settingsUiState.value.iqamaSoundName.ifEmpty { stringResource(R.string.settings_iqama_sound_subtitle) },
                         onClick = { onEvent(SettingsEvent.OnClickIqamaSoundPicker) })
                     SettingsNavigationItem(
                         title = stringResource(R.string.settings_notify_sound_title),
-                        subtitle = stringResource(R.string.settings_notify_sound_subtitle),
+                        subtitle = settingsUiState.value.notifySoundName.ifEmpty { stringResource(R.string.settings_notify_sound_subtitle) },
                         onClick = { onEvent(SettingsEvent.OnClickNotifySoundPicker) },
                         showDivider = false
                     )

@@ -1,6 +1,8 @@
 package com.islamnotify.settings.presentation
 
 import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -28,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -38,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +51,7 @@ import androidx.compose.ui.unit.sp
 import com.batoulapps.adhan2.CalculationMethod
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.sounds.domain.SoundOption
 import com.islamnotify.ui.theme.AppThemeTypes
 
 fun CalculationMethod.toDisplayString(context: Context): String {
@@ -289,26 +296,142 @@ object SettingsDialogs {
         onDismiss: () -> Unit,
         onConfirm: (AppThemeTypes) -> Unit
     ) {
-        val context = LocalContext.current
+        var selectedTheme by remember(initialTheme) { mutableStateOf(initialTheme) }
 
-        SingleSelectDialog(
-            title = stringResource(R.string.settings_choose_theme),
-            items = AppThemeTypes.entries.toList(),
-            selectedItem = initialTheme,
-            // Map the enum to your localized string
-            itemLabel = { theme -> theme.mapToString(context.getLocalizedContext()) },
-            onDismiss = onDismiss,
-            onConfirm = onConfirm,
-            // Here is how we include the Color Preview Circle!
-            leadingContent = { theme ->
-                Surface(
-                    modifier = Modifier.size(24.dp),
-                    shape = CircleShape,
-                    color = getPreviewColorForTheme(theme),
-                    border = BorderStroke(1.dp, Color.Black.copy(alpha = 0.1f))
-                ) {}
+        val darkThemes = listOf(
+            AppThemeTypes.GREEN_DARK, AppThemeTypes.PINK_DARK, AppThemeTypes.BLUE_DARK,
+            AppThemeTypes.YELLOW_DARK, AppThemeTypes.BROWN_DARK, AppThemeTypes.RED_DARK
+        )
+        val lightThemes = listOf(
+            AppThemeTypes.GREEN_LIGHT, AppThemeTypes.PINK_LIGHT, AppThemeTypes.BLUE_LIGHT,
+            AppThemeTypes.YELLOW_LIGHT, AppThemeTypes.BROWN_LIGHT, AppThemeTypes.RED_LIGHT
+        )
+
+        AlertDialog(
+            onDismissRequest = onDismiss,
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = stringResource(R.string.settings_choose_theme),
+                    fontFamily = Manrope,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            text = {
+                Column(modifier = Modifier.heightIn(max = 450.dp)) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentPadding = PaddingValues(vertical = 8.dp)
+                    ) {
+                        item {
+                            Text(
+                                text = stringResource(R.string.settings_theme_section_dark),
+                                fontFamily = Manrope,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp)
+                            )
+                        }
+                        items(darkThemes) { theme ->
+                            ThemeRow(
+                                theme = theme,
+                                isSelected = selectedTheme == theme,
+                                onClick = { selectedTheme = theme }
+                            )
+                        }
+                        item {
+                            Text(
+                                text = stringResource(R.string.settings_theme_section_light),
+                                fontFamily = Manrope,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.padding(start = 4.dp, top = 12.dp, bottom = 4.dp)
+                            )
+                        }
+                        items(lightThemes) { theme ->
+                            ThemeRow(
+                                theme = theme,
+                                isSelected = selectedTheme == theme,
+                                onClick = { selectedTheme = theme }
+                            )
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { onConfirm(selectedTheme) }) {
+                    Text(
+                        stringResource(R.string.settings_dialog_apply),
+                        fontFamily = Manrope,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = onDismiss) {
+                    Text(
+                        stringResource(R.string.settings_dialog_cancel),
+                        fontFamily = Manrope,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         )
+    }
+
+    @Composable
+    private fun ThemeRow(theme: AppThemeTypes, isSelected: Boolean, onClick: () -> Unit) {
+        val context = LocalContext.current
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .clickable { onClick() }
+                .padding(vertical = 8.dp, horizontal = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = isSelected,
+                onClick = null,
+                colors = RadioButtonDefaults.colors(
+                    selectedColor = MaterialTheme.colorScheme.primary,
+                    unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Surface(
+                modifier = Modifier.size(24.dp),
+                shape = CircleShape,
+                color = getPreviewColorForTheme(theme),
+                border = BorderStroke(1.dp, Color.Black.copy(alpha = 0.1f))
+            ) {}
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = theme.toColorName(context.getLocalizedContext()),
+                fontFamily = Manrope,
+                fontSize = 15.sp,
+                fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+                color = if (isSelected) MaterialTheme.colorScheme.onSurface
+                else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+
+    fun AppThemeTypes.toColorName(context: Context): String = when (this) {
+        AppThemeTypes.GREEN_DARK, AppThemeTypes.GREEN_LIGHT -> context.getString(R.string.settings_theme_color_green)
+        AppThemeTypes.PINK_DARK, AppThemeTypes.PINK_LIGHT -> context.getString(R.string.settings_theme_color_pink)
+        AppThemeTypes.BLUE_DARK, AppThemeTypes.BLUE_LIGHT -> context.getString(R.string.settings_theme_color_blue)
+        AppThemeTypes.YELLOW_DARK, AppThemeTypes.YELLOW_LIGHT -> context.getString(R.string.settings_theme_color_yellow)
+        AppThemeTypes.BROWN_DARK, AppThemeTypes.BROWN_LIGHT -> context.getString(R.string.settings_theme_color_brown)
+        AppThemeTypes.RED_DARK, AppThemeTypes.RED_LIGHT -> context.getString(R.string.settings_theme_color_red)
+        else -> context.getString(R.string.settings_unknown_place_holder)
     }
 
 
@@ -442,6 +565,153 @@ object SettingsDialogs {
             AppThemeTypes.RED_LIGHT -> context.getString(R.string.settings_theme_red_light)
             else -> context.getString(R.string.settings_unknown_place_holder)
         }
+    }
+
+    @Composable
+    fun SoundPickerDialog(
+        title: String,
+        items: List<SoundOption>,
+        selectedRawResId: Int?,
+        onDismiss: () -> Unit,
+        onConfirm: (Int) -> Unit
+    ) {
+        val context = LocalContext.current
+        val localizedContext = context.getLocalizedContext()
+        val initialSelection = selectedRawResId ?: items.first().rawResId
+        var currentSelection by remember(initialSelection) { mutableStateOf(initialSelection) }
+        val previewingState = remember { mutableStateOf<Int?>(null) }
+        val mediaPlayer = remember { MediaPlayer() }
+
+        DisposableEffect(Unit) {
+            onDispose {
+                if (mediaPlayer.isPlaying) mediaPlayer.stop()
+                mediaPlayer.release()
+            }
+        }
+
+        AlertDialog(
+            onDismissRequest = {
+                if (mediaPlayer.isPlaying) { mediaPlayer.stop(); mediaPlayer.reset() }
+                previewingState.value = null
+                onDismiss()
+            },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    text = title,
+                    fontFamily = Manrope,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            },
+            text = {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 450.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp)
+                ) {
+                    items(items) { option ->
+                        val isSelected = option.rawResId == currentSelection
+                        val isPreviewing = option.rawResId == previewingState.value
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .clickable { currentSelection = option.rawResId }
+                                .padding(vertical = 4.dp, horizontal = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = null,
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = MaterialTheme.colorScheme.primary,
+                                    unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            )
+                            Spacer(Modifier.width(12.dp))
+                            Text(
+                                text = localizedContext.getString(option.nameResId),
+                                fontFamily = Manrope,
+                                fontSize = 15.sp,
+                                fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal,
+                                color = if (isSelected) MaterialTheme.colorScheme.onSurface
+                                        else MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.weight(1f)
+                            )
+                            IconButton(
+                                onClick = {
+                                    if (isPreviewing) {
+                                        if (mediaPlayer.isPlaying) { mediaPlayer.stop(); mediaPlayer.reset() }
+                                        previewingState.value = null
+                                    } else {
+                                        if (mediaPlayer.isPlaying) { mediaPlayer.stop(); mediaPlayer.reset() }
+                                        try {
+                                            mediaPlayer.setDataSource(
+                                                context,
+                                                Uri.parse("android.resource://${context.packageName}/${option.rawResId}")
+                                            )
+                                            mediaPlayer.prepare()
+                                            mediaPlayer.start()
+                                            previewingState.value = option.rawResId
+                                            mediaPlayer.setOnCompletionListener {
+                                                previewingState.value = null
+                                                mediaPlayer.reset()
+                                            }
+                                        } catch (e: Exception) {
+                                            previewingState.value = null
+                                        }
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    painter = painterResource(
+                                        if (isPreviewing) R.drawable.ic_stop_sounds
+                                        else R.drawable.ic_sounds_loud
+                                    ),
+                                    contentDescription = null,
+                                    tint = if (isPreviewing) MaterialTheme.colorScheme.primary
+                                           else MaterialTheme.colorScheme.onSurfaceVariant,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (mediaPlayer.isPlaying) { mediaPlayer.stop(); mediaPlayer.reset() }
+                    previewingState.value = null
+                    onConfirm(currentSelection)
+                }) {
+                    Text(
+                        stringResource(R.string.settings_dialog_apply),
+                        fontFamily = Manrope,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    if (mediaPlayer.isPlaying) { mediaPlayer.stop(); mediaPlayer.reset() }
+                    previewingState.value = null
+                    onDismiss()
+                }) {
+                    Text(
+                        stringResource(R.string.settings_dialog_cancel),
+                        fontFamily = Manrope,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        )
     }
 
     @Composable

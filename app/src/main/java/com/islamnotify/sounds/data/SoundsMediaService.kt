@@ -205,12 +205,12 @@ class SoundsMediaService() : Service() {
         when (action) {
             SoundsUtils.ACTION_AZAN_SOUND -> {
                 soundUri = soundsConfig?.azanSoundUriString?.toUri()
-                    ?: "android.resource://${packageName}/${R.raw.nasser_alqatamy_azhan_sound}".toUri()
+                    ?: "android.resource://${packageName}/${R.raw.azhan_nasser_alqatamy}".toUri()
             }
 
             SoundsUtils.ACTION_IQAMA_SOUND -> {
                 soundUri = soundsConfig?.iqamaSoundUriString?.toUri()
-                    ?: "android.resource://${packageName}/${R.raw.nasser_alqatamy_iqama_sound}".toUri()
+                    ?: "android.resource://${packageName}/${R.raw.iqama_nasser_alqatamy}".toUri()
             }
 
             SoundsUtils.ACTION_NOTIFY_SOUND -> {

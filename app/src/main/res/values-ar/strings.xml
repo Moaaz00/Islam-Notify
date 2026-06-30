@@ -174,6 +174,7 @@
     <string name="settings_offset_main_prayers_header">أوقات الصلاة الرئيسية</string>
     <string name="settings_offset_iqama_header">أوقات الإقامة</string>
     <string name="settings_offset_additional_header">أوقات إضافية</string>
+    <string name="settings_offset_adjust_all">الكل</string>
 
     <string name="settings_hijri_date_offset_title">تعديل التاريخ الهجري</string>
     <string name="settings_hijri_date_offset_subtitle_part1">الفرق:</string>
@@ -228,6 +229,35 @@
     <string name="settings_theme_brown_light">البني (الوضع الفاتح)</string>
     <string name="settings_theme_red_dark">الأحمر (الوضع الداكن)</string>
     <string name="settings_theme_red_light">الأحمر (الوضع الفاتح)</string>
+    <string name="settings_theme_section_dark">الوضع الداكن</string>
+    <string name="settings_theme_section_light">الوضع الفاتح</string>
+    <string name="settings_theme_color_green">الأخضر</string>
+    <string name="settings_theme_color_pink">الوردي</string>
+    <string name="settings_theme_color_blue">الأزرق</string>
+    <string name="settings_theme_color_yellow">الأصفر</string>
+    <string name="settings_theme_color_brown">البني</string>
+    <string name="settings_theme_color_red">الأحمر</string>
+
+    <!-- Sound picker display names -->
+    <string name="sound_azhan_alminshawy">المنشاوي</string>
+    <string name="sound_full_azhan_alminshawy">المنشاوي (كامل)</string>
+    <string name="sound_azhan_alhusary">الحصري</string>
+    <string name="sound_full_azhan_alhusary">الحصري (كامل)</string>
+    <string name="sound_azhan_adham_alsharqawy">أدهم الشرقاوي</string>
+    <string name="sound_full_azhan_adham_alsharqawy">أدهم الشرقاوي (كامل)</string>
+    <string name="sound_azhan_mashary_alafasy">مشاري العفاسي</string>
+    <string name="sound_full_azhan_mashary_alafasy">مشاري العفاسي (كامل)</string>
+    <string name="sound_azhan_nasser_alqatamy">ناصر القطامي</string>
+    <string name="sound_full_azhan_nasser_alqatamy">ناصر القطامي (كامل)</string>
+    <string name="sound_iqama_alhusary">الحصري</string>
+    <string name="sound_iqama_mashary_alafasy">مشاري العفاسي</string>
+    <string name="sound_iqama_nasser_alqatamy">ناصر القطامي</string>
+    <string name="sound_iqama_hashem_alsaqqaf">هاشم الصقاف</string>
+    <string name="sound_iqama_yasser_aldousary">ياسر الدوسري</string>
+    <string name="sound_notify_1">صوت التنبيه 1</string>
+    <string name="sound_notify_2">صوت التنبيه 2</string>
+    <string name="sound_notify_3">صوت التنبيه 3</string>
+    <string name="sound_notify_4">صوت التنبيه 4</string>
 
     <string name="settings_unknown_place_holder">غير معروف</string>
 

@@ -38,6 +38,10 @@ import javax.inject.Inject
 import kotlin.Boolean
 import kotlin.String
 import com.islamnotify.R
+import com.islamnotify.sounds.domain.AZAN_SOUNDS
+import com.islamnotify.sounds.domain.IQAMA_SOUNDS
+import com.islamnotify.sounds.domain.NOTIFY_SOUNDS
+import com.islamnotify.sounds.domain.SoundOption
 import java.util.Locale
 
 @HiltViewModel
@@ -82,16 +86,6 @@ class SettingsViewModel @Inject constructor(
                 ?: context.getString(R.string.settings_unknown_place_holder)
         }
         _uiState.update { it.copy(language = language, currentLanguageOption = currentLanguageOption) }
-
-
-        // TODO: To be done dynamically
-        _uiState.update {
-            it.copy(
-                azanSoundName = "Al-Minshawy model",
-                iqamaSoundName = "Al-Husary model",
-                notifySoundName = "Sound-01 model"
-            )
-        }
 
 
         // Launch Prayer Config independently
@@ -139,10 +133,17 @@ class SettingsViewModel @Inject constructor(
         // Collect Sounds Flow (Reactive: UI updates whenever sound settings change)
         viewModelScope.launch {
             soundsWork.getSoundsConfig().collect { config ->
+                val localizedContext = context.getLocalizedContext()
                 _uiState.update {
                     it.copy(
                         isAzanSoundEnabled = config.isAzanEnabled,
-                        isIqamaSoundEnabled = config.isIqamaEnabled
+                        isIqamaSoundEnabled = config.isIqamaEnabled,
+                        azanSoundResId = config.azanSoundUriString?.substringAfterLast("/")?.toIntOrNull(),
+                        iqamaSoundResId = config.iqamaSoundUriString?.substringAfterLast("/")?.toIntOrNull(),
+                        notifySoundResId = config.notifySoundUriString?.substringAfterLast("/")?.toIntOrNull(),
+                        azanSoundName = deriveSoundName(config.azanSoundUriString, AZAN_SOUNDS, localizedContext),
+                        iqamaSoundName = deriveSoundName(config.iqamaSoundUriString, IQAMA_SOUNDS, localizedContext),
+                        notifySoundName = deriveSoundName(config.notifySoundUriString, NOTIFY_SOUNDS, localizedContext)
                     )
                 }
             }
@@ -325,13 +326,49 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun onLanguageChanged(option: LanguageOption) {
-        _uiState.update { it.copy(currentLanguageOption = option) }
+        val localizedContext = context.getLocalizedContext()
+        val displayString = when (option) {
+            LanguageOption.ENGLISH -> localizedContext.getString(R.string.settings_language_en)
+            LanguageOption.ARABIC -> localizedContext.getString(R.string.settings_language_ar)
+            LanguageOption.AUTO -> localizedContext.getString(R.string.settings_language_system_default)
+        }
+        _uiState.update { it.copy(currentLanguageOption = option, language = displayString) }
         val localeList = when (option) {
             LanguageOption.ENGLISH -> LocaleListCompat.create(Locale("en"))
             LanguageOption.ARABIC -> LocaleListCompat.create(Locale("ar"))
             LanguageOption.AUTO -> LocaleListCompat.getEmptyLocaleList()
         }
         AppCompatDelegate.setApplicationLocales(localeList)
+    }
+
+    fun onSelectAzanSound(rawResId: Int) {
+        viewModelScope.launch {
+            soundsWork.saveConfig {
+                it.copy(azanSoundUriString = "android.resource://${context.packageName}/$rawResId")
+            }
+        }
+    }
+
+    fun onSelectIqamaSound(rawResId: Int) {
+        viewModelScope.launch {
+            soundsWork.saveConfig {
+                it.copy(iqamaSoundUriString = "android.resource://${context.packageName}/$rawResId")
+            }
+        }
+    }
+
+    fun onSelectNotifySound(rawResId: Int) {
+        viewModelScope.launch {
+            soundsWork.saveConfig {
+                it.copy(notifySoundUriString = "android.resource://${context.packageName}/$rawResId")
+            }
+        }
+    }
+
+    private fun deriveSoundName(uriString: String?, options: List<SoundOption>, context: Context): String {
+        val resId = uriString?.substringAfterLast("/")?.toIntOrNull()
+        val option = options.find { it.rawResId == resId } ?: options.first()
+        return context.getString(option.nameResId)
     }
 
     fun onEventsSelectionChanged(flags: EventFlags) {
