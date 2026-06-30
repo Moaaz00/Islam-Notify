@@ -231,13 +231,22 @@ private fun SkipWarningDialog(
         text = { Text(text = stringResource(R.string.intro_skip_warning_message)) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(text = stringResource(R.string.intro_skip_confirm))
+                Text(
+                    text = stringResource(R.string.intro_skip_confirm),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = stringResource(R.string.intro_skip_cancel))
+                Text(
+                    text = stringResource(R.string.intro_skip_cancel),
+                    color = MaterialTheme.colorScheme.primary
+                )
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.surface,
+        titleContentColor = MaterialTheme.colorScheme.onSurface,
+        textContentColor = MaterialTheme.colorScheme.onSurfaceVariant
     )
 }

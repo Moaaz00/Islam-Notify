@@ -284,10 +284,10 @@
     <string name="intro_perm_notification_title">الإشعارات</string>
     <string name="intro_perm_notification_subtitle">لاستخدام ميزة الإشعار الدائم والتذكير بالمناسبات.</string>
     <string name="intro_perm_battery_title">العمل في الخلفية</string>
-    <string name="intro_perm_battery_subtitle">حتى تستمر الإشعارات في العمل بشكل موثوق في الخلفية.</string>
+    <string name="intro_perm_battery_subtitle">لمنع تأخير الأذان والعديد من المزايا الأخري.</string>
 
     <string name="intro_battery_sheet_title">السماح بالعمل في الخلفية</string>
-    <string name="intro_battery_sheet_description">للحفاظ على دقة إشعارات الصلاة، اضبط استهلاك البطارية لهذا التطبيق على \"غير مقيّد\".</string>
+    <string name="intro_battery_sheet_description">لمنع تأخير الأذان والعديد من المزايا الأخري، اضبط استهلاك البطارية لهذا التطبيق على \"غير مقيّد\".</string>
     <string name="intro_battery_sheet_step1">افتح خيار \"البطارية\".</string>
     <string name="intro_battery_sheet_step2">اختر \"غير مقيّد\".</string>
     <string name="intro_battery_sheet_open_settings">فتح إعدادات التطبيق</string>
@@ -303,4 +303,28 @@
     <string name="intro_next">التالي</string>
     <string name="intro_finish">الإنهاء</string>
     <string name="intro_back">السابق</string>
+
+    <!-- Main Screen State Dialogs -->
+    <string name="dialog_loading_title">جارٍ التحميل</string>
+    <string name="dialog_loading_message">يتم جلب مواقيت الصلاة، يرجى الانتظار…</string>
+    <string name="dialog_prayer_error_title">خطأ في بيانات الصلاة</string>
+    <string name="dialog_prayer_error_message">تعذّر حساب مواقيت الصلاة. اسحب للأسفل للتحديث والمحاولة مرة أخرى.</string>
+    <string name="dialog_location_error_title">خطأ في الموقع</string>
+    <string name="dialog_location_permission_denied_message">يُرجى منح إذن الموقع لتحديد مواقيت الصلاة الخاصة بك. افتح إعدادات التطبيق لمنح الإذن.</string>
+    <string name="dialog_location_gps_disabled_message">خدمة تحديد الموقع معطّلة على جهازك. يرجى تفعيل نظام GPS للحصول على مواقيت دقيقة.</string>
+    <string name="dialog_location_generic_error_message">تعذّر تحديد موقعك. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
+    <string name="dialog_open_settings">فتح الإعدادات</string>
+    <string name="dialog_enable_gps">تفعيل GPS</string>
+    <string name="dialog_retry">إعادة المحاولة</string>
+    <string name="dialog_try_again">حاول مرة أخرى</string>
+
+    <!-- Permissions Reminder Dialog -->
+    <string name="dialog_permissions_title">أذونات مطلوبة</string>
+    <string name="dialog_permissions_message">لضمان عمل الإشعارات بشكل موثوق، يرجى منح الأذونات التالية.</string>
+    <string name="dialog_permissions_notification">الإشعارات</string>
+    <string name="dialog_permissions_notification_desc">مطلوب لعرض إشعارات مواقيت الصلاة والتنبيهات.</string>
+    <string name="dialog_permissions_battery">العمل في الخلفية</string>
+    <string name="dialog_permissions_battery_desc">لمنع تأخير الأذان و العديد من المزايا الأخري. إذهب إلي \"البطارية\" ثم إضغط \"غير مقيد\".</string>
+    <string name="dialog_permissions_dont_ask">لا تسألني مجدداً</string>
+    <string name="dialog_permissions_cancel">إلغاء</string>
 </resources>

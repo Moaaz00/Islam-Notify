@@ -133,6 +133,8 @@ fun MainScreenContent(
 //    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 //    val scope = rememberCoroutineScope()
 
+    val permissionDialogState by viewModel.permissionDialogState.collectAsState()
+
     val locationName = when (uiState) {
         is LocationPrayerState.Success -> uiState.locationData.locationName
             ?: stringResource(R.string.locating_unknown_string)
@@ -158,6 +160,23 @@ fun MainScreenContent(
         is LocationPrayerState.Initial -> uiState.prayerData
         else -> null
     }
+
+    when (uiState) {
+        is LocationPrayerState.Loading -> LoadingDialog()
+        is LocationPrayerState.PrayerError -> PrayerErrorDialog(onRetry = onRefresh)
+        is LocationPrayerState.LocationError -> LocationErrorDialog(
+            cause = uiState.failureCause,
+            onRetry = onRefresh
+        )
+        else -> permissionDialogState?.let { state ->
+            PermissionsReminderDialog(
+                state = state,
+                onDismiss = { viewModel.dismissPermissionsDialog(dontAskAgain = false) },
+                onDontAskAgain = { viewModel.dismissPermissionsDialog(dontAskAgain = true) }
+            )
+        }
+    }
+
     val pullToRefreshState = rememberPullToRefreshState()
 
 //    ModalNavigationDrawer(

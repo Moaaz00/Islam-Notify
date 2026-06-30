@@ -284,10 +284,10 @@
     <string name="intro_perm_notification_title">Notifications</string>
     <string name="intro_perm_notification_subtitle">To use the always-on notification and event reminders.</string>
     <string name="intro_perm_battery_title">Background Activity</string>
-    <string name="intro_perm_battery_subtitle">So notifications keep working reliably in the background.</string>
+    <string name="intro_perm_battery_subtitle">To prevent the system from delaying Azan and other features.</string>
 
     <string name="intro_battery_sheet_title">Allow background activity</string>
-    <string name="intro_battery_sheet_description">To keep prayer notifications accurate, set this app\'s battery usage to \"Unrestricted\".</string>
+    <string name="intro_battery_sheet_description">To prevent the system from delaying Azan and other features, set this app\'s battery usage to \"Unrestricted\".</string>
     <string name="intro_battery_sheet_step1">Open the \"Battery\" option.</string>
     <string name="intro_battery_sheet_step2">Select \"Unrestricted\".</string>
     <string name="intro_battery_sheet_open_settings">Open App Settings</string>
@@ -303,4 +303,28 @@
     <string name="intro_next">Next</string>
     <string name="intro_finish">Finish</string>
     <string name="intro_back">Back</string>
+
+    <!-- Main Screen State Dialogs -->
+    <string name="dialog_loading_title">Loading</string>
+    <string name="dialog_loading_message">Fetching your prayer times, please wait…</string>
+    <string name="dialog_prayer_error_title">Prayer Data Error</string>
+    <string name="dialog_prayer_error_message">Unable to calculate prayer times. Pull down to refresh and try again.</string>
+    <string name="dialog_location_error_title">Location Error</string>
+    <string name="dialog_location_permission_denied_message">Location permission is required to determine your prayer times. Open app settings to grant the permission.</string>
+    <string name="dialog_location_gps_disabled_message">Location services are disabled on your device. Please turn on GPS to get accurate prayer times.</string>
+    <string name="dialog_location_generic_error_message">Unable to determine your location. Please check your internet connection and try again.</string>
+    <string name="dialog_open_settings">Open Settings</string>
+    <string name="dialog_enable_gps">Enable GPS</string>
+    <string name="dialog_retry">Retry</string>
+    <string name="dialog_try_again">Try Again</string>
+
+    <!-- Permissions Reminder Dialog -->
+    <string name="dialog_permissions_title">Permissions Required</string>
+    <string name="dialog_permissions_message">To ensure notifications work reliably, please grant the following permissions.</string>
+    <string name="dialog_permissions_notification">Notifications</string>
+    <string name="dialog_permissions_notification_desc">Required to display prayer time notifications and alerts.</string>
+    <string name="dialog_permissions_battery">Background Activity</string>
+    <string name="dialog_permissions_battery_desc">Prevent the system from delaying Azan and other features. Go to \"Battery\" then select \"Unrestricted\".</string>
+    <string name="dialog_permissions_dont_ask">Don\'t Ask Again</string>
+    <string name="dialog_permissions_cancel">Cancel</string>
 </resources>

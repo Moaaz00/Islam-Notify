@@ -166,6 +166,7 @@ class IntroActivity : ComponentActivity() {
         startActivity(intent)
     }
 
+
     private fun openNotificationSettings() {
         val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
             putExtra(Settings.EXTRA_APP_PACKAGE, packageName)

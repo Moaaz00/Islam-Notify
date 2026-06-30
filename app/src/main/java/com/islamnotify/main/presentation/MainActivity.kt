@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var mainPreferencesRepository: MainPreferencesRepository
 
-    // 1. Define the permission launcher
+    // Location permission launcher — notification/battery are handled via the in-app dialog
     private val locationPermissionLauncher: ActivityResultLauncher<Array<String>> =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
@@ -94,34 +94,12 @@ class MainActivity : AppCompatActivity() {
                 permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
 
             if (fineLocationGranted || coarseLocationGranted) {
-                // Permission granted, fetch data
                 Log.d("LocationClient", "Permission Granted via Launcher")
                 viewModel.setToLoading()
                 viewModel.fetchPrayerDataAsync()
-                requestNotificationPermissionIfNeeded()
             } else {
                 Log.e("LocationClient", "Permission Denied")
-                // Optional: Show a Snackbar or UI message here telling user why you need it
             }
-        }
-
-    // === Notification Permission Launcher ===
-    private val notificationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (!granted) {
-                Log.e("NotificationPerm", "User denied POST_NOTIFICATIONS")
-            } else {
-                Log.d("NotificationPerm", "Notification permission granted")
-                viewModel.startNotificationWork()
-                requestBatteryWhitelistingIfNeeded()
-            }
-        }
-
-    // === Battery Optimization Launcher ===
-    private val batteryOptLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            Log.d("BatteryOpt", "Returned from Battery Optimizations screen")
-            viewModel.startNotificationWork()
         }
 
 
@@ -158,23 +136,6 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 //        }
-
-// OBSERVE failure causes → automatically request permissions
-        lifecycleScope.launchWhenStarted {
-            viewModel.notificationFailures.collect { failures ->
-                if (failures.isNullOrEmpty()) return@collect
-
-                Log.e("NotifFailures", "Failures = $failures")
-
-                if (failures.contains(NotificationFailureCauses.NOTIFICATION_PERMISSION_DENIED)) {
-                    requestNotificationPermissionIfNeeded()
-                }
-
-                if (failures.contains(NotificationFailureCauses.BATTERY_PERMISSION_DENIED)) {
-                    requestBatteryWhitelistingIfNeeded()
-                }
-            }
-        }
 
         val initialTheme: MainPreferencesConfig = viewModel.initialTheme()
         setContent {
@@ -239,41 +200,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestNotificationPermissionIfNeeded() {
-        // Android 13 (API 33) and above requires runtime permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val permissionStatus = ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            )
-
-            if (permissionStatus != PackageManager.PERMISSION_GRANTED) {
-                // Launch the permission requester defined at the top of your class
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
-    }
-
-    private fun requestBatteryWhitelistingIfNeeded() {
-        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        val packageName = packageName
-
-        // Check if the app is already on the whitelist
-        val isIgnoringOptimizations = powerManager.isIgnoringBatteryOptimizations(packageName)
-
-        if (!isIgnoringOptimizations) {
-            // Create an intent to request the user to whitelist the app
-            val intent = Intent().apply {
-                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                data = Uri.parse("package:$packageName")
-            }
-            // Launch the activity result launcher defined at the top of your class
-            batteryOptLauncher.launch(intent)
-        } else {
-            Log.d("BatteryOpt", "App is already whitelisted.")
-            viewModel.startNotificationWork()
-        }
-    }
 
 }
 

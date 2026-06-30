@@ -55,6 +55,11 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+data class PermissionDialogState(
+    val notificationMissing: Boolean,
+    val batteryMissing: Boolean
+)
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
     @param:ApplicationContext private val context: Context,
@@ -102,6 +107,9 @@ class MainViewModel @Inject constructor(
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
+
+    private val _permissionDialogState = MutableStateFlow<PermissionDialogState?>(null)
+    val permissionDialogState: StateFlow<PermissionDialogState?> = _permissionDialogState.asStateFlow()
 
     val soundsConfigState: StateFlow<SoundsConfig?> = soundsWork.getSoundsConfig()
         .stateIn(
@@ -366,6 +374,39 @@ class MainViewModel @Inject constructor(
                     break
                 }
             }
+        }
+    }
+
+    fun refreshPermissionState(notificationGranted: Boolean, batteryGranted: Boolean) {
+        viewModelScope.launch {
+            val config = mainPreferencesRepository.getConfig().first()
+            val notificationMissing = !notificationGranted && !config.dontAskNotification
+            val batteryMissing = !batteryGranted && !config.dontAskBattery
+
+            if (notificationMissing || batteryMissing) {
+                _permissionDialogState.value = PermissionDialogState(notificationMissing, batteryMissing)
+            } else {
+                val wasShowingDialog = _permissionDialogState.value != null
+                _permissionDialogState.value = null
+                if (wasShowingDialog) {
+                    startNotificationWork()
+                }
+            }
+        }
+    }
+
+    fun dismissPermissionsDialog(dontAskAgain: Boolean) {
+        viewModelScope.launch {
+            if (dontAskAgain) {
+                val currentState = _permissionDialogState.value
+                mainPreferencesRepository.saveConfig { config ->
+                    config.copy(
+                        dontAskNotification = config.dontAskNotification || (currentState?.notificationMissing == true),
+                        dontAskBattery = config.dontAskBattery || (currentState?.batteryMissing == true)
+                    )
+                }
+            }
+            _permissionDialogState.value = null
         }
     }
 
