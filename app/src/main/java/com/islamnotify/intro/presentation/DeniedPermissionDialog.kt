@@ -11,6 +11,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +36,7 @@ fun DeniedPermissionDialog(
         title = {
             Text(
                 text = stringResource(permissionTextProvider.getTitleRes(isPermanentlyDeclined)),
+                fontFamily = FontFamily(Font(R.font.readex)),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 18.sp,
                 lineHeight = 26.sp
@@ -42,6 +45,7 @@ fun DeniedPermissionDialog(
         text = {
             Text(
                 text = stringResource(permissionTextProvider.getDescriptionRes(isPermanentlyDeclined)),
+                fontFamily = FontFamily(Font(R.font.readex)),
                 fontSize = 14.sp,
                 lineHeight = 22.sp,
                 modifier = Modifier.padding(top = 4.dp)
@@ -62,6 +66,7 @@ fun DeniedPermissionDialog(
                     } else {
                         stringResource(R.string.dialog_perm_ok)
                     },
+                    fontFamily = FontFamily(Font(R.font.readex)),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp
                 )
@@ -76,6 +81,7 @@ fun DeniedPermissionDialog(
             ) {
                 Text(
                     text = stringResource(R.string.dialog_perm_cancel),
+                    fontFamily = FontFamily(Font(R.font.readex)),
                     fontSize = 14.sp
                 )
             }
