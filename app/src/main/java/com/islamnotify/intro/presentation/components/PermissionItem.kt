@@ -85,17 +85,23 @@ fun PermissionItem(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = tagText,
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Medium,
-                        color = if (isRequired) {
-                            MaterialTheme.colorScheme.error
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
-                    )
+                    if (tagText.isNotEmpty()) {
+                        Spacer(Modifier.width(if (isRequired) 4.dp else 8.dp))
+                        Text(
+                            text = tagText,
+                            style = if (isRequired) {
+                                MaterialTheme.typography.titleLarge
+                            } else {
+                                MaterialTheme.typography.labelSmall
+                            },
+                            fontWeight = if (isRequired) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isRequired) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            }
+                        )
+                    }
                 }
                 Spacer(Modifier.size(2.dp))
                 Text(
