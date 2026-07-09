@@ -156,9 +156,6 @@ class AlarmService : Service() {
 
 
     private fun cleanUpAndStopService() {
-        // TODO: general clean up and handle the alarm status
-        this.unregisterReceiver(dismissReceiver)
-        this.unregisterReceiver(snoozeReceiver)
         stopSelf()
     }
 
@@ -166,6 +163,12 @@ class AlarmService : Service() {
     override fun onBind(p0: Intent?): IBinder? = null
     override fun onDestroy() {
         cleanUpAndStopService()
+        try {
+            unregisterReceiver(dismissReceiver)
+            unregisterReceiver(snoozeReceiver)
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Receivers already unregistered", e)
+        }
         super.onDestroy()
     }
     override fun onTimeout(startId: Int) {

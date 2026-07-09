@@ -558,7 +558,11 @@ class SoundsMediaService() : Service() {
     override fun onDestroy() {
         scope.cancel()
         cleanUp()
-        this.unregisterReceiver(cancelAzanReceiver)
+        try {
+            this.unregisterReceiver(cancelAzanReceiver)
+        }catch (e: Exception){
+            Log.w(TAG, "onDestroy: receiver already registered")
+        }
         super.onDestroy()
     }
 
