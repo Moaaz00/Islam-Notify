@@ -40,7 +40,10 @@ Key features: `alarms/`, `prayer_times/`, `sounds/`, `events/`, `location/`, `ca
 ```
 
 ## Secrets
-`local.properties` holds `TIME_ZONE_API_KEY` — never commit this file.
+`local.properties` holds the release keystore credentials (`RELEASE_STORE_FILE`,
+`RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD`) — never commit this file.
+The build guards the read with an existence check, so CI/off-machine builds without
+`local.properties` still configure (only `assembleRelease`/`bundleRelease` need the keystore).
 
 ## Current State
 - Alarms feature is newly added (all `alarms/` files are new/staged)
