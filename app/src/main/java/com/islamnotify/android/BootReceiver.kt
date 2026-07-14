@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.events.domain.EventsWork
 import com.islamnotify.notification.domain.NotificationWork
 import com.islamnotify.sounds.domain.SoundsWork
@@ -21,6 +22,7 @@ class BootReceiver : BroadcastReceiver() {
     @Inject lateinit var notificationWork: NotificationWork
     @Inject lateinit var eventsWork: EventsWork
     @Inject lateinit var soundsWork: SoundsWork
+    @Inject lateinit var crashReporter: CrashReporter
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action.equals(Intent.ACTION_BOOT_COMPLETED) || intent?.action.equals(Intent.ACTION_MY_PACKAGE_REPLACED)){
@@ -40,6 +42,7 @@ class BootReceiver : BroadcastReceiver() {
                     soundsWork.startScheduling()
                 } catch (e: Exception) {
                     Log.e("NotificationFlow", "BootReceiver onReceive: ",e)
+                    crashReporter.recordNonFatal(e)
                 } finally {
                     pendingResult.finish()
                 }

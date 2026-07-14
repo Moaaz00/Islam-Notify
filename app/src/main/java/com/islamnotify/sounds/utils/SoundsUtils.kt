@@ -2,6 +2,7 @@ package com.islamnotify.sounds.utils
 
 import android.util.Log
 import com.islamnotify.common.AppUtils
+import com.islamnotify.common.domain.CrashReporterProvider
 import com.islamnotify.prayer_times.domain.model.PrayerEntities
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import com.islamnotify.sounds.data.PrayersSoundData
@@ -141,6 +142,7 @@ object SoundsUtils {
             }
         }catch (e: Exception){
             Log.e("SoundsFlow", "shouldStartSound: ", e)
+            CrashReporterProvider.instance?.recordNonFatal(e)
             return false
         }
     }

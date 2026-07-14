@@ -99,6 +99,8 @@ class MainActivity : AppCompatActivity() {
                 viewModel.fetchPrayerDataAsync()
             } else {
                 Log.e("LocationClient", "Permission Denied")
+                com.islamnotify.common.domain.CrashReporterProvider
+                    .instance?.log("MainActivity: location permission denied via launcher")
             }
         }
 

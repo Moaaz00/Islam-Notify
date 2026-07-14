@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import com.islamnotify.R
+import com.islamnotify.common.domain.CrashReporterProvider
 import com.islamnotify.events.domain.EventFlags
 import com.islamnotify.prayer_times.domain.model.NextPrayerData
 import com.islamnotify.prayer_times.domain.model.PrayerData
@@ -170,6 +171,7 @@ object AppUtils {
 
         } catch (e: Exception) {
             Log.e("formating prayer times", "formatting error", e)
+            CrashReporterProvider.instance?.recordNonFatal(e)
             this
         }
     }

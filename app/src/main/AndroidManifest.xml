@@ -10,9 +10,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <application
         android:name=".android.Application"
@@ -27,6 +25,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IslamNotify"
         tools:targetApi="31">
+
+        <!-- Crashlytics data collection: off in debug, on in release (see build.gradle.kts).
+             A runtime setCrashlyticsCollectionEnabled(true) call overrides this default. -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="${crashlyticsCollectionEnabled}" />
 
         <!-- &lt;!&ndash;        cypher&ndash;&gt; -->
         <!-- <meta-data -->

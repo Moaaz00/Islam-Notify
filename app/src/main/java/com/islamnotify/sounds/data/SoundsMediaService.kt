@@ -55,6 +55,9 @@ class SoundsMediaService() : Service() {
 
     @Inject
     lateinit var soundsDataStore: SoundsDataStore
+
+    @Inject
+    lateinit var crashReporter: com.islamnotify.common.domain.CrashReporter
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     var player: ExoPlayer? = null
     var wakeLock: PowerManager.WakeLock? = null
@@ -159,11 +162,13 @@ class SoundsMediaService() : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Service didn't start", e)
+            crashReporter.recordNonFatal(e)
             cleanUpAndStopService()
         }
 
         if (intent == null || action == null) {
             Log.e(TAG, "onStartCommand: intent or action is null")
+            crashReporter.log("SoundsMediaService.onStartCommand: null intent/action, stopping service")
             cleanUpAndStopService()
             return START_NOT_STICKY
         }
@@ -222,6 +227,7 @@ class SoundsMediaService() : Service() {
 
         if (soundUri == null) {
             Log.e(TAG, "playSound: sound uri is null")
+            crashReporter.log("SoundsMediaService.playSound: sound uri null, using default notify sound")
             soundUri = "android.resource://${packageName}/${R.raw.notify_sound}".toUri()
         }
 
@@ -302,6 +308,7 @@ class SoundsMediaService() : Service() {
 
                 else -> {
                     Log.e(TAG, "Focus denied")
+                    crashReporter.log("SoundsMediaService: audio focus request denied, stopping service")
                     cleanUpAndStopService()
                     return
                 }
@@ -422,6 +429,7 @@ class SoundsMediaService() : Service() {
 
         override fun onPlayerError(error: PlaybackException) {
             Log.e(TAG, "onPlayerError: ", error)
+            crashReporter.recordNonFatal(error)
             stopForeground(STOP_FOREGROUND_DETACH)
             cleanUpAndStopService()
         }
@@ -562,6 +570,7 @@ class SoundsMediaService() : Service() {
             this.unregisterReceiver(cancelAzanReceiver)
         }catch (e: Exception){
             Log.w(TAG, "onDestroy: receiver already registered")
+            crashReporter.recordNonFatal(e)
         }
         super.onDestroy()
     }

@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.islamnotify.android.AlarmReceiver
 import com.islamnotify.common.AppUtils
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.domain.LocationPrayerResult
 import com.islamnotify.prayer_times.domain.PrayerDataUseCase
 import com.islamnotify.prayer_times.domain.model.PrayerEntities
@@ -33,7 +34,8 @@ class SoundsWorker @AssistedInject constructor(
     @Assisted val workerParams: WorkerParameters,
     val prayerDataUseCase: PrayerDataUseCase,
     val soundsDataStore: SoundsDataStore,
-    val alarmManager: AlarmManager
+    val alarmManager: AlarmManager,
+    val crashReporter: CrashReporter
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -48,6 +50,7 @@ class SoundsWorker @AssistedInject constructor(
             return Result.success()
         } catch (e: Exception) {
             Log.e(TAG, "doWork: failed", e)
+            crashReporter.recordNonFatal(e)
             return Result.failure()
         }
     }
@@ -63,6 +66,7 @@ class SoundsWorker @AssistedInject constructor(
 
         if (prayerData == null) {
             Log.e(TAG, "scheduleSoundsForToday: Failed to get prayer times")
+            crashReporter.log("SoundsWorker.scheduleSoundsForToday: no prayer data, sounds not scheduled")
             return
         }
 
@@ -125,6 +129,7 @@ class SoundsWorker @AssistedInject constructor(
 
         if (triggerTime <= System.currentTimeMillis()) {
             Log.e(TAG, "scheduleMidnightRequest: midnight schedule failed")
+            crashReporter.log("SoundsWorker.scheduleMidnightRequest: computed trigger time in the past")
             return
         }
 

@@ -13,6 +13,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.location.domain.LocationRepository
 import com.islamnotify.location.domain.model.LocationData
 import com.islamnotify.location.domain.model.LocationFailureCause
@@ -31,7 +32,8 @@ import kotlin.coroutines.resume
 class LocationRepositoryImpl @Inject constructor(
     @param:ApplicationContext private val context: Context,
     private val fusedLocationProvider: FusedLocationProviderClient,
-    private val locationDataStore: LocationDataStore
+    private val locationDataStore: LocationDataStore,
+    private val crashReporter: CrashReporter
 ) : LocationRepository {
 
     companion object {
@@ -47,6 +49,7 @@ class LocationRepositoryImpl @Inject constructor(
         val lastLocation = try {
             fusedLocationProvider.lastLocation.await()
         } catch (e: Exception) {
+            // Not reported to Crashlytics: location-subsystem exceptions may carry coordinates. Local log only.
             Log.w(TAG, "getLastKnownLocation: last location is null", e)
             null
         }
@@ -69,6 +72,7 @@ class LocationRepositoryImpl @Inject constructor(
         val lastLocation = try {
             fusedLocationProvider.lastLocation.await()
         } catch (e: Exception) {
+            // Not reported to Crashlytics: location-subsystem exceptions may carry coordinates. Local log only.
             Log.w(TAG, "getCurrentLocation: location is null", e)
             null
         }
@@ -88,6 +92,7 @@ class LocationRepositoryImpl @Inject constructor(
             processNewLocation(latitude, longitude)
         } else {
             Log.w(TAG, "getCurrentLocation: current location fetching failed")
+            crashReporter.log("LocationRepositoryImpl.getCurrentLocation: no fresh location, using cache")
             getCachedLocation(newLocationFetch.failureCause ?: LocationFailureCause.GENERIC_ERROR)
         }
     }
@@ -113,8 +118,10 @@ class LocationRepositoryImpl @Inject constructor(
             }
         } catch (_: TimeoutCancellationException) {
             Log.e(TAG, "getNewLocation(): failed to get the location ue to timeout")
+            crashReporter.log("LocationRepositoryImpl.getNewLocation: timed out after 20s")
             LocationFetchResult(null, null, LocationFailureCause.GENERIC_ERROR)
         } catch (e: Exception) {
+            // Not reported to Crashlytics: location-subsystem exceptions may carry coordinates. Local log only.
             Log.e(TAG, "getNewLocation(): failed to get the location due to general exception", e)
             LocationFetchResult(null, null, LocationFailureCause.GENERIC_ERROR)
         } finally {
@@ -131,9 +138,11 @@ class LocationRepositoryImpl @Inject constructor(
                 LocationResult.Stale(location, cause)
             } else {
                 Log.w(TAG, "getLocation: cached location is not valid")
+                crashReporter.log("LocationRepositoryImpl.getCachedLocation: cached location invalid/absent (cause=$cause)")
                 LocationResult.Error(cause)
             }
         } catch (e: Exception) {
+            // Not reported to Crashlytics: cached-location exceptions may carry coordinates. Local log only.
             Log.e(TAG, "getLocation: cached location error", e)
             LocationResult.Error(cause)
         }
@@ -189,8 +198,10 @@ class LocationRepositoryImpl @Inject constructor(
             }
         }catch (_: TimeoutCancellationException){
             Log.e(TAG, "getLocationName failed to get the location due to timeout")
+            crashReporter.log("LocationRepositoryImpl.getLocationInfo: geocoder timed out after 5s")
             AddressData(null, locationDataStore.getCountryCode().first())
         } catch (e: Exception) {
+            // Not reported to Crashlytics: Geocoder exceptions embed the lat/long in their message. Local log only.
             Log.e(TAG, "getLocationName Error", e)
             AddressData(null, locationDataStore.getCountryCode().first())
         }

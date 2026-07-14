@@ -374,18 +374,18 @@ fun HeaderSection(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp) // Space between the two buttons
                 ) {
-                    // Hourglass Button
-                    IconButton(
-                        onClick = { onAlarmClicked() },
-                        modifier = Modifier.size(40.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_hourglass),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+                    // Hourglass (Alarm) Button — hidden for release; unhide to restore.
+//                    IconButton(
+//                        onClick = { onAlarmClicked() },
+//                        modifier = Modifier.size(40.dp)
+//                    ) {
+//                        Icon(
+//                            painter = painterResource(R.drawable.ic_hourglass),
+//                            contentDescription = null,
+//                            tint = MaterialTheme.colorScheme.onPrimary,
+//                            modifier = Modifier.size(20.dp)
+//                        )
+//                    }
 
                     // Settings Button (placed at the absolute end)
                     IconButton(
@@ -939,6 +939,7 @@ fun formatTime(time24h: String, localizedContext: Context): String {
         return "$localizedHour:$localizedMinute"
     } catch (e: Exception) {
         Log.e("MainActivity", "Error parsing time: $time24h", e)
+        com.islamnotify.common.domain.CrashReporterProvider.instance?.recordNonFatal(e)
         return time24h
     }
 }

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import com.islamnotify.common.domain.CrashReporterProvider
 import com.islamnotify.events.util.EventsUtils
 import com.islamnotify.sounds.data.SoundsMediaService
 import com.islamnotify.sounds.utils.SoundsUtils
@@ -23,11 +24,13 @@ class WakeupAlarmReceiver() : BroadcastReceiver() {
 
             if (context == null){
                 Log.e(TAG, "onReceive: failed, context is null")
+                CrashReporterProvider.instance?.log("WakeupAlarmReceiver.onReceive: null context")
                 return
             }
 
             if (alarmId == -1){
                 Log.e(TAG, "onReceive: failed, alarm id is -1")
+                CrashReporterProvider.instance?.log("WakeupAlarmReceiver.onReceive: alarm id is -1")
                 return
             }
 
@@ -47,6 +50,7 @@ class WakeupAlarmReceiver() : BroadcastReceiver() {
                 Log.d(TAG, "onReceive: Service started successfully")
             } catch (e: Exception) {
                 Log.e(TAG, "onReceive: Service failed to start", e)
+                CrashReporterProvider.instance?.recordNonFatal(e)
             } finally {
                 pendingResult.finish()
             }

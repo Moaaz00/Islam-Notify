@@ -17,6 +17,7 @@ import com.islamnotify.android.AlarmReceiver
 import com.islamnotify.calendar.domain.CalendarRepository
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.events.domain.EventFlags
 import com.islamnotify.events.domain.EventsData
 import com.islamnotify.events.util.EventsUtils
@@ -39,7 +40,8 @@ class EventsWorker @AssistedInject constructor(
     val prayerDataUseCase: PrayerDataUseCase,
     val alarmManager: AlarmManager,
     val dataStore: EventsDataStore,
-    val calendarRepository: CalendarRepository
+    val calendarRepository: CalendarRepository,
+    val crashReporter: CrashReporter
 ) : CoroutineWorker(context, workerParams) {
 
 
@@ -51,6 +53,7 @@ class EventsWorker @AssistedInject constructor(
             return Result.success()
         } catch (e: Exception) {
             Log.e("EventsFlow", "doWork: ", e)
+            crashReporter.recordNonFatal(e)
             return Result.failure()
         }
     }

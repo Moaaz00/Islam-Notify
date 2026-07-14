@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporterProvider
 
 class AlarmService : Service() {
 
@@ -73,6 +74,7 @@ class AlarmService : Service() {
         val alarmId = intent?.getIntExtra(Constants.SERVICE_KEY_ALARM_ID,-1)
         if (alarmId == -1 || alarmId == null){
             Log.e(TAG, "onStartCommand: alarm id didn't get received in the service")
+            CrashReporterProvider.instance?.log("AlarmService.onStartCommand: missing alarm id, stopping service")
             cleanUpAndStopService()
             return START_NOT_STICKY
         }
@@ -150,6 +152,7 @@ class AlarmService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Service didn't start", e)
+            CrashReporterProvider.instance?.recordNonFatal(e)
             cleanUpAndStopService()
         }
     }
@@ -168,6 +171,7 @@ class AlarmService : Service() {
             unregisterReceiver(snoozeReceiver)
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "Receivers already unregistered", e)
+            CrashReporterProvider.instance?.recordNonFatal(e)
         }
         super.onDestroy()
     }

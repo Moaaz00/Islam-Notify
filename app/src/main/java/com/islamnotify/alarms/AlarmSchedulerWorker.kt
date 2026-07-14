@@ -10,6 +10,7 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.islamnotify.common.AppUtils.toPrayerDataList
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.prayer_times.domain.LocationPrayerResult
 import com.islamnotify.prayer_times.domain.PrayerDataUseCase
@@ -26,7 +27,8 @@ class AlarmSchedulerWorker @AssistedInject constructor(
     @Assisted val workerParams: WorkerParameters,
     val alarmManager: AlarmManager,
     val prayerDataUseCase: PrayerDataUseCase,
-    val prayerAlarmDao: PrayerAlarmDao
+    val prayerAlarmDao: PrayerAlarmDao,
+    val crashReporter: CrashReporter
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -43,6 +45,7 @@ class AlarmSchedulerWorker @AssistedInject constructor(
                 return Result.failure()
             } catch (writeEx: Exception) {
                 Log.e(TAG, "doWork: ", writeEx)
+                crashReporter.recordNonFatal(writeEx, "alarmId" to alarmId)
                 return Result.failure()
             }
         }
@@ -52,11 +55,14 @@ class AlarmSchedulerWorker @AssistedInject constructor(
             schedulePrayerAlarm(alarmId)
             return Result.success()
         } catch (e: Exception){
+            // The actual alarm-scheduling exception — previously swallowed without logging.
+            crashReporter.recordNonFatal(e, "alarmId" to alarmId)
             try {
                 prayerAlarmDao.updateAlarmStatus(alarmId, AlarmStatus.FAILED)
                 return Result.failure()
             } catch (writeEx: Exception) {
                 Log.e(TAG, "schedulePrayerAlarm: ", writeEx)
+                crashReporter.recordNonFatal(writeEx, "alarmId" to alarmId)
                 return Result.failure()
             }
         }
@@ -69,12 +75,14 @@ class AlarmSchedulerWorker @AssistedInject constructor(
         val prayerAlarm = try {
             prayerAlarmDao.getAlarmById(alarmId)
         } catch (e: Exception) {
+            crashReporter.recordNonFatal(e, "alarmId" to alarmId)
             try {
                 Log.e(TAG, "schedulePrayerAlarm: couldn't get the alarm from database", e)
                 prayerAlarmDao.updateAlarmStatus(alarmId, AlarmStatus.FAILED)
                 return
             } catch (writeEx: Exception) {
                 Log.e(TAG, "schedulePrayerAlarm: ", writeEx)
+                crashReporter.recordNonFatal(writeEx, "alarmId" to alarmId)
                 return
             }
         }
@@ -105,11 +113,13 @@ class AlarmSchedulerWorker @AssistedInject constructor(
 
         // update the status to failed if couldn't fetch the prayer times
         if (prayerData == null) {
+            crashReporter.log("AlarmSchedulerWorker: no prayer data, marking alarm $alarmId FAILED")
             try {
                 prayerAlarmDao.updateAlarmStatus(alarmId, AlarmStatus.FAILED)
                 return
             } catch (writeEx: Exception) {
                 Log.e(TAG, "schedulePrayerAlarm: ", writeEx)
+                crashReporter.recordNonFatal(writeEx, "alarmId" to alarmId)
                 return
             }
         }
@@ -117,6 +127,7 @@ class AlarmSchedulerWorker @AssistedInject constructor(
         // if the alarm doesn't exist, just return
         if (prayerAlarm == null) {
             Log.w(TAG, "schedulePrayerAlarm: Alarm Doesn't exist in the database")
+            crashReporter.log("AlarmSchedulerWorker: alarm $alarmId not found in database")
             return
         }
 
@@ -126,6 +137,7 @@ class AlarmSchedulerWorker @AssistedInject constructor(
             prayerAlarmDao.updateNextTriggerTime(alarmId, nextAlarmMillis)
         } catch (writeEx: Exception) {
             Log.e(TAG, "schedulePrayerAlarm: ", writeEx)
+            crashReporter.recordNonFatal(writeEx, "alarmId" to alarmId)
         }
 
         // schedule alarm

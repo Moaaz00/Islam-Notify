@@ -15,6 +15,7 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.islamnotify.android.AlarmReceiver
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import com.islamnotify.sounds.domain.SoundStates
 import com.islamnotify.sounds.domain.SoundsConfig
@@ -28,7 +29,8 @@ import javax.inject.Inject
 class SoundsWorkImpl @Inject constructor(
     @param:ApplicationContext val context: Context,
     val alarmManager: AlarmManager,
-    val soundsDataStore: SoundsDataStore
+    val soundsDataStore: SoundsDataStore,
+    val crashReporter: CrashReporter
 ) : SoundsWork {
 
     companion object {
@@ -102,6 +104,7 @@ class SoundsWorkImpl @Inject constructor(
             Log.d(TAG, "cancel: All alarms and workers have been cleared")
         } catch (e: Exception) {
             Log.e(TAG, "cancel: Error while cancelling sounds", e)
+            crashReporter.recordNonFatal(e)
         }
     }
 

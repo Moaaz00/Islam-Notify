@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import com.islamnotify.sounds.di.SoundsModules
 import com.islamnotify.sounds.domain.SoundStates
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SoundsDataStore(
-    @param:SoundsModules.SoundPrefs val dataStore: DataStore<Preferences>
+    @param:SoundsModules.SoundPrefs val dataStore: DataStore<Preferences>,
+    private val crashReporter: CrashReporter
 ) {
 
     object Keys {
@@ -86,7 +88,9 @@ class SoundsDataStore(
             val currentStateName = prefs[key] ?: defaultState.name
             val currentState = try {
                 SoundStates.valueOf(currentStateName)
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                // Persisted sound state no longer maps to a known enum — silently defaulted.
+                crashReporter.recordNonFatal(e, "soundStateName" to currentStateName)
                 defaultState
             }
 

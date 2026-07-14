@@ -663,6 +663,9 @@ object SettingsDialogs {
                                                 mediaPlayer.reset()
                                             }
                                         } catch (e: Exception) {
+                                            // Sound preview failed to play — was silently swallowed.
+                                            com.islamnotify.common.domain.CrashReporterProvider
+                                                .instance?.recordNonFatal(e)
                                             previewingState.value = null
                                         }
                                     }

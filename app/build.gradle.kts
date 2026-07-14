@@ -10,38 +10,63 @@ plugins {
     alias(libs.plugins.google.devtools.ksp)
     id("com.google.dagger.hilt.android")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
     namespace = "com.islamnotify"
-    compileSdk = 36
+    compileSdk = 37
+
+    // Loaded once for signingConfigs (release keystore credentials).
+    // Existence-checked so builds without local.properties (e.g. CI) don't crash at configuration time.
+    val localProperties = Properties().apply {
+        val localFile = rootProject.file("local.properties")
+        if (localFile.exists()) load(localFile.inputStream())
+    }
 
     defaultConfig {
         applicationId = "com.islamnotify"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val properties = Properties()
-        properties.load(project.rootProject.file("local.properties").inputStream())
-        val apiKey = properties.getProperty("TIME_ZONE_API_KEY") ?: ""
-        buildConfigField("String", "TIME_ZONE_API_KEY", "\"$apiKey\"")
-
     }
 
+    signingConfigs {
+        create("release") {
+            // Credentials live in local.properties (git-ignored) — never hard-code them here.
+            // If the keystore is absent, this config stays empty and only `assembleRelease`
+            // will fail; debug builds are unaffected.
+            val storeFilePath = localProperties.getProperty("RELEASE_STORE_FILE")
+            if (storeFilePath != null && file(storeFilePath).exists()) {
+                storeFile = file(storeFilePath)
+                storePassword = localProperties.getProperty("RELEASE_STORE_PASSWORD")
+                keyAlias = localProperties.getProperty("RELEASE_KEY_ALIAS")
+                keyPassword = localProperties.getProperty("RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
 
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            // Crashlytics reports on in release (see AndroidManifest meta-data).
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = true
+        }
+        debug {
+            // Crashlytics reports off in debug by default; the test-crash button
+            // force-enables collection at runtime to verify the pipeline.
+            manifestPlaceholders["crashlyticsCollectionEnabled"] = false
         }
     }
     compileOptions {
@@ -54,7 +79,6 @@ android {
     }
     buildFeatures {
         compose = true
-        buildConfig = true
     }
 }
 
@@ -102,6 +126,11 @@ dependencies {
     implementation(libs.play.services.location)
     implementation("com.google.maps.android:maps-compose:4.4.1")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
+
+    // Firebase Crashlytics (BoM manages versions)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics) // Crashlytics uses Analytics for velocity/session data
 
     implementation(libs.batoul.adhan2)
     coreLibraryDesugaring(libs.desugar.jdk.libs)

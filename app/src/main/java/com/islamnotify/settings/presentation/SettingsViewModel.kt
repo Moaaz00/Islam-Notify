@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.batoulapps.adhan2.CalculationMethod
 import com.islamnotify.calendar.domain.CalendarRepository
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.events.domain.EventFlags
 import com.islamnotify.events.domain.EventsPreferenceKeys
 import com.islamnotify.events.domain.EventsWork
@@ -52,7 +53,8 @@ class SettingsViewModel @Inject constructor(
     val eventsWork: EventsWork,
     val preferencesRepository: MainPreferencesRepository,
     val soundsWork: SoundsWork,
-    val calendarRepository: CalendarRepository
+    val calendarRepository: CalendarRepository,
+    private val crashReporter: CrashReporter
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SettingsUiState())
@@ -116,6 +118,7 @@ class SettingsViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Log.e("SettingsViewModel", "Prayer config fetch failed", e)
+                crashReporter.recordNonFatal(e)
             }
         }
 

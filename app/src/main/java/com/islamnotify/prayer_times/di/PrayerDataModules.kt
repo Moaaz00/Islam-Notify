@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.location.domain.LocationRepository
 import com.islamnotify.prayer_times.data.PrayerDataLocal
 import com.islamnotify.prayer_times.data.PrayerDataRepositoryImpl
@@ -29,8 +30,8 @@ object PrayerDataModules {
 
     @Provides
     @Singleton
-    fun providePrayerLocal(): PrayerDataLocal {
-        return PrayerDataLocal()
+    fun providePrayerLocal(crashReporter: CrashReporter): PrayerDataLocal {
+        return PrayerDataLocal(crashReporter)
     }
 
     @Provides
@@ -43,16 +44,24 @@ object PrayerDataModules {
 
     @Provides
     @Singleton
-    fun providePrayerDataStore(@PrayerPrefs dataStore: DataStore<Preferences>): PrayerDataStore {
-        return PrayerDataStore(dataStore)
+    fun providePrayerDataStore(
+        @PrayerPrefs dataStore: DataStore<Preferences>,
+        crashReporter: CrashReporter
+    ): PrayerDataStore {
+        return PrayerDataStore(dataStore, crashReporter)
     }
 
     @Provides
     @Singleton
-    fun providePrayerDataUseCase(prayerDataRepository: PrayerDataRepository, locationRepository: LocationRepository): PrayerDataUseCase {
+    fun providePrayerDataUseCase(
+        prayerDataRepository: PrayerDataRepository,
+        locationRepository: LocationRepository,
+        crashReporter: CrashReporter
+    ): PrayerDataUseCase {
         return PrayerDataUseCase(
             prayerDataRepository = prayerDataRepository,
-            locationRepository = locationRepository
+            locationRepository = locationRepository,
+            crashReporter = crashReporter
         )
     }
 }

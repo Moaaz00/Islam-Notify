@@ -4,6 +4,7 @@ import com.batoulapps.adhan2.CalculationMethod
 import com.batoulapps.adhan2.Coordinates
 import com.batoulapps.adhan2.SunnahTimes
 import com.batoulapps.adhan2.data.DateComponents
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.domain.model.PrayerConfig
 import com.islamnotify.prayer_times.domain.model.PrayerTimes
 import com.islamnotify.prayer_times.util.PrayerUtils.addMinutesToTime
@@ -14,7 +15,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-class PrayerDataLocal {
+class PrayerDataLocal(private val crashReporter: CrashReporter) {
     fun fetchPrayerTimes(
         latitude: Double,
         longitude: Double,
@@ -60,7 +61,10 @@ class PrayerDataLocal {
             val zonedDateTime = this.toJavaInstant().atZone(zoneId)
             return formatter.format(zonedDateTime)
 
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            // Formatting a calculated prayer instant failed — was silent; the empty string it returns
+            // corrupts downstream prayer times, so this is a real defect worth reporting.
+            crashReporter.recordNonFatal(e)
             return String()
         }
     }

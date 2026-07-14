@@ -13,6 +13,7 @@ import androidx.work.WorkerParameters
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.notification.domain.NotificationWorkResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -21,7 +22,8 @@ import dagger.assisted.AssistedInject
 class NotificationWorker @AssistedInject constructor(
     @Assisted val context: Context,
     @Assisted val workerParams: WorkerParameters,
-    val notificationWorkHandler: NotificationWorkHandler
+    val notificationWorkHandler: NotificationWorkHandler,
+    val crashReporter: CrashReporter
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -34,6 +36,7 @@ class NotificationWorker @AssistedInject constructor(
             when (val result = notificationWorkHandler.doNotificationWork()) {
                 is NotificationWorkResult.Error, is NotificationWorkResult.PrayerError, is NotificationWorkResult.LocationError -> {
                     Log.e(TAG, "Worker's doWork: failed $result")
+                    crashReporter.log("NotificationWorker.doWork: failed with $result")
                     return Result.failure()
                 }
 
@@ -45,6 +48,7 @@ class NotificationWorker @AssistedInject constructor(
             }
         } catch (e: Exception) {
             Log.e(TAG, "Worker's doWork error", e)
+            crashReporter.recordNonFatal(e)
             return Result.failure()
         }
     }

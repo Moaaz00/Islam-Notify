@@ -1,6 +1,7 @@
 package com.islamnotify.prayer_times.util
 
 import android.util.Log
+import com.islamnotify.common.domain.CrashReporterProvider
 import com.islamnotify.prayer_times.domain.model.PrayerData
 import com.islamnotify.prayer_times.domain.model.PrayerEntities
 import com.islamnotify.prayer_times.domain.model.PrayerTimes
@@ -35,6 +36,7 @@ object PrayerUtils {
                 "Error parsing time string: $this. Please ensure it's in HH:mm format.",
                 e
             )
+            CrashReporterProvider.instance?.recordNonFatal(e)
             return this
         }
     }
@@ -82,7 +84,9 @@ object PrayerUtils {
             val zonedTime = targetDateTime.atZone(ZoneId.systemDefault())
             return zonedTime.toInstant().toEpochMilli()
         }catch (e: Exception){
+            // Returns a bogus 0L epoch (1970) that silently corrupts alarm/notification scheduling.
             Log.e("PrayerDataUtils", "prayerTimeToMillis: ", e)
+            CrashReporterProvider.instance?.recordNonFatal(e)
             return 0L
         }
     }

@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.batoulapps.adhan2.CalculationMethod
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.di.PrayerDataModules
 import com.islamnotify.prayer_times.domain.model.PrayerConfig
 import com.islamnotify.prayer_times.domain.model.PrayerTimes
@@ -15,7 +16,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class PrayerDataStore @Inject constructor(@param:PrayerDataModules.PrayerPrefs val dataStore: DataStore<Preferences>) {
+class PrayerDataStore @Inject constructor(
+    @param:PrayerDataModules.PrayerPrefs val dataStore: DataStore<Preferences>,
+    private val crashReporter: CrashReporter
+) {
 
     private object Keys {
         val FAJR = stringPreferencesKey("fajr")
@@ -198,7 +202,9 @@ class PrayerDataStore @Inject constructor(@param:PrayerDataModules.PrayerPrefs v
                     if (autoCalculationMethod != null) CalculationMethod.valueOf(
                         autoCalculationMethod
                     ) else null
-                } catch (_: Exception) {
+                } catch (e: Exception) {
+                    // Persisted calculation method no longer maps to a known enum — silently defaulted to null.
+                    crashReporter.recordNonFatal(e, "autoCalculationMethod" to autoCalculationMethod)
                     null
                 },
                 manualCalculationMethod = manualMethod,
@@ -256,6 +262,7 @@ class PrayerDataStore @Inject constructor(@param:PrayerDataModules.PrayerPrefs v
 
             if (!mandatoryKeys.all { prefs.contains(it) }) {
                 Log.w("InitialPrayerTimes", "DataStore missing mandatory keys")
+                crashReporter.log("PrayerDataStore.getPrayerTimes: missing mandatory keys, emitting null")
                 return@map null
             }
 

@@ -25,6 +25,7 @@ import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.formatPrayerTimes
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.common.AppUtils.toPrayerDataList
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.location.domain.model.LocationData
 import com.islamnotify.notification.domain.NotificationFailureCauses
@@ -41,7 +42,8 @@ class NotificationWorkHandler(
     val context: Context,
     val prayerDataUseCase: PrayerDataUseCase,
     val alarmManager: AlarmManager,
-    val calendarRepository: CalendarRepository
+    val calendarRepository: CalendarRepository,
+    val crashReporter: CrashReporter
 ) {
 
     companion object {
@@ -55,6 +57,7 @@ class NotificationWorkHandler(
 
         if (failureCauses.contains(NotificationFailureCauses.NOTIFICATION_PERMISSION_DENIED)) {
             Log.e(TAG, "doNotificationWork: notification permission denied. canceling work")
+            crashReporter.log("NotificationWorkHandler: notification permission denied, work cancelled")
             return NotificationWorkResult.Error(failureCauses)
         }
 
@@ -370,8 +373,15 @@ class NotificationWorkHandler(
                 TAG,
                 "UpdateNotification sentNotification failed : permission denied"
             )
+            crashReporter.log("NotificationWorkHandler.sendNotification: POST_NOTIFICATIONS not granted, notifying anyway")
         }
-        notificationManager.notify(NotificationUtils.PRAYER_NOTIFICATION_ID, builder.build())
-        Log.d(TAG, "UpdateNotification sentNotification success")
+        try {
+            notificationManager.notify(NotificationUtils.PRAYER_NOTIFICATION_ID, builder.build())
+            Log.d(TAG, "UpdateNotification sentNotification success")
+        } catch (e: Exception) {
+            // e.g. SecurityException when posting without permission — was previously uncaught.
+            Log.e(TAG, "UpdateNotification sentNotification threw", e)
+            crashReporter.recordNonFatal(e)
+        }
     }
 }

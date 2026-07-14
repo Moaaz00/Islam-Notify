@@ -2,6 +2,7 @@ package com.islamnotify.alarms
 
 import android.util.Log
 import androidx.room.TypeConverter
+import com.islamnotify.common.domain.CrashReporterProvider
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import java.time.DayOfWeek
 
@@ -23,6 +24,7 @@ class AlarmConverters {
             }
         } catch (e: Exception) {
             Log.e("AlarmConverters", "toDayOfWeekList: ", e)
+            CrashReporterProvider.instance?.recordNonFatal(e, "value" to value)
             emptyList()
         }
     }
@@ -42,6 +44,7 @@ class AlarmConverters {
             PrayerTypes.entries.firstOrNull { it.name.equals(value, ignoreCase = true) }
         } catch (e: Exception) {
             Log.e("AlarmConverters", "toPrayerType failed for value: $value", e)
+            CrashReporterProvider.instance?.recordNonFatal(e, "value" to value)
             null
         }
     }
@@ -60,6 +63,7 @@ class AlarmConverters {
             AlarmRelations.entries.firstOrNull { it.name.equals(value, ignoreCase = true) }
         } catch (e: Exception) {
             Log.e("AlarmConverters", "toAlarmRelation failed for value: $value", e)
+            CrashReporterProvider.instance?.recordNonFatal(e, "value" to value)
             null
         }
     }
@@ -76,6 +80,7 @@ class AlarmConverters {
             AlarmStatus.valueOf(value)
         } catch (e: Exception) {
             Log.e("AlarmConverters", "toAlarmStatus failed for value: $value", e)
+            CrashReporterProvider.instance?.recordNonFatal(e, "value" to value)
             null
         }
     }

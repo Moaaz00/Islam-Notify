@@ -16,6 +16,7 @@ import com.islamnotify.calendar.domain.CalendarRepository
 import com.islamnotify.calendar.domain.DateConfig
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.events.domain.EventsWork
 import com.islamnotify.events.util.EventsUtils
 import com.islamnotify.main.domain.MainPreferencesConfig
@@ -68,7 +69,8 @@ class MainViewModel @Inject constructor(
     private val mainPreferencesRepository: MainPreferencesRepository,
     eventsWork: EventsWork,
     val soundsWork: SoundsWork,
-    val calendarRepository: CalendarRepository
+    val calendarRepository: CalendarRepository,
+    private val crashReporter: CrashReporter
 ) : ViewModel() {
 
 
@@ -233,6 +235,7 @@ class MainViewModel @Inject constructor(
 //                }
 
                 is NotificationWorkResult.Error -> {
+                    crashReporter.log("MainViewModel.startNotificationWork: Error state (failures=${result.failures})")
                     _notificationState.value = NotificationWorkState.Error
                     _notificationFailures.value = result.failures
                 }
@@ -417,10 +420,12 @@ class MainViewModel @Inject constructor(
     private suspend fun fetchPrayerData() {
         when (val result = prayerDataUseCase.getPrayerDataWithCurrentLocation()) {
             is LocationPrayerResult.PrayerError -> {
+                crashReporter.log("MainViewModel.fetchPrayerData: PrayerError state shown to user")
                 _uiState.value = LocationPrayerState.PrayerError
             }
 
             is LocationPrayerResult.LocationError -> {
+                crashReporter.log("MainViewModel.fetchPrayerData: LocationError (${result.failureCause}) shown to user")
                 _uiState.value = LocationPrayerState.LocationError(result.failureCause)
             }
 

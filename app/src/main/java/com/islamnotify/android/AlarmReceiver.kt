@@ -15,10 +15,12 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.islamnotify.common.AppUtils
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.events.domain.EventsWork
 import com.islamnotify.events.util.EventsUtils
 import com.islamnotify.notification.domain.NotificationWork
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -36,7 +38,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    // Reports any exception thrown inside a scope.launch that isn't caught locally
+    // (e.g. the midnight-notification branch), which would otherwise be dropped silently.
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        crashReporter.recordNonFatal(throwable)
+    }
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO + exceptionHandler)
 
     @Inject
     lateinit var notificationWork: NotificationWork
@@ -46,6 +53,9 @@ class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
     lateinit var soundsWork: SoundsWork
+
+    @Inject
+    lateinit var crashReporter: CrashReporter
 
     companion object {
         private var lastTriggerTime: Long = 0
@@ -73,6 +83,7 @@ class AlarmReceiver : BroadcastReceiver() {
         ) {
             if (context == null) {
                 Log.e("SoundsFlow", "onReceive: context is null")
+                crashReporter.log("AlarmReceiver.onReceive: null context for sound action")
                 return
             }
 
@@ -116,6 +127,7 @@ class AlarmReceiver : BroadcastReceiver() {
                         Log.d("SoundsFlow", "onReceive: Service started successfully")
                     } catch (e: Exception) {
                         Log.e("SoundsFlow", "onReceive: Service failed to start", e)
+                        crashReporter.recordNonFatal(e)
                     } finally {
                         pendingResult.finish()
                     }
@@ -153,6 +165,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     }
                 } catch (e: Exception) {
                     Log.e("NotificationFlow", "AlarmReceiver onReceive: ", e)
+                    crashReporter.recordNonFatal(e)
                 } finally {
                     pendingResult.finish()
                 }
@@ -179,6 +192,7 @@ class AlarmReceiver : BroadcastReceiver() {
                     Log.d("EventsFlow", "AlarmReceiver onReceive: Request Worker success")
                 } catch (e: Exception) {
                     Log.e("EventsFlow", "AlarmReceiver onReceive: Request Worker Failed", e)
+                    crashReporter.recordNonFatal(e)
                 } finally {
                     pendingResult.finish()
                 }
@@ -231,6 +245,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             } catch (e: Exception) {
                 Log.e("EventsFlow", "AlarmReceiver onReceive: Notification Failed ", e)
+                crashReporter.recordNonFatal(e)
             } finally {
                 pendingResult.finish()
             }

@@ -7,6 +7,7 @@ import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import com.islamnotify.calendar.domain.CalendarRepository
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.notification.data.NotificationDataStore
 import com.islamnotify.notification.data.NotificationWorkHandler
 import com.islamnotify.notification.data.NotificationWorkImpl
@@ -45,8 +46,8 @@ object NotificationModules {
 
     @Provides
     @Singleton
-    fun provideNotificationWorkHandler(@ApplicationContext context: Context, prayerDataUseCase: PrayerDataUseCase, alarmManager: AlarmManager, calendarRepository: CalendarRepository): NotificationWorkHandler {
-        return NotificationWorkHandler(context, prayerDataUseCase, alarmManager, calendarRepository)
+    fun provideNotificationWorkHandler(@ApplicationContext context: Context, prayerDataUseCase: PrayerDataUseCase, alarmManager: AlarmManager, calendarRepository: CalendarRepository, crashReporter: CrashReporter): NotificationWorkHandler {
+        return NotificationWorkHandler(context, prayerDataUseCase, alarmManager, calendarRepository, crashReporter)
     }
 
 

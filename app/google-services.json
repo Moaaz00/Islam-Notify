@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1003556008341",
+    "project_id": "islam-notify",
+    "storage_bucket": "islam-notify.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003556008341:android:7b2a6cb33ee087b5f6869c",
+        "android_client_info": {
+          "package_name": "com.islamnotify"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANMVNZ1T0xZIr5W6_Ew3B5dpO7EVdKmxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

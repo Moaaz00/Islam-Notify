@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.sounds.data.SoundsDataStore
 import com.islamnotify.sounds.data.SoundsWorkImpl
 import com.islamnotify.sounds.domain.SoundsWork
@@ -34,8 +35,11 @@ class SoundsModules {
 
     @Provides
     @Singleton
-    fun provideSoundsDataStore(@SoundPrefs dataStore: DataStore<Preferences>): SoundsDataStore{
-        return SoundsDataStore(dataStore)
+    fun provideSoundsDataStore(
+        @SoundPrefs dataStore: DataStore<Preferences>,
+        crashReporter: CrashReporter
+    ): SoundsDataStore{
+        return SoundsDataStore(dataStore, crashReporter)
     }
 
 }

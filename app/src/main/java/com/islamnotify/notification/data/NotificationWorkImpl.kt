@@ -14,6 +14,7 @@ import androidx.work.await
 import androidx.work.impl.awaitWithin
 import com.islamnotify.android.AlarmReceiver
 import com.islamnotify.common.AppUtils
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.notification.domain.NotificationWork
 import com.islamnotify.notification.domain.NotificationWorkResult
 import com.islamnotify.notification.util.NotificationUtils
@@ -26,7 +27,8 @@ class NotificationWorkImpl @Inject constructor(
     @param:ApplicationContext val context: Context,
     val alarmManager: AlarmManager,
     val notificationDataStore: NotificationDataStore,
-    val notificationWorkHandler: NotificationWorkHandler
+    val notificationWorkHandler: NotificationWorkHandler,
+    val crashReporter: CrashReporter
 ) : NotificationWork {
 
     companion object {
@@ -42,6 +44,7 @@ class NotificationWorkImpl @Inject constructor(
             return notificationWorkHandler.doNotificationWork()
         } catch (e: Exception) {
             Log.e(TAG, "Repository's startWork() error: ", e)
+            crashReporter.recordNonFatal(e)
             cancelNotification()
             return NotificationWorkResult.Error(null)
         }
@@ -65,6 +68,7 @@ class NotificationWorkImpl @Inject constructor(
             Log.d(TAG, "Repository's startWorkInBackground(): worker is requested")
         } catch (e: Exception) {
             Log.e(TAG, "Repository's startWorkInBackground() error: ", e)
+            crashReporter.recordNonFatal(e)
             cancelNotification()
         }
     }

@@ -3,6 +3,7 @@ package com.islamnotify.prayer_times.data
 import android.content.Context
 import android.util.Log
 import com.batoulapps.adhan2.CalculationMethod
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.prayer_times.domain.model.PrayerConfig
 import com.islamnotify.prayer_times.domain.PrayerDataRepository
 import com.islamnotify.prayer_times.domain.PrayerDataResult
@@ -16,7 +17,8 @@ import javax.inject.Inject
 class PrayerDataRepositoryImpl @Inject constructor(
     @param:ApplicationContext val context: Context,
     val prayerDataLocal: PrayerDataLocal,
-    val prayerDataStore: PrayerDataStore
+    val prayerDataStore: PrayerDataStore,
+    val crashReporter: CrashReporter
 ) : PrayerDataRepository {
 
     override suspend fun getPrayerDataForToday(
@@ -39,7 +41,11 @@ class PrayerDataRepositoryImpl @Inject constructor(
 
             prayerDataStore.savePrayerTimes(prayerTimes)
             PrayerDataResult.Success(prayerTimes)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            // Prayer calculation/IO failed — was silently swallowed. Report before falling back to cache.
+            // No location context attached (no country code / coordinates) — privacy.
+            Log.e("FetchPrayerTimes", "getPrayerDataForToday failed; falling back to cache", e)
+            crashReporter.recordNonFatal(e)
             fetchCachedData()
         }
     }
@@ -60,6 +66,7 @@ class PrayerDataRepositoryImpl @Inject constructor(
             Log.d("InitialPrayerTimes", "Repository returned non null initial data: fajr = ${result.fajr}, sunrise = ${result.sunrise}, zuhr = ${result.zuhr}, asr = ${result.asr}, sunset = ${result.sunset}, isha = ${result.isha}, midnight = ${result.midnight}, last third = ${result.lastThird}")
         }else{
             Log.w("InitialPrayerTimes", "Repository returned null initial data")
+            crashReporter.log("PrayerDataRepositoryImpl.loadInitialData: no cached prayer times")
         }
         return result
     }

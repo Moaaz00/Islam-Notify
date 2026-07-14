@@ -1,6 +1,7 @@
 package com.islamnotify.prayer_times.domain
 
 import android.util.Log
+import com.islamnotify.common.domain.CrashReporter
 import com.islamnotify.location.domain.LocationRepository
 import com.islamnotify.location.domain.model.LocationResult
 import com.islamnotify.prayer_times.domain.model.InitialPrayerLocationData
@@ -20,7 +21,8 @@ import java.time.temporal.TemporalAdjusters
 
 class PrayerDataUseCase @Inject constructor(
     val prayerDataRepository: PrayerDataRepository,
-    val locationRepository: LocationRepository
+    val locationRepository: LocationRepository,
+    val crashReporter: CrashReporter
 ) {
 
     suspend fun getPrayerDataWithLastLocation(): LocationPrayerResult {
@@ -50,6 +52,8 @@ class PrayerDataUseCase @Inject constructor(
                         locationData = locationResult.locationData
                     )
                 } else {
+                    // Calc failed AND no cache — the root throwable was already recorded in the repository.
+                    crashReporter.log("PrayerDataUseCase: PrayerError (no prayer data and no cache)")
                     LocationPrayerResult.PrayerError
                 }
             }
@@ -68,11 +72,15 @@ class PrayerDataUseCase @Inject constructor(
                         failureCause = locationResult.failureCause
                     )
                 } else {
+                    crashReporter.log("PrayerDataUseCase: PrayerError with stale location (no prayer data and no cache)")
                     LocationPrayerResult.PrayerError
                 }
             }
 
             is LocationResult.Error -> {
+                // PERMISSION_DENIED / GPS_DISABLED are expected user states, not bugs — breadcrumb only.
+                // The underlying throwable behind GENERIC_ERROR was already recorded in LocationRepositoryImpl.
+                crashReporter.log("PrayerDataUseCase: LocationError (${locationResult.failureCause})")
                 LocationPrayerResult.LocationError(locationResult.failureCause)
             }
         }
