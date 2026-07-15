@@ -280,7 +280,7 @@
     <string name="intro_perm_open_settings">Settings</string>
 
     <string name="intro_perm_location_title">Location</string>
-    <string name="intro_perm_location_subtitle">To determine your prayer times.</string>
+    <string name="intro_perm_location_subtitle">Islam Notify uses your location on your device to calculate accurate prayer times. It is not shared.</string>
     <string name="intro_perm_notification_title">Notifications</string>
     <string name="intro_perm_notification_subtitle">To use the always-on notification and event reminders.</string>
     <string name="intro_perm_battery_title">Background Activity</string>

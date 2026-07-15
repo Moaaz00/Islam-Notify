@@ -85,25 +85,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var mainPreferencesRepository: MainPreferencesRepository
 
-    // Location permission launcher — notification/battery are handled via the in-app dialog
-    private val locationPermissionLauncher: ActivityResultLauncher<Array<String>> =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
-            val coarseLocationGranted =
-                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-
-            if (fineLocationGranted || coarseLocationGranted) {
-                Log.d("LocationClient", "Permission Granted via Launcher")
-                viewModel.setToLoading()
-                viewModel.fetchPrayerDataAsync()
-            } else {
-                Log.e("LocationClient", "Permission Denied")
-                com.islamnotify.common.domain.CrashReporterProvider
-                    .instance?.log("MainActivity: location permission denied via launcher")
-            }
-        }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -121,7 +102,6 @@ class MainActivity : AppCompatActivity() {
 //            viewModel.loadInitialData()
 //        }
 
-        //checkPermissionsAndFetch()
 // OBSERVE notification work state
 //        lifecycleScope.launchWhenStarted {
 //            viewModel.notificationState.collect { state ->
@@ -172,29 +152,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-    private fun checkPermissionsAndFetch() {
-        val hasFine = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-        val hasCoarse = ContextCompat.checkSelfPermission(
-            this,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) == PackageManager.PERMISSION_GRANTED
-
-        if (!hasFine && !hasCoarse) {
-//            viewModel.fetchPrayerDataAsync()
-//        } else {
-            locationPermissionLauncher.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            )
-        }
-    }
 
 
 }

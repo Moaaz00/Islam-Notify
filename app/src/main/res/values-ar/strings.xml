@@ -280,7 +280,7 @@
     <string name="intro_perm_open_settings">الإعدادات</string>
 
     <string name="intro_perm_location_title">الموقع</string>
-    <string name="intro_perm_location_subtitle">لمعرفة مواقيت الصلاة الخاصة بك.</string>
+    <string name="intro_perm_location_subtitle">يستخدم التطبيق موقعك على جهازك لحساب مواقيت الصلاة بدقة. ولا تتم مشاركته.</string>
     <string name="intro_perm_notification_title">الإشعارات</string>
     <string name="intro_perm_notification_subtitle">لاستخدام ميزة الإشعار الدائم والتذكير بالمناسبات.</string>
     <string name="intro_perm_battery_title">العمل في الخلفية</string>
