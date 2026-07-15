@@ -126,8 +126,7 @@ fun MainScreenContent(
     date: String,
     isRefreshing: Boolean,
     onRefresh: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onAlarmScreenClicked: () -> Unit
+    onSettingsClick: () -> Unit
 ) {
     val context = LocalContext.current
 //    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -221,9 +220,6 @@ fun MainScreenContent(
                     onSettingsClick()
                     /*scope.launch { drawerState.open() }*/
                 },
-                onAlarmClicked = {
-                    onAlarmScreenClicked()
-                },
                 modifier = Modifier.wrapContentHeight()
             )
 
@@ -267,7 +263,6 @@ fun HeaderSection(
     locationName: String,
     nextPrayerName: String,
     onMenuClick: () -> Unit,
-    onAlarmClicked: () -> Unit,
     nextPrayerTime: String,
     countDown: CountDownDataModel,
     modifier: Modifier = Modifier
@@ -374,19 +369,6 @@ fun HeaderSection(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp) // Space between the two buttons
                 ) {
-                    // Hourglass (Alarm) Button — hidden for release; unhide to restore.
-//                    IconButton(
-//                        onClick = { onAlarmClicked() },
-//                        modifier = Modifier.size(40.dp)
-//                    ) {
-//                        Icon(
-//                            painter = painterResource(R.drawable.ic_hourglass),
-//                            contentDescription = null,
-//                            tint = MaterialTheme.colorScheme.onPrimary,
-//                            modifier = Modifier.size(20.dp)
-//                        )
-//                    }
-
                     // Settings Button (placed at the absolute end)
                     IconButton(
                         onClick = { onMenuClick() },

@@ -48,7 +48,6 @@ import androidx.compose.ui.res.stringResource
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils
 import com.islamnotify.prayer_times.domain.model.NextPrayerData
-import com.islamnotify.qibla_finder.MapActivity
 
 
 import android.os.VibrationEffect
@@ -174,11 +173,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    fun startMapActivity() {
-        val intent = Intent(this, MapActivity::class.java)
-        startActivity(intent)
-    }
 
     private fun checkPermissionsAndFetch() {
         val hasFine = ContextCompat.checkSelfPermission(

@@ -9,7 +9,6 @@ plugins {
 
     alias(libs.plugins.google.devtools.ksp)
     id("com.google.dagger.hilt.android")
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
 }
@@ -89,7 +88,6 @@ dependencies {
     implementation(platform("androidx.compose:compose-bom:$composeBom"))
 //    implementation("androidx.compose.foundation:foundation")
 
-    implementation("org.maplibre.gl:android-sdk:12.3.1")
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.compose.material3)
@@ -124,8 +122,6 @@ dependencies {
     ksp("androidx.hilt:hilt-compiler:1.3.0") // Changed from kapt to ksp
 
     implementation(libs.play.services.location)
-    implementation("com.google.maps.android:maps-compose:4.4.1")
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
 
     // Firebase Crashlytics (BoM manages versions)
     implementation(platform(libs.firebase.bom))

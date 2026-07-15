@@ -69,7 +69,6 @@ import com.islamnotify.settings.presentation.SettingsViewModel
 import com.islamnotify.ui.theme.AppThemeTypes
 import kotlinx.serialization.Serializable
 import com.islamnotify.R
-import com.islamnotify.alarms.presentation.AlarmAppNavigation
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.settings.presentation.PrayerOffsetViewModel
 import com.islamnotify.settings.presentation.PrayerTimesOffsetScreen
@@ -162,9 +161,6 @@ fun NavigationRoot() {
                 onRefresh = { viewModel.refreshData() },
                 onSettingsClick = {
                     navController.navigate(Screen.Settings)
-                },
-                onAlarmScreenClicked = {
-                    navController.navigate(AlarmScreen)
                 }
             )
         }
@@ -274,10 +270,6 @@ fun NavigationRoot() {
                 onOffsetChanged = { transform -> viewModel.onOffsetChanged(transform) },
                 onBackClick = { navController.popBackStack() }
             )
-        }
-
-        composable<AlarmScreen>{
-            AlarmAppNavigation()
         }
 
         // Hijri Date Offset Dialog
@@ -506,10 +498,6 @@ data object ThemeDialog
 @Keep
 @Serializable
 data object LanguageDialog
-
-@Keep
-@Serializable
-data object AlarmScreen
 
 private fun LanguageOption.toDisplayString(context: Context): String {
     return when (this) {

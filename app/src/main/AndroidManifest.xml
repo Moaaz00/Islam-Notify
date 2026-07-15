@@ -32,17 +32,9 @@
             android:name="firebase_crashlytics_collection_enabled"
             android:value="${crashlyticsCollectionEnabled}" />
 
-        <!-- &lt;!&ndash;        cypher&ndash;&gt; -->
-        <!-- <meta-data -->
-        <!-- android:name="com.google.android.geo.API_KEY" -->
-        <!-- android:value="${qiblaFinderApiKey}" /> -->
         <activity
             android:name=".intro.presentation.IntroActivity"
             android:exported="false" />
-        <activity
-            android:name=".qibla_finder.MapActivity"
-            android:exported="false" />
-
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -61,10 +53,6 @@
 
         <receiver
             android:name=".android.AlarmReceiver"
-            android:enabled="true"
-            android:exported="false" />
-        <receiver
-            android:name=".alarms.WakeupAlarmReceiver"
             android:enabled="true"
             android:exported="false" />
         <receiver
@@ -99,21 +87,6 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="mediaPlayback" />
-        <service
-            android:name=".alarms.AlarmService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback" />
-
-        <activity
-            android:name=".alarms.AlarmActivity"
-            android:showOnLockScreen="true"
-            android:turnScreenOn="true"
-            android:showWhenLocked="true"
-            android:excludeFromRecents="true"
-            android:launchMode="singleInstance"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
