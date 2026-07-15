@@ -198,7 +198,11 @@ class MainViewModel @Inject constructor(
             _hijriDate.value =
                 "${hijriData.dayOfWeek}, ${hijriData.formatedDayOfMonth} ${hijriData.monthName} ${hijriData.formatedYear}"
 
-            startNotificationWork()
+            // Only reschedule when notifications are already on; startNotificationWork()
+            // would otherwise re-enable the (disabled) notification toggle.
+            if (notificationWork.isEnabled().first()) {
+                startNotificationWork()
+            }
 
             delay(700)
             _isRefreshing.value = false
@@ -318,7 +322,9 @@ class MainViewModel @Inject constructor(
                 val wasShowingDialog = _permissionDialogState.value != null
                 _permissionDialogState.value = null
                 permissionsDialogDismissed = false // all clear → allow future reminders again
-                if (wasShowingDialog) {
+                // Only reschedule when notifications are already on; startNotificationWork()
+                // would otherwise re-enable the (disabled) notification toggle.
+                if (wasShowingDialog && notificationWork.isEnabled().first()) {
                     startNotificationWork()
                 }
             }

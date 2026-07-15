@@ -9,6 +9,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,7 +33,11 @@ class PrayerOffsetViewModel @Inject constructor(
         _config.update { transform(it) }
         viewModelScope.launch {
             prayerDataUseCase.savePrayerConfig { transform(it) }
-            notificationWork.startWork()
+            // Only reschedule when notifications are already on; startWork() would
+            // otherwise re-enable the (disabled) notification toggle.
+            if (notificationWork.isEnabled().first()) {
+                notificationWork.startWork()
+            }
         }
     }
 }

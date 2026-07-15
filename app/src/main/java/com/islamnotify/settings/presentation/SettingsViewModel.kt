@@ -205,7 +205,11 @@ class SettingsViewModel @Inject constructor(
             prayerDataUseCase.savePrayerConfig {
                 it.copy(manualCalculationMethod = method)
             }
-            notificationWork.startWork()
+            // Only reschedule when notifications are already on; startWork() would
+            // otherwise re-enable the (disabled) notification toggle.
+            if (_uiState.value.isNotificationEnabled) {
+                notificationWork.startWork()
+            }
         }
     }
 
@@ -256,6 +260,12 @@ class SettingsViewModel @Inject constructor(
         viewModelScope.launch {
             prayerDataUseCase.savePrayerConfig {
                 it.copy(isAutoCalculationMethodEnabled = enabled)
+            }
+            // Switching auto/manual changes the active calculation method and thus the
+            // prayer times, so the pending alarms must be rescheduled — but only when
+            // notifications are already on (startWork() would otherwise re-enable them).
+            if (_uiState.value.isNotificationEnabled) {
+                notificationWork.startWork()
             }
         }
     }
@@ -328,7 +338,11 @@ class SettingsViewModel @Inject constructor(
         }
         viewModelScope.launch {
             prayerDataUseCase.savePrayerConfig(transform)
-            notificationWork.startWork()
+            // Only reschedule when notifications are already on; startWork() would
+            // otherwise re-enable the (disabled) notification toggle.
+            if (_uiState.value.isNotificationEnabled) {
+                notificationWork.startWork()
+            }
         }
     }
 
