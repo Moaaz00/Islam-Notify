@@ -1,14 +1,9 @@
 package com.islamnotify.main.presentation
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.media.AudioAttributes
-import android.media.RingtoneManager
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import com.islamnotify.R
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.batoulapps.adhan2.CalculationMethod
@@ -150,7 +145,6 @@ class MainViewModel @Inject constructor(
 
     init {
         populateData()
-        createNotificationChannels()
         observeNextPrayerChanges()
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -242,85 +236,6 @@ class MainViewModel @Inject constructor(
             }
         }
     }
-
-    fun createNotificationChannels() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val localizedContext = context.getLocalizedContext()
-            val prayersName = localizedContext.getString(R.string.prayer_notification_channel_name)
-            val prayersDescription =
-                localizedContext.getString(R.string.prayer_notification_channel_description)
-            val importance = NotificationManager.IMPORTANCE_HIGH
-
-            val eventsName = localizedContext.getString(R.string.events_notification_channel_name)
-            val eventsDescription =
-                localizedContext.getString(R.string.events_notification_channel_description)
-
-            val prayersChannel = NotificationChannel(
-                AppUtils.PRAYER_NOTIFICATION_CHANNEL_ID,
-                prayersName,
-                importance
-            )
-            prayersChannel.setSound(null, null)
-            prayersChannel.description = prayersDescription
-            prayersChannel.enableVibration(false)
-            prayersChannel.vibrationPattern = null
-            prayersChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-
-            val eventsChannel =
-                NotificationChannel(AppUtils.EVENTS_NOTIFICATION_CHANNEL_ID, eventsName, importance)
-            eventsChannel.description = eventsDescription
-            eventsChannel.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-
-            val mediaName = localizedContext.getString(R.string.sounds_notification_channel_name)
-            val mediaDescription =
-                localizedContext.getString(R.string.sounds_notification_channel_description)
-            val mediaChannel = NotificationChannel(
-                AppUtils.SOUNDS_NOTIFICATION_CHANNEL_ID,
-                mediaName,
-                NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = mediaDescription
-                lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-                setSound(null, null)
-                enableVibration(false)
-                vibrationPattern = null
-            }
-
-            val othersChannel = NotificationChannel(
-                AppUtils.OTHERS_NOTIFICATION_CHANNEL_ID,
-                localizedContext.getString(R.string.others_notification_channel_name),
-                NotificationManager.IMPORTANCE_LOW
-            ).apply {
-                setSound(null, null)
-                enableVibration(false)
-                vibrationPattern = null
-            }
-
-            val alarmChannel = NotificationChannel(
-                AppUtils.ALARM_NOTIFICATION_CHANNEL,
-                localizedContext.getString(R.string.alarm_notification_channel_name),
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
-                setSound(null, null)
-                enableVibration(true)
-            }
-
-            // Register the channel with the system
-            context.getSystemService(NotificationManager::class.java).apply {
-                createNotificationChannels(
-                    listOf(
-                        prayersChannel,
-                        eventsChannel,
-                        mediaChannel,
-                        othersChannel,
-                        alarmChannel
-                    )
-                )
-            }
-
-        }
-    }
-
 
     private fun populateData() {
         viewModelScope.launch {
