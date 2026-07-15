@@ -136,7 +136,15 @@ fun NavigationRoot() {
                         }
                         val batteryGranted = (context.getSystemService(Context.POWER_SERVICE) as PowerManager)
                             .isIgnoringBatteryOptimizations(context.packageName)
-                        viewModel.refreshPermissionState(notificationGranted, batteryGranted)
+                        val locationGranted = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) == PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ) == PackageManager.PERMISSION_GRANTED
+                        viewModel.refreshPermissionState(notificationGranted, batteryGranted, locationGranted)
                     }
                 }
                 lifecycleOwner.lifecycle.addObserver(observer)

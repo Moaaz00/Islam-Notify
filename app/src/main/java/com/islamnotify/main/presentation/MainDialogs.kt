@@ -1,8 +1,15 @@
 package com.islamnotify.main.presentation
 
+import android.Manifest
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +19,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -182,7 +191,8 @@ fun LocationErrorDialog(
 fun PermissionsReminderDialog(
     state: PermissionDialogState,
     onDismiss: () -> Unit,
-    onDontAskAgain: () -> Unit
+    onDontAskAgain: () -> Unit,
+    onLocationGranted: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -194,12 +204,44 @@ fun PermissionsReminderDialog(
         )
     }
 
-    val openBatterySettings: () -> Unit = {
+    val openAppDetailsSettings: () -> Unit = {
         context.startActivity(
             Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
                 data = Uri.fromParts("package", context.packageName, null)
             }
         )
+    }
+
+    val locationLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+        val granted = result[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+        if (granted) {
+            onLocationGranted()
+        }
+    }
+
+    val requestLocation: () -> Unit = {
+        val activity = context.findActivity()
+        // shouldShowRequestPermissionRationale is false once the permission is permanently
+        // denied (post-onboarding it was already requested during the intro), so fall back
+        // to the settings screen in that case; otherwise fire the runtime prompt.
+        if (activity == null ||
+            !ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        ) {
+            openAppDetailsSettings()
+        } else {
+            locationLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
     }
 
     AlertDialog(
@@ -212,25 +254,38 @@ fun PermissionsReminderDialog(
             )
         },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(20.dp)) {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
 //                Text(
 //                    text = "",
 //                    //text = stringResource(R.string.dialog_permissions_message),
 //                    fontFamily = MainFont,
 //                    style = MaterialTheme.typography.bodyMedium
 //                )
+                if (state.locationMissing) {
+                    PermissionRow(
+                        title = stringResource(R.string.dialog_permissions_location),
+                        description = stringResource(R.string.dialog_permissions_location_desc),
+                        buttonText = stringResource(R.string.dialog_permissions_grant),
+                        onAction = requestLocation
+                    )
+                }
                 if (state.notificationMissing) {
                     PermissionRow(
                         title = stringResource(R.string.dialog_permissions_notification),
                         description = stringResource(R.string.dialog_permissions_notification_desc),
-                        onOpenSettings = openNotificationSettings
+                        buttonText = stringResource(R.string.dialog_permissions_grant),
+                        onAction = openNotificationSettings
                     )
                 }
                 if (state.batteryMissing) {
                     PermissionRow(
                         title = stringResource(R.string.dialog_permissions_battery),
                         description = stringResource(R.string.dialog_permissions_battery_desc),
-                        onOpenSettings = openBatterySettings
+                        buttonText = stringResource(R.string.dialog_permissions_grant),
+                        onAction = openAppDetailsSettings
                     )
                 }
             }
@@ -259,11 +314,21 @@ fun PermissionsReminderDialog(
     )
 }
 
+private fun Context.findActivity(): Activity? {
+    var ctx: Context = this
+    while (ctx is ContextWrapper) {
+        if (ctx is Activity) return ctx
+        ctx = ctx.baseContext
+    }
+    return null
+}
+
 @Composable
 private fun PermissionRow(
     title: String,
     description: String,
-    onOpenSettings: () -> Unit
+    buttonText: String,
+    onAction: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -288,12 +353,12 @@ private fun PermissionRow(
         }
         Spacer(modifier = Modifier.width(8.dp))
         OutlinedButton(
-            onClick = onOpenSettings,
+            onClick = onAction,
             shape = RoundedCornerShape(12.dp),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
         ) {
             Text(
-                text = stringResource(R.string.dialog_open_settings),
+                text = buttonText,
                 fontFamily = MainFont,
                 style = MaterialTheme.typography.labelMedium
             )

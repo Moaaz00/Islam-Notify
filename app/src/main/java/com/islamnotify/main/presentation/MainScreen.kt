@@ -171,7 +171,11 @@ fun MainScreenContent(
             PermissionsReminderDialog(
                 state = state,
                 onDismiss = { viewModel.dismissPermissionsDialog(dontAskAgain = false) },
-                onDontAskAgain = { viewModel.dismissPermissionsDialog(dontAskAgain = true) }
+                onDontAskAgain = { viewModel.dismissPermissionsDialog(dontAskAgain = true) },
+                onLocationGranted = {
+                    viewModel.setToLoading()
+                    viewModel.fetchPrayerDataAsync()
+                }
             )
         }
     }

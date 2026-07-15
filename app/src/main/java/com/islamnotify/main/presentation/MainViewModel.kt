@@ -53,7 +53,8 @@ import javax.inject.Inject
 
 data class PermissionDialogState(
     val notificationMissing: Boolean,
-    val batteryMissing: Boolean
+    val batteryMissing: Boolean,
+    val locationMissing: Boolean
 )
 
 @HiltViewModel
@@ -107,6 +108,11 @@ class MainViewModel @Inject constructor(
 
     private val _permissionDialogState = MutableStateFlow<PermissionDialogState?>(null)
     val permissionDialogState: StateFlow<PermissionDialogState?> = _permissionDialogState.asStateFlow()
+
+    // Set when the user explicitly dismisses the reminder dialog (Cancel / Don't Ask Again).
+    // In-memory and session-scoped: it prevents re-opening the dialog on resume, but resets on a
+    // cold start. It does NOT block resume-driven updates while the dialog is still open.
+    private var permissionsDialogDismissed = false
 
     val soundsConfigState: StateFlow<SoundsConfig?> = soundsWork.getSoundsConfig()
         .stateIn(
@@ -295,17 +301,23 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun refreshPermissionState(notificationGranted: Boolean, batteryGranted: Boolean) {
+    fun refreshPermissionState(notificationGranted: Boolean, batteryGranted: Boolean, locationGranted: Boolean) {
         viewModelScope.launch {
             val config = mainPreferencesRepository.getConfig().first()
             val notificationMissing = !notificationGranted && !config.dontAskNotification
             val batteryMissing = !batteryGranted && !config.dontAskBattery
+            val locationMissing = !locationGranted && !config.dontAskLocation
 
-            if (notificationMissing || batteryMissing) {
-                _permissionDialogState.value = PermissionDialogState(notificationMissing, batteryMissing)
+            if (notificationMissing || batteryMissing || locationMissing) {
+                // Keep the dialog in sync while it's open, but don't reopen it after the user
+                // explicitly dismissed it this session (Cancel / Don't Ask Again).
+                if (!permissionsDialogDismissed) {
+                    _permissionDialogState.value = PermissionDialogState(notificationMissing, batteryMissing, locationMissing)
+                }
             } else {
                 val wasShowingDialog = _permissionDialogState.value != null
                 _permissionDialogState.value = null
+                permissionsDialogDismissed = false // all clear → allow future reminders again
                 if (wasShowingDialog) {
                     startNotificationWork()
                 }
@@ -320,10 +332,12 @@ class MainViewModel @Inject constructor(
                 mainPreferencesRepository.saveConfig { config ->
                     config.copy(
                         dontAskNotification = config.dontAskNotification || (currentState?.notificationMissing == true),
-                        dontAskBattery = config.dontAskBattery || (currentState?.batteryMissing == true)
+                        dontAskBattery = config.dontAskBattery || (currentState?.batteryMissing == true),
+                        dontAskLocation = config.dontAskLocation || (currentState?.locationMissing == true)
                     )
                 }
             }
+            permissionsDialogDismissed = true
             _permissionDialogState.value = null
         }
     }

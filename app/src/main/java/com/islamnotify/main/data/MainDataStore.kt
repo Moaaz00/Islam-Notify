@@ -22,6 +22,7 @@ class MainDataStore @Inject constructor(@param:MainModule.MainPrefs val dataStor
         val SHOW_INTRO = booleanPreferencesKey("SHOW_INTRO")
         val DONT_ASK_NOTIFICATION = booleanPreferencesKey("DONT_ASK_NOTIFICATION")
         val DONT_ASK_BATTERY = booleanPreferencesKey("DONT_ASK_BATTERY")
+        val DONT_ASK_LOCATION = booleanPreferencesKey("DONT_ASK_LOCATION")
     }
 
     override suspend fun saveConfig(transform: (MainPreferencesConfig) -> MainPreferencesConfig) {
@@ -32,6 +33,7 @@ class MainDataStore @Inject constructor(@param:MainModule.MainPrefs val dataStor
             preferences[Keys.SHOW_INTRO] = newConfig.showIntro
             preferences[Keys.DONT_ASK_NOTIFICATION] = newConfig.dontAskNotification
             preferences[Keys.DONT_ASK_BATTERY] = newConfig.dontAskBattery
+            preferences[Keys.DONT_ASK_LOCATION] = newConfig.dontAskLocation
         }
     }
 
@@ -41,7 +43,8 @@ class MainDataStore @Inject constructor(@param:MainModule.MainPrefs val dataStor
                 theme = AppThemeTypes.valueOf(preferences[Keys.THEME] ?: AppThemeTypes.GREEN_LIGHT.name),
                 showIntro = preferences[Keys.SHOW_INTRO] ?: true,
                 dontAskNotification = preferences[Keys.DONT_ASK_NOTIFICATION] ?: false,
-                dontAskBattery = preferences[Keys.DONT_ASK_BATTERY] ?: false
+                dontAskBattery = preferences[Keys.DONT_ASK_BATTERY] ?: false,
+                dontAskLocation = preferences[Keys.DONT_ASK_LOCATION] ?: false
             )
         }
     }
