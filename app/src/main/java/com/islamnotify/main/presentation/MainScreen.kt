@@ -308,13 +308,13 @@ fun HeaderSection(
 //                Icon(
 //                    painter = painterResource(R.drawable.ic_location_pin_filled),
 //                    contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onPrimary,
+//                    tint = ExtendedTheme.colors.onHeader,
 //                    modifier = Modifier.size(16.dp)
 //                )
 //                Spacer(modifier = Modifier.width(6.dp))
 //                Text(
 //                    text = locationName,
-//                    color = MaterialTheme.colorScheme.onPrimary,
+//                    color = ExtendedTheme.colors.onHeader,
 //                    fontFamily = MainFont,
 //                    fontWeight = FontWeight.Normal,
 //                    fontSize = 12.sp,
@@ -327,7 +327,7 @@ fun HeaderSection(
 //                Icon(
 //                    painter = painterResource(R.drawable.ic_settings_filled),
 //                    contentDescription = null,
-//                    tint = MaterialTheme.colorScheme.onPrimary,
+//                    tint = ExtendedTheme.colors.onHeader,
 //                    modifier = Modifier.size(24.dp)
 //                )
 //            }
@@ -352,13 +352,13 @@ fun HeaderSection(
                         Icon(
                             painter = painterResource(R.drawable.ic_location_pin),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
+                            tint = ExtendedTheme.colors.onHeader,
                             modifier = Modifier.size(14.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = locationName,
-                            color = MaterialTheme.colorScheme.onPrimary,
+                            color = ExtendedTheme.colors.onHeader,
                             fontFamily = MainFont,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
@@ -381,7 +381,7 @@ fun HeaderSection(
                         Icon(
                             painter = painterResource(R.drawable.ic_settings),
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimary,
+                            tint = ExtendedTheme.colors.onHeader,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -400,7 +400,7 @@ fun HeaderSection(
 //                    Spacer(Modifier.weight(4f))
                     Text(
                         text = nextPrayerName,
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = ExtendedTheme.colors.onHeader,
                         fontFamily = MainFont,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
@@ -412,7 +412,7 @@ fun HeaderSection(
                     Text(
                         modifier = Modifier.padding(bottom = 0.dp, top = 0.dp),
                         text = formatTime(nextPrayerTime, context),
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = ExtendedTheme.colors.onHeader,
                         fontFamily = MainFont,
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
@@ -435,7 +435,7 @@ fun HeaderSection(
                             countDown.seconds
                         ),
                         //                    text = if (countDown.isNotEmpty()) "$remainingText $nextPrayerName $countDown" else "",
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = ExtendedTheme.colors.onHeader,
                         fontFamily = MainFont,
                         fontWeight = FontWeight.Normal,
                         fontSize = 14.sp,

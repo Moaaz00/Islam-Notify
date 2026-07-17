@@ -1,6 +1,5 @@
 package com.islamnotify.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -14,6 +13,57 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
+/*
+ * ---------------------------------------------------------------------------
+ * Theme system
+ * ---------------------------------------------------------------------------
+ * Every theme is GREEN_LIGHT's structure re-hued. GREEN_LIGHT is the reference
+ * and is reproduced here verbatim; the rest are derived from it so they carry
+ * the same weight and contrast.
+ *
+ * The design is "warm parchment paper + one brand hue". The neutrals below are
+ * hue 45-49 (cream) and contain no green at all — the brand colour appears ONLY
+ * in primary/secondary and the header gradient. That separation is what makes
+ * the reference read like a printed almanac rather than a colour-washed app, so
+ * the neutrals are shared verbatim by all six light themes; only `primary` and
+ * `backgroundGradient` change.
+ *
+ * Light themes, per role:
+ *   primary/secondary  brand hue at L* 49.8  -> exactly 4.5:1 against white
+ *   gradient L*        62.5 / 47.3 / 36.9 / 36.9 / 26.4   (an even ramp)
+ *   gradient hue       rotated toward yellow at the top (sunlit) and away from it at the
+ *                      foot (shadow). Green swings 85 -> 130 deg; that rotation is what
+ *                      gives the header depth. The amount is clamped per hue so the top
+ *                      stop cannot leave its own colour family.
+ *   gradient sat       primary_sat + k * (1 - primary_sat), k = .127/.017/.151/.151/.079
+ *
+ * Dark themes reuse the same hues and saturations, dropping the gradient to
+ * L* 38.5/27.1/17/17/9.1 and lifting `primary` to L* 79.8 (Material tone-80) so
+ * the accent stays luminous on a near-black surface.
+ *
+ * Saturation is tuned per hue rather than fixed: cool hues keep their identity when muted
+ * (blue holds at 30%), but warm hues collapse into mud below ~30%, so gold carries 58%.
+ * Brown IS a low-saturation orange, which is why it sits at 32%.
+ *
+ * Two themes deviate from the L* 49.8 accent on purpose, because the hue cannot express
+ * its own identity at that lightness:
+ *   RED  sits at L* 24.8 (#78092A). A red at L* 49.8 is a brick/terracotta, not a wine.
+ *        Its whole ramp shifts down with it; only its top stop is lifted back to L* 44
+ *        for a crimson glow.
+ *   PINK keeps the L* 49.8 accent but lifts its top stop to L* 68, because cotton-candy
+ *        pink is *defined* by being light -- at L* 49.8 any pink reads raspberry. The body
+ *        stays dark enough to carry white text; the candy lives in the top stop.
+ *
+ * Red and pink sit only 10 deg apart on the wheel, so in light mode they are told apart by
+ * depth (wine vs candy). Dark mode would collapse that difference, so red's dark ramp is
+ * based at L* 43 rather than 49.8 -- it stays the deep theme in both modes.
+ *
+ * Superseded commented-out palettes were removed; `git show HEAD~1 -- <file>`
+ * has them if any are still wanted.
+ */
+
+// Unreachable fallbacks (`themeType` covers all twelve enum entries) kept for
+// the dynamic-colour / no-theme path.
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
@@ -24,90 +74,7 @@ private val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
 )
-
-
-//private val OliveColorScheme = lightColorScheme(
-//    primary = Color(0xFF064E3B),          // dark_green (Brand identity)
-//    onPrimary = Color(0xFFFBFAF7),              // Text on dark green
-//
-//    secondary = Color(0xFF064E3B),        // active_card_green (Highlights)
-//    onSecondary = Color(0xFFFBFAF7),            // Text on active cards
-//
-//    background = Color(0xFFF4F1EA),       // off_white (The main screen bottom)
-//    onBackground = Color(0xFF4E4E4E),     // dark_gray (Main text)
-//
-//    surface = Color(0xFFFBFAF7),                // Inactive cards
-//    onSurface = Color(0xFF4E4E4E),        // Text on inactive cards
-//
-//    outlineVariant = Color(0x00000000).copy(alpha = 0.05f) // Your border stroke color
-//)
-//
-//val OliveCustomThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF4A6A3F),
-//        Color(0xFF3E5C36),
-//        Color(0xFF2F4730)
-//    )
-//)
-
-//private val OliveColorScheme = lightColorScheme(
-//    primary = Color(0xFF4A6A3F),          // dark_green (Brand identity)
-//    onPrimary = Color(0xFFFBFAF7),              // Text on dark green
-//
-//    secondary = Color(0xFF55734B),        // active_card_green (Highlights)
-//    onSecondary = Color(0xFFFBFAF7),            // Text on active cards
-//
-//    background = Color(0xFFF4F1EA),       // off_white (The main screen bottom)
-//    onBackground = Color(0xFF4E4E4E),     // dark_gray (Main text)
-//
-//    surface = Color(0xFFFBFAF7),                // Inactive cards
-//    onSurface = Color(0xFF4E4E4E),        // Text on inactive cards
-//
-//    outlineVariant = Color(0x00000000).copy(alpha = 0.05f) // Your border stroke color
-//)
-//
-//val OliveCustomThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF4A6A3F),
-//        Color(0xFF3E5C36),
-//        Color(0xFF2F4730)
-//    )
-//)
-
-//private val OliveColorScheme = lightColorScheme(
-//    primary = Color(0xFF4A6A3F),          // dark_green (Brand identity)
-//    onPrimary = Color(0xFFFBFAF7),              // Text on dark green
-//
-//    secondary = Color(0xFF55734B),        // active_card_green (Highlights)
-//    onSecondary = Color(0xFFFBFAF7),            // Text on active cards
-//
-//    background = Color(0xFFF1EEE7),       // off_white (The main screen bottom)
-//    onBackground = Color(0xFF595959),     // dark_gray (Main text)
-//
-//    surface = Color(0xFFFBFAF7),                // Inactive cards
-//    onSurface = Color(0xFF595959),        // Text on inactive cards
-//
-//    outlineVariant = Color(0x00000000).copy(alpha = 0.05f) // Your border stroke color
-//)
-//
-//val OliveCustomThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF4A6A3F),
-//        Color(0xFF3E5C36),
-//        Color(0xFF2F4730)
-//    )
-//)
 
 /*Possible primary colors
 BROWNS:
@@ -157,677 +124,394 @@ REDS:
 4- fc6063 (could be orange)
 */
 
-//private val blueDarkColorScheme = darkColorScheme(
-//    // LOGIC: Shifted to a lighter "Mist Blue" (Tonal 80) to pop against dark backgrounds
-//    // This matches the luminance of your Green B7CCAD
-//    primary = Color(0xFF25383e),
-//    onPrimary = Color(0xFFE1E3E4), // Cool-toned off-white for text on primary
-//
-//    // LOGIC: Active prayer card uses a deep Slate Blue
-//    // Matches the 0xFF364431 logic from the green theme
-//    secondary = Color(0xFF25383e),
-//    onSecondary = Color(0xFFE1E3E4),
-//
-//    // LOGIC: Deep "Charcoal Slate". Keeps the cool tone of blue light mode
-//    // but at the same 10-12% luminance as the green dark mode.
-//    background = Color(0xFF191C1E),
-//    onBackground = Color(0xFFE1E3E4), // Cool white for readability
-//
-//    // LOGIC: Slightly lighter than background (Elevation 1)
-//    surface = Color(0xFF222628),
-//    onSurface = Color(0xFFE1E3E4),
-//
-//    onSurfaceVariant = Color(0xFFC1C8CC), // Light blue-grey for secondary text
-//
-//    outline = Color(0xFF8A9296),
-//    outlineVariant = Color(0xFF40484B) // Subtle border for cards
-//)
-//
-//val blueDarkThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF2A3F44), // Top: Muted dark teal
-//        Color(0xFF22353B), // Transition
-//        Color(0xFF1B2E36), // Middle: Deep Slate
-//        Color(0xFF16252B), // Lower
-//        Color(0xFF16252B), // Lower
-//        Color(0xFF0E161B)  // Bottom: Deepest Navy/Charcoal
-//    ),
-//    // Consistent with your green dark theme
-//    bg_alpha = 0.03f
-//)
-
-private val blueDarkColorScheme = darkColorScheme(
-    primary = Color(0xFF9DB9C9), // Lighter slate blue (better contrast for dark mode)
-    onPrimary = Color(0xFFFFFFFF), // Dark navy text on light blue
-
-    secondary = Color(0xFF5D7B8C), // Original slate blue for active prayer card
-    onSecondary = Color(0xFFFFFFFF), // White text on active card
-
-    background = Color(0xFF121417), // Deep charcoal blue-black
-    onBackground = Color(0xFFE2E2E6), // Soft white text (less eye strain than pure white)
-
-
-    surface = Color(0xFF1C2024), // Slightly lighter slate-grey for inactive cards
-    onSurface = Color(0xFFC4C7CB), // Muted grey text
-
-    onSurfaceVariant = Color(0xFF8E9194), // Muted blue-grey for disabled states
-
-    outline = Color(0xFF44474A), // Dark grey switch head
-    outlineVariant = Color(0xFFFFFFFF).copy(0.1f) // Subtle light border for cards
-)
-
-// header background (Dark Midnight variant)
-val blueDarkThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-        Color(0xFF3D5361), // Top: Much more visible Slate Blue (distinguishes the header)
-        Color(0xFF2D3E49), // Middle-Top: Deep Steel Blue
-        Color(0xFF222F38), // Middle: Dark Navy
-        Color(0xFF1B252C), // Shadow: Very dark blue
-        Color(0xFF1B252C), // Shadow: Very dark blue
-        Color(0xFF151D24)  // Bottom: Ends just slightly lighter than the background
-    ),
-    0.03f
-)
-
-
-private val blueLightColorScheme = lightColorScheme(
-    primary = Color(0xFF5D7B8C), // Muted Slate Blue (matches the Sage Green tone)
+// ---------------------------------------------------------------- GREEN
+private val greenLightColorScheme = lightColorScheme(
+    primary = Color(0xFF657D5D),
     onPrimary = Color(0xFFFFFFFF),
 
-    secondary = Color(0xFF5D7B8C), // active prayer card
-    onSecondary = Color(0xFFF9FAFB), // on active card
+    secondary = Color(0xFF657D5D),
+    onSecondary = Color(0xFFFDFCF9),
 
-    background = Color(0xFFEBEEF0), // Cool linen (replaces the greenish-tinted EFEDE4)
-    onBackground = Color(0xFF353A3D), // Dark charcoal with a hint of navy
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
 
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
 
-    surface = Color(0xFFF9FAFB), // Very light misty white
-    onSurface = Color(0xFF1A1C1E), // Near black with cool undertone
-
-    onSurfaceVariant = Color(0xFF73787B), // Muted blue-grey for disabled states
-
-    outline = Color(0xFFCCD3D6), // Steel-grey switch head
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
     outlineVariant = Color(0xFF000000).copy(0.1f)
 )
 
-// header background (Slate/Midnight variant)
-val blueLightThemeColors = CustomThemeColors(
+val greenLightThemeColors = CustomThemeColors(
     backgroundGradient = listOf(
-        Color(0xFF809EB0), // Top: Misty blue
-        Color(0xFF5D7B8C), // Middle: Your brand blue
-        Color(0xFF4A6575), // Depth: Stormy blue
-        Color(0xFF2D3E49), // Shadow: Deep charcoal blue
-        Color(0xFF2D3E49), // Shadow: Deep charcoal blue
-        Color(0xFF1D2830)  // Bottom: Midnight (grounds the theme)
+        Color(0xFF85A05F),
+        Color(0xFF5E7756),
+        Color(0xFF3F5F36),
+        Color(0xFF3F5F36),
+        Color(0xFF2C4430),
     ),
-    0.05f
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
 )
-//private val blueLightColorScheme = lightColorScheme(
-//    primary = Color(0xFF326f82), // main brand blue (your provided color)
-//    onPrimary = Color(0xFFFFFFFF), // on gradient
-//
-//    secondary = Color(0xFF2d6473), // active prayer card
-//    onSecondary = Color(0xFFF7F9FA), // on active card
-//
-//    background = Color(0xFFf3f3f1), // prayer list section (cool-toned off-white)
-//    onBackground = Color(0xFF353B3C), // on prayer list section
-//
-//
-//    surface = Color(0xFFFFFFFF), // inactive cards above the prayer list (cool white)
-//    onSurface = Color(0xFF1D2021), // on inactive cards
-//
-//    onSurfaceVariant = Color(0xFF70787A), // disabled switch (muted blue-grey)
-//
-//    outline = Color(0xFFC4CDD1), // switch head (muted cool grey)
-//    outlineVariant = Color(0xFF000000).copy(0.1f) // prayer cards border
-//)
-//
-//// header background (30-40% of the screen)
-//val blueLightThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF538D93), // Top: Slightly more Cyan/Greenish (Teal)
-//        Color(0xFF28697d), // Transition: Muted Blue-Teal
-//        Color(0xFF225765), // Middle: Your Base Color (True Blue)
-//        Color(0xFF225765), // Middle: Your Base Color (True Blue)
-//        Color(0xFF225765), // Middle: Your Base Color (True Blue)
-//        Color(0xFF1F4C5B), // Lower: Deeper Slate Blue
-//        Color(0xFF1B364A)  // Bottom: Shifted toward Navy/Indigo (Subtle Purple hue)
-//    ),
-//    0.05f
-//)
 
+private val greenDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFB7CCAD),
+    onPrimary = Color(0xFF1E2E1A),
 
-//val brownDarkColorScheme = darkColorScheme(
-//    primary = Color(0xFF5D4037),
-//    onPrimary = Color(0xFFFDF8F6), // Tinted White (Cream)
-//    secondary = Color(0xFF4E342E),
-//    onSecondary = Color(0xFFFDF8F6),
-//    background = Color(0xFF1B1614),
-//    onBackground = Color(0xFFF5F0EE),
-//    surface = Color(0xFF2D2422),
-//    onSurface = Color(0xFFF5F0EE),
-//    onSurfaceVariant = Color(0xFFA1887F),
-//    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-//)
-//
-//val brownDarkThemeColors = CustomThemeColors(listOf(
-//    Color(0xFFA1887F), // Light warm tan (Start)
-//    Color(0xFF5D4037), // Your accent (Middle)
-//    Color(0xFF3E2723)  // Deep espresso (Bottom)
-//))
-private val brownDarkColorScheme = darkColorScheme(
-    primary = Color(0xFFCBA584), // Lighter tan/sand
+    secondary = Color(0xFF364431),
+    onSecondary = Color(0xFFE2E3DA),
+
+    background = Color(0xFF1A1C18),
+    onBackground = Color(0xFFE2E3DA),
+
+    surface = Color(0xFF23261F),
+    onSurface = Color(0xFFE2E3DA),
+
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF43493E)
+)
+
+val greenDarkThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFF506039),
+        Color(0xFF364431),
+        Color(0xFF1E2E1A),
+        Color(0xFF1E2E1A),
+        Color(0xFF121C14),
+    ),
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF4B5344),
+    switchThumbOff = Color(0xFFC5C8BB),
+    bg_alpha = 0.03f
+)
+
+// ---------------------------------------------------------------- BLUE
+private val blueLightColorScheme = lightColorScheme(
+    primary = Color(0xFF5779A1),
     onPrimary = Color(0xFFFFFFFF),
 
-    secondary = Color(0xFF483727), // Original Ochre
-    onSecondary = Color(0xFFFFFFFF),
+    secondary = Color(0xFF5779A1),
+    onSecondary = Color(0xFFFDFCF9),
 
-    background = Color(0xFF141210), // Near black with warm umber tint
-    onBackground = Color(0xFFE6E1DC),
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
 
-    surface = Color(0xFF1D1A17), // Dark chocolate-grey
-    onSurface = Color(0xFFC9C3BD),
-    onSurfaceVariant = Color(0xFF918C86),
-    outline = Color(0xFF4A4540),
-    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
+
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
+    outlineVariant = Color(0xFF000000).copy(0.1f)
+)
+
+val blueLightThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFF5EA0B8),
+        Color(0xFF51729A),
+        Color(0xFF375983),
+        Color(0xFF375983),
+        Color(0xFF363871),
+    ),
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
+)
+
+private val blueDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFB5C7DD),
+    onPrimary = Color(0xFF1B2B3F),
+
+    secondary = Color(0xFF2E4158),
+    onSecondary = Color(0xFFE2E3DA),
+
+    background = Color(0xFF191B1D),
+    onBackground = Color(0xFFE2E3DA),
+
+    surface = Color(0xFF202627),
+    onSurface = Color(0xFFE2E3DA),
+
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF41494C)
+)
+
+val blueDarkThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFF326071),
+        Color(0xFF2E4158),
+        Color(0xFF1B2B3F),
+        Color(0xFF1B2B3F),
+        Color(0xFF16172F),
+    ),
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF475256),
+    switchThumbOff = Color(0xFFC5C8BB),
+    bg_alpha = 0.03f
+)
+
+// ---------------------------------------------------------------- BROWN
+private val brownLightColorScheme = lightColorScheme(
+    primary = Color(0xFF9B6C50),
+    onPrimary = Color(0xFFFFFFFF),
+
+    secondary = Color(0xFF9B6C50),
+    onSecondary = Color(0xFFFDFCF9),
+
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
+
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
+
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
+    outlineVariant = Color(0xFF000000).copy(0.1f)
+)
+
+val brownLightThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFFB89056),
+        Color(0xFF95654B),
+        Color(0xFF7C4B32),
+        Color(0xFF7C4B32),
+        Color(0xFF642E31),
+    ),
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
+)
+
+private val brownDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFDCC0B0),
+    onPrimary = Color(0xFF3C2418),
+
+    secondary = Color(0xFF553A2B),
+    onSecondary = Color(0xFFE2E3DA),
+
+    background = Color(0xFF1D1B18),
+    onBackground = Color(0xFFE2E3DA),
+
+    surface = Color(0xFF272420),
+    onSurface = Color(0xFFE2E3DA),
+
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF4B4740)
 )
 
 val brownDarkThemeColors = CustomThemeColors(
     backgroundGradient = listOf(
-        Color(0xFF5E452E), // Top: Warm clay glow
-        Color(0xFF4A3624), // Middle: Deep umber
-        Color(0xFF38291B), // Depth
-        Color(0xFF291E14), // Shadow
-        Color(0xFF291E14), // Shadow
-        Color(0xFF1C140D)  // Bottom: Espresso
-    ), 0.03f
-)
-
-private val brownLightColorScheme = lightColorScheme(
-    primary = Color(0xFFA67C52), // Muted ochre (same weight as your green)
-    onPrimary = Color(0xFFFFFFFF),
-
-    secondary = Color(0xFFA67C52), // active prayer card
-    onSecondary = Color(0xFFFDFBF9), // on active card
-
-    background = Color(0xFFF0EBE1), // warm linen (matches the tone of EFEDE4)
-    onBackground = Color(0xFF3D3A35), // dark charcoal-brown
-
-
-    surface = Color(0xFFFDFBF9), // very light cream
-    onSurface = Color(0xFF1B1A17), // on inactive cards
-
-    onSurfaceVariant = Color(0xFF7A756D), // muted brownish-grey
-
-    outline = Color(0xFFD4CDBB), // sandy switch head
-    outlineVariant = Color(0xFF000000).copy(0.1f)
-)
-
-// header background (Earthy Amber/Gold variant)
-val brownLightThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-        Color(0xFFBC9975), // Top: soft tan
-        Color(0xFFA67C52), // Middle: brand ochre
-        Color(0xFF8F6642), // Depth: clay
-        Color(0xFF755136), // Shadow: burnt umber
-        Color(0xFF755136), // Shadow: burnt umber
-        Color(0xFF4A3423)  // Bottom: deep espresso
+        Color(0xFF705630),
+        Color(0xFF553A2B),
+        Color(0xFF3C2418),
+        Color(0xFF3C2418),
+        Color(0xFF2B1315),
     ),
-    0.05f
-)
-
-
-
-
-//val redDarkColorScheme = darkColorScheme(
-//    primary = Color(0xFF7F1734),
-//    onPrimary = Color(0xFFFFF1F2), // Tinted White (Rose)
-//    secondary = Color(0xFF7F1734),
-//    onSecondary = Color(0xFFFFF1F2),
-//    background = Color(0xFF1E1113),
-//    onBackground = Color(0xFFFCEFF1),
-//    surface = Color(0xFF2D1B1E),
-//    onSurface = Color(0xFFFCEFF1),
-//    onSurfaceVariant = Color(0xFF9F8B8E),
-//    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-//)
-//
-//val redDarkThemeColors = CustomThemeColors(listOf(
-//    Color(0xFFE11D48), // Vibrant Red (Start)
-//    Color(0xFF9F1239), // Rich Crimson (Middle)
-//    Color(0xFF7F1734)  // Your accent (Bottom)
-//))
-
-private val redDarkColorScheme = darkColorScheme(
-    primary = Color(0xFFD17E95), // Lighter dusty rose/red
-    onPrimary = Color(0xFFFFFFFF),
-
-    secondary = Color(0xFF4c0f21), // Original Burgundy
-    onSecondary = Color(0xFFFFFFFF),
-
-    background = Color(0xFF171113), // Near black with a wine tint
-    onBackground = Color(0xFFE9E0E2),
-
-    surface = Color(0xFF20181A), // Dark wine-grey
-    onSurface = Color(0xFFCDC1C4),
-    onSurfaceVariant = Color(0xFF968B8E),
-    outline = Color(0xFF4D4245),
-    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-)
-
-val redDarkThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-        Color(0xFF5E0C25), // Top: Deep garnet glow
-        Color(0xFF4D0A1E), // Middle: Dark wine
-        Color(0xFF3B0717), // Depth
-        Color(0xFF2B0511), // Shadow
-        Color(0xFF2B0511), // Shadow
-        Color(0xFF1A030A)  // Bottom: Black-currant
-    ), 0.03f
-)
-
-private val redLightColorScheme = lightColorScheme(
-    primary = Color(0xFF851134), // Your brand red
-    onPrimary = Color(0xFFFFFFFF),
-
-    secondary = Color(0xFF851134), // active prayer card
-    onSecondary = Color(0xFFFDF9FA), // on active card (slight rosy tint)
-
-    background = Color(0xFFF2ECEE), // Warm ash with a hint of rose (replaces the green-tinted EFEDE4)
-    onBackground = Color(0xFF3D3638), // Dark charcoal with a subtle red undertone
-
-
-    surface = Color(0xFFFDF9FA), // Clean off-white
-    onSurface = Color(0xFF1E1A1B), // Near black with warm undertone
-
-    onSurfaceVariant = Color(0xFF7B7274), // Muted reddish-grey for disabled states
-
-    outline = Color(0xFFD4C9CC), // Soft grey-pink switch head
-    outlineVariant = Color(0xFF000000).copy(0.1f)
-)
-
-// header background (Deep Red variant)
-val redLightThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-        Color(0xFFA6445B), // Top: Lighter, softer crimson
-        Color(0xFF851134), // Middle: Your brand red
-        Color(0xFF6A0D2A), // Depth: Rich maroon
-        Color(0xFF520A20), // Shadow: Deep wine
-        Color(0xFF520A20), // Shadow: Deep wine
-        Color(0xFF320513)  // Bottom: Dark black-currant
-    ),
-    0.05f
-)
-
-
-//val greenDarkColorScheme = darkColorScheme(
-//    primary = Color(0xFF4B5D3F),
-//    onPrimary = Color(0xFFF0FDF4), // Tinted White (Mint)
-//    secondary = Color(0xFF36422D),
-//    onSecondary = Color(0xFFF0FDF4),
-//    background = Color(0xFF141A12),
-//    onBackground = Color(0xFFECFDF5),
-//    surface = Color(0xFF1E241B),
-//    onSurface = Color(0xFFECFDF5),
-//    onSurfaceVariant = Color(0xFF8B9487),
-//    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-//)
-//
-//val greenDarkThemeColors = CustomThemeColors(listOf(
-//    Color(0xFF8BA37E), // Light Sage (Start)
-//    Color(0xFF4B5D3F), // Your accent (Middle)
-//    Color(0xFF2D3A26)  // Deep Forest (Bottom)
-//))
-
-private val greenDarkColorScheme = darkColorScheme(
-    // LOGIC: Shifted to a lighter "Sage" (Tonal 80) to pop against dark backgrounds
-    primary = Color(0xFFB7CCAD),
-    onPrimary = Color(0xFFE2E3DA), // Deep forest green for text on primary
-
-    // LOGIC: Active prayer card uses the "Sage" highlight
-    secondary = Color(0xFF364431),
-    onSecondary = Color(0xFFE2E3DA),
-
-    // LOGIC: Deep "Charcoal Olive". It keeps the warmth of your light mode
-    // but at 10-12% luminance.
-    background = Color(0xFF1A1C18),
-    onBackground = Color(0xFFE2E3DA), // Creamy white for readability
-
-    // LOGIC: Slightly lighter than background (Elevation 1)
-    surface = Color(0xFF23261F),
-    onSurface = Color(0xFFE2E3DA),
-
-    onSurfaceVariant = Color(0xFFC5C8BB), // Lighter gray-green for secondary text
-
-    outline = Color(0xFF8F9284),
-    outlineVariant = Color(0xFF43493E) // Subtle border for cards
-)
-
-
-val greenDarkThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-//        Color(0xFF4A6A3F),
-        Color(0xFF506039),
-//        Color(0xFF96AD75),
-        Color(0xFF364431),
-        Color(0xFF1E2E1A),
-        Color(0xFF1E2E1A),
-        Color(0xFF121C14)
-    ),
-    // Increased alpha slightly for the Mosque vector to make it
-    // visible against the darker gradient
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF554F46),
+    switchThumbOff = Color(0xFFC5C8BB),
     bg_alpha = 0.03f
 )
 
-
-
-private val greenLightColorScheme = lightColorScheme(
-    primary = Color(0xFF657D5D), // main brand green
-    onPrimary = Color(0xFFFFFFFF), // on gradient
-
-    secondary = Color(0xFF657D5D), // active prayer card
-    onSecondary = Color(0xFFFDFCF9), // on active card
-
-    background = Color(0xFFEFEDE4), // prayer list section
-    onBackground = Color(0xFF3D3D3D), // on prayer list section
-
-
-    surface = Color(0xFFFDFCF9), // inactive cards above the prayer list
-    onSurface = Color(0xFF1B1B1B), // on inactive cards
-
-    onSurfaceVariant = Color(0xFF797770), // disabled switch
-
-    outline = Color(0xFFD1CEC0), // switch head
-    outlineVariant = Color(0xFF000000).copy(0.1f) // prayer cards border
-)
-
-// header background (30-40% of the screen)
-val greenLightThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-
-//        Color(0xFF4A6A3F),
-        Color(0xFF85A05F),
-//        Color(0xFF96AD75),
-        Color(0xFF5E7756),
-        Color(0xFF3F5F36),
-        Color(0xFF3F5F36),
-        Color(0xFF2C4430)
-    ), 0.05f
-)
-
-
-//private val greenLightColorScheme = lightColorScheme(
-//    primary = Color(0xFF657d5d),          // main brand green
-//    onPrimary = Color(0xFFFFFFFF),
-//
-//    // Slightly brighter for active states (more contrast)
-//    secondary = Color(0xFF657d5d),
-//    onSecondary = Color(0xFFFBFAF7),
-//
-//    background = Color(0xFFF4F1EA),       // slightly warmer (less gray)
-//    onBackground = Color(0xFF4E4E4E),
-//
-//    surface = Color(0xFFFBFAF7),
-//    onSurface = Color(0xFF4E4E4E),
-//    onSurfaceVariant = Color(0xFFBDBDBD),
-//
-//    outlineVariant = Color(0xFF000000).copy(0.1f) // cleaner subtle border
-//
-//)
-
-//private val greenLightColorScheme = lightColorScheme(
-//    primary = Color(0xFF4A6A3F),          // main brand green
-//    onPrimary = Color(0xFFFBFAF7),
-//
-//    // Slightly brighter for active states (more contrast)
-//    secondary = Color(0xFF537249),
-//    onSecondary = Color(0xFFFBFAF7),
-//
-//    background = Color(0xFFF4F1EA),       // slightly warmer (less gray)
-//    onBackground = Color(0xFF4E4E4E),
-//
-//    surface = Color(0xFFFBFAF7),
-//    onSurface = Color(0xFF4E4E4E),
-//    onSurfaceVariant = Color(0xFFBDBDBD),
-//
-//    outlineVariant = Color(0xFF000000).copy(0.05f) // cleaner subtle border
-//)
-//
-//val greenLightThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFF4A6A3F),
-//        Color(0xFF3F5F36),
-//        Color(0xFF2C4430)
-//    )
-//)
-
-
-// -------- Custom41 (Pink Sunset)
-//val yellowDarkColorScheme = darkColorScheme(
-//    primary = Color(0xFFC5A028),
-//    onPrimary = Color(0xFFFFFBEB), // Tinted White (Ivory)
-//    secondary = Color(0xFFcf9f30),
-//    onSecondary = Color(0xFFFFFBEB),
-//    background = Color(0xFF1C1917),
-//    onBackground = Color(0xFFFAFAF9),
-//    surface = Color(0xFF292524),
-//    onSurface = Color(0xFFFAFAF9),
-//    onSurfaceVariant = Color(0xFFA8A29E),
-//    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-//)
-//
-//val yellowDarkThemeColors = CustomThemeColors(listOf(
-//    Color(0xFFD4AF37),
-//    Color(0xFFB45309),
-//    Color(0xFF92400E)
-//))
-
-private val yellowDarkColorScheme = darkColorScheme(
-    primary = Color(0xFFD4B46C), // Lighter gold for readability
-    onPrimary = Color(0xFFFFFFFF),
-
-    secondary = Color(0xFF4e4126), // Original Mustard Gold
-    onSecondary = Color(0xFFFFFFFF),
-
-    background = Color(0xFF14130F), // Near black with a hint of mustard
-    onBackground = Color(0xFFE6E2D6),
-
-    surface = Color(0xFF1E1C16), // Dark bronze-grey
-    onSurface = Color(0xFFCAC5B9),
-    onSurfaceVariant = Color(0xFF918D82),
-    outline = Color(0xFF4A473E),
-    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
-)
-
-val yellowDarkThemeColors = CustomThemeColors(
-    backgroundGradient = listOf(
-        Color(0xFF5E4E29), // Top: Deep bronze glow
-        Color(0xFF473B1F), // Middle: Dark mustard
-        Color(0xFF332A16), // Depth
-        Color(0xFF241D0F), // Shadow
-        Color(0xFF241D0F), // Shadow
-        Color(0xFF1A150B)  // Bottom: Darkest earth
-    ), 0.03f
-)
-
-//private val yellowLightColorScheme = lightColorScheme(
-//    primary = Color(0xFFA88C3D), // Muted Mustard / Old Gold
-//    onPrimary = Color(0xFFFFFFFF),
-//
-//    secondary = Color(0xFFA88C3D), // active prayer card
-//    onSecondary = Color(0xFFFDFCF7), // on active card
-//
-//    background = Color(0xFFF1EEE1), // Warm vanilla (matches the tone of EFEDE4)
-//    onBackground = Color(0xFF3D3A30), // Dark charcoal with a hint of gold
-//
-//
-//    surface = Color(0xFFFDFCF7), // Creamy white
-//    onSurface = Color(0xFF1B1B18), // on inactive cards
-//
-//    onSurfaceVariant = Color(0xFF7A776B), // Muted gold-grey
-//
-//    outline = Color(0xFFD4CFBC), // soft straw-colored outline
-//    outlineVariant = Color(0xFF000000).copy(0.1f)
-//)
-//
-//// header background (Mustard/Gold variant)
-//val yellowLightThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFFCBB26A), // Top: Soft, dusty yellow
-//        Color(0xFFA88C3D), // Middle: Brand Mustard
-//        Color(0xFF917833), // Depth: Darker honey
-//        Color(0xFF78632A), // Shadow: Deep bronze
-//        Color(0xFF78632A), // Shadow: Deep bronze
-//        Color(0xFF53451E)  // Bottom: Roasted earth
-//    ),
-//    0.05f
-//)
-
+// ---------------------------------------------------------------- YELLOW
 private val yellowLightColorScheme = lightColorScheme(
-    primary = Color(0xFFA88C3D), // Muted Mustard
+    primary = Color(0xFF8C7425),
     onPrimary = Color(0xFFFFFFFF),
 
-    secondary = Color(0xFFA88C3D),
-    onSecondary = Color(0xFFFDFCF7),
+    secondary = Color(0xFF8C7425),
+    onSecondary = Color(0xFFFDFCF9),
 
-    background = Color(0xFFF1EEE1),
-    onBackground = Color(0xFF3D3A30),
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
 
-    surface = Color(0xFFFDFCF7),
-    onSurface = Color(0xFF1B1B18),
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
 
-    onSurfaceVariant = Color(0xFF7A776B),
-
-    outline = Color(0xFFD4CFBC),
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
     outlineVariant = Color(0xFF000000).copy(0.1f)
 )
 
 val yellowLightThemeColors = CustomThemeColors(
     backgroundGradient = listOf(
-        Color(0xFFBBA77B), // Top: DUSTY Straw (Reduced glare)
-        Color(0xFFA88C3D), // Middle: Brand Mustard
-        Color(0xFF8E7735), // Depth: Darker honey
-        Color(0xFF6B5926), // Shadow: Deep bronze
-        Color(0xFF6B5926), // Shadow: Deep bronze
-        Color(0xFF453A1B)  // Bottom: Roasted earth
+        Color(0xFFA99826),
+        Color(0xFF856D23),
+        Color(0xFF6A5417),
+        Color(0xFF6A5417),
+        Color(0xFF623217),
     ),
-    0.05f
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
 )
 
-//private val pinkDarkColorScheme = darkColorScheme(
-//    primary = Color(0xFFFDA4AF), // main color accent
-//    onPrimary = Color(0xFFFFF1F2), // texts above the header
-//    secondary = Color(0xFFFB7185), // active card
-//    onSecondary = Color(0xFFFFF1F2), // on active card
-//    background = Color(0xFF332127), // populate the remaining screen space below the header
-////    background = Color(0xFF1E293B),
-//    onBackground = Color(0xFFFCEFF1), // text on the background
-////    onBackground = Color(0xFFF1F5F9),
-//    surface = Color(0xFF3E2D33), // inactive cards
-////    surface = Color(0xFF334155),
-//    onSurface = Color(0xFFFCEFF1), // on inactive cards
-////    onSurface = Color(0xFFF1F5F9),
-//    onSurfaceVariant = Color(0xFFB09EA3), // disabled switches
-//    outlineVariant = Color(0xFFFFFFFF).copy(0.1f) // card strokes
-//)
-//
-//// main screen header (30-40% of screen)
-//val pinkDarkThemeColors = CustomThemeColors(listOf(
-//    Color(0xFFFB7185),
-//    Color(0xFFE11D48),
-//    Color(0xFFE11D48 )
-//))
+private val yellowDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFD3C599),
+    onPrimary = Color(0xFF33280B),
 
-private val pinkDarkColorScheme = darkColorScheme(
-    primary = Color(0xFFFDA4AF), // Lighter soft pink
-    onPrimary = Color(0xFFFFFFFF),
+    secondary = Color(0xFF4C3E14),
+    onSecondary = Color(0xFFE2E3DA),
 
-    secondary = Color(0xFF5e2f35), // Original Coral Pink
-    onSecondary = Color(0xFFFFFFFF),
+    background = Color(0xFF1B1B18),
+    onBackground = Color(0xFFE2E3DA),
 
-    background = Color(0xFF1A1315), // Near black with a mauve tint
-    onBackground = Color(0xFFECE0E2),
+    surface = Color(0xFF25251F),
+    onSurface = Color(0xFFE2E3DA),
 
-    surface = Color(0xFF241C1E), // Dark plum-grey
-    onSurface = Color(0xFFD0BFC3),
-    onSurfaceVariant = Color(0xFF998A8E),
-    outline = Color(0xFF524145),
-    outlineVariant = Color(0xFFFFFFFF).copy(0.1f)
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF48473D)
 )
 
-val pinkDarkThemeColors = CustomThemeColors(
+val yellowDarkThemeColors = CustomThemeColors(
     backgroundGradient = listOf(
-        Color(0xFF7A3741), // Top: Muted rose glow
-        Color(0xFF632D35), // Middle: Deep dusty rose
-        Color(0xFF4D2329), // Depth
-        Color(0xFF38191E), // Shadow
-        Color(0xFF38191E), // Shadow
-        Color(0xFF261114)  // Bottom: Deep mauve-black
-    ), 0.03f
+        Color(0xFF665C17),
+        Color(0xFF4C3E14),
+        Color(0xFF33280B),
+        Color(0xFF33280B),
+        Color(0xFF29140A),
+    ),
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF515142),
+    switchThumbOff = Color(0xFFC5C8BB),
+    bg_alpha = 0.03f
 )
 
-//private val pinkLightColorScheme = lightColorScheme(
-//    primary = Color(0xFFFB7185), // Your brand pink/coral
-//    onPrimary = Color(0xFFFFFFFF),
-//
-//    secondary = Color(0xFFef6e82), // active prayer card
-//    onSecondary = Color(0xFFFFF9F9), // on active card
-//
-//    background = Color(0xFFF5F0EE), // Soft linen with a hint of warmth (matches the EFEDE4 vibe)
-//    onBackground = Color(0xFF3D3738), // Deep charcoal with a warm plum undertone
-//
-//
-//    surface = Color(0xFFFFF9F9), // Very light petal white
-//    onSurface = Color(0xFF1F1A1B), // Near black with warm undertone
-//
-//    onSurfaceVariant = Color(0xFF7B7374), // Muted rose-grey for disabled states
-//
-//    outline = Color(0xFFD9D0D1), // Soft clay-pink switch head
-//    outlineVariant = Color(0xFF000000).copy(0.1f)
-//)
-
-//// header background (Pink/Coral variant)
-//val pinkLightThemeColors = CustomThemeColors(
-//    backgroundGradient = listOf(
-//        Color(0xFFFDA4AF), // Top: Soft, airy pink
-//        Color(0xFFFB7185), // Middle: Your brand pink
-//        Color(0xFFE15B6F), // Depth: Muted raspberry
-//        Color(0xFFB94455), // Shadow: Deep rosewood
-//        Color(0xFFB94455), // Shadow: Deep rosewood
-//        Color(0xFF8D3441)  // Bottom: Dark wine (grounds the theme)
-//    ),
-//    0.05f
-//)
-
-private val pinkLightColorScheme = lightColorScheme(
-    primary = Color(0xFFBF7A84), // Muted Pink (Tone-matched to your Green 0xFF657D5D)
+// ---------------------------------------------------------------- RED
+private val redLightColorScheme = lightColorScheme(
+    primary = Color(0xFF78092A),
     onPrimary = Color(0xFFFFFFFF),
 
-    secondary = Color(0xFFBF7A84),
-    onSecondary = Color(0xFFFFF9F9),
+    secondary = Color(0xFF78092A),
+    onSecondary = Color(0xFFFDFCF9),
 
-    background = Color(0xFFF5F0EE),
-    onBackground = Color(0xFF3D3738),
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
 
-    surface = Color(0xFFFFF9F9),
-    onSurface = Color(0xFF1F1A1B),
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
 
-    onSurfaceVariant = Color(0xFF7B7374),
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
+    outlineVariant = Color(0xFF000000).copy(0.1f)
+)
 
-    outline = Color(0xFFD9D0D1),
+val redLightThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFFCF0E2E),
+        Color(0xFF6D0827),
+        Color(0xFF45041A),
+        Color(0xFF45041A),
+        Color(0xFF2A031F),
+    ),
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
+)
+
+private val redDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFE3BCC8),
+    onPrimary = Color(0xFF3E0417),
+
+    secondary = Color(0xFF650824),
+    onSecondary = Color(0xFFE2E3DA),
+
+    background = Color(0xFF1F1A1B),
+    onBackground = Color(0xFFE2E3DA),
+
+    surface = Color(0xFF2A2323),
+    onSurface = Color(0xFFE2E3DA),
+
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF504446)
+)
+
+val redDarkThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFF980A21),
+        Color(0xFF650824),
+        Color(0xFF3E0417),
+        Color(0xFF3E0417),
+        Color(0xFF2A031F),
+    ),
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF5C4C4D),
+    switchThumbOff = Color(0xFFC5C8BB),
+    bg_alpha = 0.03f
+)
+
+// ---------------------------------------------------------------- PINK
+private val pinkLightColorScheme = lightColorScheme(
+    primary = Color(0xFFCD4182),
+    onPrimary = Color(0xFFFFFFFF),
+
+    secondary = Color(0xFFCD4182),
+    onSecondary = Color(0xFFFDFCF9),
+
+    background = Color(0xFFEFEDE4),
+    onBackground = Color(0xFF3D3D3D),
+
+    surface = Color(0xFFFDFCF9),
+    onSurface = Color(0xFF1B1B1B),
+
+    onSurfaceVariant = Color(0xFF797770),
+    outline = Color(0xFFD1CEC0),
     outlineVariant = Color(0xFF000000).copy(0.1f)
 )
 
 val pinkLightThemeColors = CustomThemeColors(
     backgroundGradient = listOf(
-        Color(0xFFD1919A), // Top: DUSTY Rose (Softer, matte feel)
-        Color(0xFFBF7A84), // Middle: Muted Pink
-        Color(0xFFA66670), // Depth: Muted raspberry
-        Color(0xFF8A4E58), // Shadow: Deep rosewood
-        Color(0xFF8A4E58), // Shadow: Deep rosewood
-        Color(0xFF5C3339)  // Bottom: Dark wine
+        Color(0xFFE58BAC),
+        Color(0xFFC9347B),
+        Color(0xFF9F2361),
+        Color(0xFF9F2361),
+        Color(0xFF6D1A63),
     ),
-    0.05f
+    onHeader = Color(0xFFFFFFFF),
+    switchTrackOff = Color(0xFF797770),
+    switchThumbOff = Color(0xFFFFFFFF),
+    bg_alpha = 0.05f
+)
+
+private val pinkDarkColorScheme = darkColorScheme(
+    primary = Color(0xFFE2BBCD),
+    onPrimary = Color(0xFF501130),
+
+    secondary = Color(0xFF741E47),
+    onSecondary = Color(0xFFE2E3DA),
+
+    background = Color(0xFF1F1A1B),
+    onBackground = Color(0xFFE2E3DA),
+
+    surface = Color(0xFF2A2324),
+    onSurface = Color(0xFFE2E3DA),
+
+    onSurfaceVariant = Color(0xFFC5C8BB),
+    outline = Color(0xFF8F9284),
+    outlineVariant = Color(0xFF504448)
+)
+
+val pinkDarkThemeColors = CustomThemeColors(
+    backgroundGradient = listOf(
+        Color(0xFFA82655),
+        Color(0xFF741E47),
+        Color(0xFF501130),
+        Color(0xFF501130),
+        Color(0xFF2F0B2B),
+    ),
+    onHeader = Color(0xFFE2E3DA),
+    switchTrackOff = Color(0xFF5C4B4F),
+    switchThumbOff = Color(0xFFC5C8BB),
+    bg_alpha = 0.03f
 )
 
 val LocalCustomColors = staticCompositionLocalOf {
@@ -890,7 +574,6 @@ fun IslamNotifyTheme(
 
         AppThemeTypes.RED_DARK -> redDarkThemeColors
         AppThemeTypes.RED_LIGHT -> redLightThemeColors
-        else -> greenLightThemeColors
     }
 
     CompositionLocalProvider(LocalCustomColors provides customColors) {

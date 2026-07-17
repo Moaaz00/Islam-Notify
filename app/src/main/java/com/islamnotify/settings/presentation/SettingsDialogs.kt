@@ -53,6 +53,18 @@ import com.islamnotify.R
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.sounds.domain.SoundOption
 import com.islamnotify.ui.theme.AppThemeTypes
+import com.islamnotify.ui.theme.blueDarkThemeColors
+import com.islamnotify.ui.theme.blueLightThemeColors
+import com.islamnotify.ui.theme.brownDarkThemeColors
+import com.islamnotify.ui.theme.brownLightThemeColors
+import com.islamnotify.ui.theme.greenDarkThemeColors
+import com.islamnotify.ui.theme.greenLightThemeColors
+import com.islamnotify.ui.theme.pinkDarkThemeColors
+import com.islamnotify.ui.theme.pinkLightThemeColors
+import com.islamnotify.ui.theme.redDarkThemeColors
+import com.islamnotify.ui.theme.redLightThemeColors
+import com.islamnotify.ui.theme.yellowDarkThemeColors
+import com.islamnotify.ui.theme.yellowLightThemeColors
 
 fun CalculationMethod.toDisplayString(context: Context): String {
     return when (this) {
@@ -718,27 +730,29 @@ object SettingsDialogs {
     }
 
     @Composable
-    fun getPreviewColorForTheme(theme: AppThemeTypes): Color {
-        return when (theme) {
-            AppThemeTypes.GREEN_LIGHT -> Color(0xFF85A05F)
-            AppThemeTypes.GREEN_DARK -> Color(0xFF406238)
+    /**
+     * Swatch for the theme picker: each theme's own gradient top stop, so the dot always
+     * previews the header the user will actually get. Previously hard-coded, which had
+     * drifted — the pink swatch still showed a palette retired several revisions ago.
+     */
+    fun getPreviewColorForTheme(theme: AppThemeTypes): Color = when (theme) {
+        AppThemeTypes.GREEN_LIGHT -> greenLightThemeColors
+        AppThemeTypes.GREEN_DARK -> greenDarkThemeColors
 
-            AppThemeTypes.RED_DARK -> Color(0xFF790D2F)
-            AppThemeTypes.RED_LIGHT -> Color(0xFF9D153E)
+        AppThemeTypes.RED_DARK -> redDarkThemeColors
+        AppThemeTypes.RED_LIGHT -> redLightThemeColors
 
-            AppThemeTypes.PINK_DARK -> Color(0xFFB94455)
-            AppThemeTypes.PINK_LIGHT -> Color(0xFFFDA4AF)
+        AppThemeTypes.PINK_DARK -> pinkDarkThemeColors
+        AppThemeTypes.PINK_LIGHT -> pinkLightThemeColors
 
-            AppThemeTypes.BROWN_DARK -> Color(0xFF694D34)
-            AppThemeTypes.BROWN_LIGHT -> Color(0xFFCBA584)
+        AppThemeTypes.BROWN_DARK -> brownDarkThemeColors
+        AppThemeTypes.BROWN_LIGHT -> brownLightThemeColors
 
-            AppThemeTypes.YELLOW_DARK -> Color(0xFFAF8C3F)
-            AppThemeTypes.YELLOW_LIGHT -> Color(0xFFD5BA7E)
+        AppThemeTypes.YELLOW_DARK -> yellowDarkThemeColors
+        AppThemeTypes.YELLOW_LIGHT -> yellowLightThemeColors
 
-            AppThemeTypes.BLUE_DARK -> Color(0xFF476375)
-            AppThemeTypes.BLUE_LIGHT -> Color(0xFF809EB0)
-            else -> Color(0x00000000)
-        }
-    }
+        AppThemeTypes.BLUE_DARK -> blueDarkThemeColors
+        AppThemeTypes.BLUE_LIGHT -> blueLightThemeColors
+    }.backgroundGradient.first()
 
 }

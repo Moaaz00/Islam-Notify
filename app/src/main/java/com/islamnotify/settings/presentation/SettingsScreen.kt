@@ -32,6 +32,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.ui.theme.ExtendedTheme
 import com.islamnotify.intro.presentation.DeniedPermissionDialog
 import com.islamnotify.intro.presentation.NotificationPermissionTextProvider
 
@@ -376,10 +377,12 @@ fun SettingsToggleItem(
                 },
                 colors = SwitchDefaults.colors(
                     checkedTrackColor = MaterialTheme.colorScheme.primary,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    uncheckedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    checkedThumbColor = Color.White,
-                    uncheckedThumbColor = Color.White
+                    // onPrimary, not Color.White: in dark themes the checked track is a
+                    // light tone, so a white thumb vanishes. Resolves to white in light themes.
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    uncheckedTrackColor = ExtendedTheme.colors.switchTrackOff,
+                    uncheckedBorderColor = ExtendedTheme.colors.switchTrackOff,
+                    uncheckedThumbColor = ExtendedTheme.colors.switchThumbOff
                 )
             )
         }
