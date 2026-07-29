@@ -31,7 +31,10 @@ class BootReceiver : BroadcastReceiver() {
                 try {
                     val isEnabled = notificationWork.isEnabled().first()
                     if (isEnabled) {
-                        notificationWork.startWorkInBackground()
+                        // Non-expedited on purpose: expedited work runs via a foreground service
+                        // below API 31, and Android 15+ blocks BOOT_COMPLETED receivers from
+                        // starting restricted foreground service types.
+                        notificationWork.startWorkInBackground(expedited = false)
                         Log.d("NotificationFlow", "BootReceiver onReceive: Notification work started")
                     } else{
                         Log.d("NotificationFlow", "BootReceiver onReceive: Notification is disabled")

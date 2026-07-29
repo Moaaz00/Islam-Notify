@@ -105,7 +105,7 @@
     <string name="dhu_al_hijjah_first_10_days_event_title">The First Ten Days of Dhu al-Hijjah</string>
     <string name="eid_al_fitr_event_title">Eid Fitr Mubarak</string>
     <string name="eid_al_adha_event_title">Eid Adha Mubarak</string>
-    <string name="friday_event_title">Blessed Friday</string>
+    <string name="friday_event_title">Day of Jumu\'ah</string>
     <string name="muharram_event_title">Month of Muharram</string>
     <string name="rajab_event_title">Month of Rajab</string>
     <string name="dhu_al_qadah_event_title">Month of Dhu al-Qa\'dah</string>
@@ -271,23 +271,23 @@
     <string name="intro_feature_title">Always-on Notification</string>
     <string name="intro_feature_body">The app shows the time remaining until the next prayer, and all prayer times when you expand the notification.</string>
 
-    <string name="intro_permissions_title">A few permissions</string>
-    <string name="intro_permissions_subtitle">We need these to show accurate prayer times and keep notifications running reliably.</string>
+    <string name="intro_permissions_title">We need a few permissions</string>
+    <string name="intro_permissions_subtitle">The app needs these to work properly. Your data stays on your device — private, secure, and no battery drain.</string>
 
     <string name="intro_perm_required">Required</string>
     <string name="intro_perm_optional">Optional</string>
-    <string name="intro_perm_grant">Grant</string>
+    <string name="intro_perm_grant">Allow</string>
     <string name="intro_perm_open_settings">Settings</string>
 
     <string name="intro_perm_location_title">Location</string>
-    <string name="intro_perm_location_subtitle">Islam Notify uses your location on your device to calculate accurate prayer times. It is not shared.</string>
+    <string name="intro_perm_location_subtitle">To calculate accurate prayer times for your area.</string>
     <string name="intro_perm_notification_title">Notifications</string>
-    <string name="intro_perm_notification_subtitle">To use the always-on notification and event reminders.</string>
-    <string name="intro_perm_battery_title">Background Activity</string>
-    <string name="intro_perm_battery_subtitle">To prevent the system from delaying Azan and other features.</string>
+    <string name="intro_perm_notification_subtitle">To show prayer times and event reminders.</string>
+    <string name="intro_perm_battery_title">Never Miss an Azan</string>
+    <string name="intro_perm_battery_subtitle">To prevent the device from delaying the Azan sounds.</string>
 
-    <string name="intro_battery_sheet_title">Allow background activity</string>
-    <string name="intro_battery_sheet_description">To prevent the system from delaying Azan and other features, set this app\'s battery usage to \"Unrestricted\".</string>
+    <string name="intro_battery_sheet_title">Never Miss an Azan</string>
+    <string name="intro_battery_sheet_description">To prevent the device from delaying the Azan sounds, set this app\'s battery usage to \"Unrestricted\".</string>
     <string name="intro_battery_sheet_step1">Open the \"Battery\" option.</string>
     <string name="intro_battery_sheet_step2">Select \"Unrestricted\".</string>
     <string name="intro_battery_sheet_open_settings">Open App Settings</string>
@@ -310,7 +310,7 @@
     <string name="dialog_prayer_error_title">Prayer Data Error</string>
     <string name="dialog_prayer_error_message">Unable to calculate prayer times. Pull down to refresh and try again.</string>
     <string name="dialog_location_error_title">Location Error</string>
-    <string name="dialog_location_permission_denied_message">Location permission is required to determine your prayer times. Open app settings to grant the permission.</string>
+    <string name="dialog_location_permission_denied_message">Prayer times need your location. Open app settings to allow it.</string>
     <string name="dialog_location_gps_disabled_message">Location services are disabled on your device. Please turn on GPS to get accurate prayer times.</string>
     <string name="dialog_location_generic_error_message">Unable to determine your location. Please check your internet connection and try again.</string>
     <string name="dialog_open_settings">Open Settings</string>
@@ -319,28 +319,28 @@
     <string name="dialog_try_again">Try Again</string>
 
     <!-- Permissions Reminder Dialog -->
-    <string name="dialog_permissions_title">Permissions Required</string>
-    <string name="dialog_permissions_message">To ensure notifications work reliably, please grant the following permissions.</string>
+    <string name="dialog_permissions_title">We need a few permissions</string>
+    <string name="dialog_permissions_message">The app needs these to work properly. Your data stays on your device — private, secure, and no battery drain.</string>
     <string name="dialog_permissions_notification">Notifications</string>
-    <string name="dialog_permissions_notification_desc">Required to display prayer time notifications and alerts.</string>
-    <string name="dialog_permissions_battery">Background Activity</string>
-    <string name="dialog_permissions_battery_desc">Prevent the system from delaying Azan and other features. Go to \"Battery\" then select \"Unrestricted\".</string>
+    <string name="dialog_permissions_notification_desc">To show prayer times and event reminders.</string>
+    <string name="dialog_permissions_battery">Never Miss an Azan</string>
+    <string name="dialog_permissions_battery_desc">To prevent the device from delaying the Azan sounds. Go to \"Battery\" then choose \"Unrestricted\".</string>
     <string name="dialog_permissions_location">Location</string>
-    <string name="dialog_permissions_location_desc">Required to determine accurate prayer times for your area.</string>
-    <string name="dialog_permissions_grant">Grant</string>
+    <string name="dialog_permissions_location_desc">To calculate accurate prayer times for your area.</string>
+    <string name="dialog_permissions_grant">Allow</string>
     <string name="dialog_permissions_dont_ask">Don\'t Ask Again</string>
-    <string name="dialog_permissions_cancel">Cancel</string>
+    <string name="dialog_permissions_cancel">Later</string>
 
     <!-- Permission Request Dialog -->
-    <string name="dialog_perm_notification_title">Notification Permission Required</string>
-    <string name="dialog_perm_notification_rationale">Notification permission is needed for features like always-on notification and events. Do you want to grant it?</string>
-    <string name="dialog_perm_notification_permanent">Notification permission is needed for features like always-on notification and events. You can grant it from app settings.</string>
-    <string name="dialog_perm_location_title">Location Permission Required</string>
-    <string name="dialog_perm_location_rationale">Location permission is required to get prayer times for your location. Do you want to grant it?</string>
-    <string name="dialog_perm_location_permanent">Location permission is required to get prayer times for your location. You can grant it from app settings.</string>
-    <string name="dialog_perm_battery_title">Battery Permission Required</string>
-    <string name="dialog_perm_battery_rationale">Battery permission is required for background features. Do you want to grant it?</string>
-    <string name="dialog_perm_battery_permanent">Battery permission is required for background features. You can grant it from app settings.</string>
+    <string name="dialog_perm_notification_title">Allow notifications</string>
+    <string name="dialog_perm_notification_rationale">Needed to show prayer times and event reminders. Allow it?</string>
+    <string name="dialog_perm_notification_permanent">Needed to show prayer times and event reminders. You can allow it from app settings.</string>
+    <string name="dialog_perm_location_title">Allow location</string>
+    <string name="dialog_perm_location_rationale">Prayer times are calculated from your location on your device. It is never shared. Allow it?</string>
+    <string name="dialog_perm_location_permanent">Prayer times are calculated from your location on your device. It is never shared. You can allow it from app settings.</string>
+    <string name="dialog_perm_battery_title">Never Miss an Azan</string>
+    <string name="dialog_perm_battery_rationale">Prevents the device from delaying the Azan sounds. Allow it?</string>
+    <string name="dialog_perm_battery_permanent">Prevents the device from delaying the Azan sounds. You can allow it from app settings.</string>
     <string name="dialog_perm_ok">OK</string>
     <string name="dialog_perm_grant">Open Settings</string>
     <string name="dialog_perm_cancel">Cancel</string>

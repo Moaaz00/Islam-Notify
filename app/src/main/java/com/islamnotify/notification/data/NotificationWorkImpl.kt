@@ -51,12 +51,16 @@ class NotificationWorkImpl @Inject constructor(
     }
 
 
-    override suspend fun startWorkInBackground() {
+    override suspend fun startWorkInBackground(expedited: Boolean) {
         try {
             notificationDataStore.enableNotification()
             val workManager = WorkManager.getInstance(context)
             val workRequest = OneTimeWorkRequestBuilder<NotificationWorker>()
-                .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                .apply {
+                    // Expedited work falls back to a foreground service below API 31, which
+                    // BOOT_COMPLETED receivers are not allowed to start on Android 15+.
+                    if (expedited) setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
+                }
                 .build()
 
             workManager.enqueueUniqueWork(

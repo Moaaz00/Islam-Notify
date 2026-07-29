@@ -118,7 +118,7 @@
     <string name="eid_al_fitr_event_title">عيد فطر مبارك</string>
     <string name="eid_al_adha_event_title">عيد أضحى مبارك</string>
     <string name="eids_event_subtitle">قال الله تعالى : ذَٰلِكَ وَمَن يُعَظِّمْ شَعَائِرَ اللَّهِ فَإِنَّهَا مِن تَقْوَى الْقُلُوبِ [الحج:٣٢]</string>
-    <string name="friday_event_title">جمعة مباركة</string>
+    <string name="friday_event_title">يوم الجمعة</string>
     <string name="friday_event_subtitle">قال رسول الله ﷺ : من قرأ سورةَ الكهفِ في يومِ الجمعةِ ، أضاء له من النورِ ما بين الجمُعتَينِ.</string>
     <string name="muharram_event_title">شهر محرم</string>
     <string name="rajab_event_title">شهر رجب</string>
@@ -271,8 +271,8 @@
     <string name="intro_feature_title">ميزة الإشعار الدائم</string>
     <string name="intro_feature_body">يعرض التطبيق الوقت المتبقي للصلاة القادمة، وجميع أوقات الصلاة عند فتح الإشعار.</string>
 
-    <string name="intro_permissions_title">بعض الأذونات</string>
-    <string name="intro_permissions_subtitle">نحتاج هذه الأذونات لعرض مواقيت صلاة دقيقة والحفاظ على عمل الإشعارات بشكل موثوق.</string>
+    <string name="intro_permissions_title">نحتاج بعض الأذونات</string>
+    <string name="intro_permissions_subtitle">يحتاج التطبيق هذه الأذونات ليعمل بشكل صحيح. بياناتك لا تغادر جهازك، بخصوصية وأمان، وبلا استنزاف للبطارية.</string>
 
     <string name="intro_perm_required">مطلوب</string>
     <string name="intro_perm_optional">اختياري</string>
@@ -280,14 +280,14 @@
     <string name="intro_perm_open_settings">الإعدادات</string>
 
     <string name="intro_perm_location_title">الموقع</string>
-    <string name="intro_perm_location_subtitle">يستخدم التطبيق موقعك على جهازك لحساب مواقيت الصلاة بدقة. ولا تتم مشاركته.</string>
+    <string name="intro_perm_location_subtitle">لحساب مواقيت الصلاة بدقة في منطقتك.</string>
     <string name="intro_perm_notification_title">الإشعارات</string>
-    <string name="intro_perm_notification_subtitle">لاستخدام ميزة الإشعار الدائم والتذكير بالمناسبات.</string>
-    <string name="intro_perm_battery_title">العمل في الخلفية</string>
-    <string name="intro_perm_battery_subtitle">لمنع تأخير الأذان والعديد من المزايا الأخري.</string>
+    <string name="intro_perm_notification_subtitle">لعرض مواقيت الصلاة وتذكيرات المناسبات.</string>
+    <string name="intro_perm_battery_title">لا يفوتك أذان</string>
+    <string name="intro_perm_battery_subtitle">لمنع الجهاز من تأخير تشغيل صوت الأذان.</string>
 
-    <string name="intro_battery_sheet_title">السماح بالعمل في الخلفية</string>
-    <string name="intro_battery_sheet_description">لمنع تأخير الأذان والعديد من المزايا الأخري، اضبط استهلاك البطارية لهذا التطبيق على \"غير مقيّد\".</string>
+    <string name="intro_battery_sheet_title">لا يفوتك أذان</string>
+    <string name="intro_battery_sheet_description">لمنع الجهاز من تأخير تشغيل صوت الأذان، اضبط استهلاك البطارية لهذا التطبيق على \"غير مقيّد\".</string>
     <string name="intro_battery_sheet_step1">افتح خيار \"البطارية\".</string>
     <string name="intro_battery_sheet_step2">اختر \"غير مقيّد\".</string>
     <string name="intro_battery_sheet_open_settings">فتح إعدادات التطبيق</string>
@@ -310,7 +310,7 @@
     <string name="dialog_prayer_error_title">خطأ في بيانات الصلاة</string>
     <string name="dialog_prayer_error_message">تعذّر حساب مواقيت الصلاة. اسحب للأسفل للتحديث والمحاولة مرة أخرى.</string>
     <string name="dialog_location_error_title">خطأ في الموقع</string>
-    <string name="dialog_location_permission_denied_message">يُرجى منح إذن الموقع لتحديد مواقيت الصلاة الخاصة بك. افتح إعدادات التطبيق لمنح الإذن.</string>
+    <string name="dialog_location_permission_denied_message">تحتاج مواقيت الصلاة إلى موقعك. افتح إعدادات التطبيق للسماح به.</string>
     <string name="dialog_location_gps_disabled_message">خدمة تحديد الموقع معطّلة على جهازك. يرجى تفعيل نظام GPS للحصول على مواقيت دقيقة.</string>
     <string name="dialog_location_generic_error_message">تعذّر تحديد موقعك. يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى.</string>
     <string name="dialog_open_settings">فتح الإعدادات</string>
@@ -319,28 +319,28 @@
     <string name="dialog_try_again">حاول مرة أخرى</string>
 
     <!-- Permissions Reminder Dialog -->
-    <string name="dialog_permissions_title">أذونات مطلوبة</string>
-    <string name="dialog_permissions_message">لضمان عمل الإشعارات بشكل موثوق، يرجى منح الأذونات التالية.</string>
+    <string name="dialog_permissions_title">نحتاج بعض الأذونات</string>
+    <string name="dialog_permissions_message">يحتاج التطبيق هذه الأذونات ليعمل بشكل صحيح. بياناتك لا تغادر جهازك، بخصوصية وأمان، وبلا استنزاف للبطارية.</string>
     <string name="dialog_permissions_notification">الإشعارات</string>
-    <string name="dialog_permissions_notification_desc">مطلوب لعرض إشعارات مواقيت الصلاة والتنبيهات.</string>
-    <string name="dialog_permissions_battery">العمل في الخلفية</string>
-    <string name="dialog_permissions_battery_desc">لمنع تأخير الأذان و العديد من المزايا الأخري. إذهب إلي \"البطارية\" ثم إضغط \"غير مقيد\".</string>
+    <string name="dialog_permissions_notification_desc">لعرض مواقيت الصلاة وتذكيرات المناسبات.</string>
+    <string name="dialog_permissions_battery">لا يفوتك أذان</string>
+    <string name="dialog_permissions_battery_desc">لمنع الجهاز من تأخير تشغيل صوت الأذان. اذهب إلى \"البطارية\" ثم اختر \"غير مقيّد\".</string>
     <string name="dialog_permissions_location">الموقع</string>
-    <string name="dialog_permissions_location_desc">مطلوب لتحديد مواقيت الصلاة بدقة في منطقتك.</string>
+    <string name="dialog_permissions_location_desc">لحساب مواقيت الصلاة بدقة في منطقتك.</string>
     <string name="dialog_permissions_grant">السماح</string>
     <string name="dialog_permissions_dont_ask">لا تسألني مجدداً</string>
-    <string name="dialog_permissions_cancel">إلغاء</string>
+    <string name="dialog_permissions_cancel">لاحقًا</string>
 
     <!-- Permission Request Dialog -->
-    <string name="dialog_perm_notification_title">إذن الإشعارات مطلوب</string>
-    <string name="dialog_perm_notification_rationale">إذن الإشعارات مطلوب لميزات مثل الإشعار الدائم والمناسبات. هل تريد السماح به؟</string>
-    <string name="dialog_perm_notification_permanent">إذن الإشعارات مطلوب لميزات مثل الإشعار الدائم والمناسبات. يمكنك السماح به من إعدادات التطبيق.</string>
-    <string name="dialog_perm_location_title">إذن الموقع مطلوب</string>
-    <string name="dialog_perm_location_rationale">إذن الموقع مطلوب لمعرفة مواقيت الصلاة الخاصة بك. هل تريد السماح به؟</string>
-    <string name="dialog_perm_location_permanent">إذن الموقع مطلوب لمعرفة مواقيت الصلاة الخاصة بك. يمكنك السماح به من إعدادات التطبيق.</string>
-    <string name="dialog_perm_battery_title">إذن البطارية مطلوب</string>
-    <string name="dialog_perm_battery_rationale">إذن البطارية مطلوب لتفعيل الميزات التي تعمل في الخلفية. هل تريد السماح به؟</string>
-    <string name="dialog_perm_battery_permanent">إذن البطارية مطلوب لتفعيل الميزات التي تعمل في الخلفية. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_notification_title">السماح بالإشعارات</string>
+    <string name="dialog_perm_notification_rationale">مطلوب لعرض مواقيت الصلاة وتذكيرات المناسبات. هل تسمح به؟</string>
+    <string name="dialog_perm_notification_permanent">مطلوب لعرض مواقيت الصلاة وتذكيرات المناسبات. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_location_title">السماح بالموقع</string>
+    <string name="dialog_perm_location_rationale">تُحسب مواقيت الصلاة من موقعك على جهازك، ولا يُشارك مع أحد. هل تسمح به؟</string>
+    <string name="dialog_perm_location_permanent">تُحسب مواقيت الصلاة من موقعك على جهازك، ولا يُشارك مع أحد. يمكنك السماح به من إعدادات التطبيق.</string>
+    <string name="dialog_perm_battery_title">لا يفوتك أذان</string>
+    <string name="dialog_perm_battery_rationale">يمنع الجهاز من تأخير تشغيل صوت الأذان. هل تسمح به؟</string>
+    <string name="dialog_perm_battery_permanent">يمنع الجهاز من تأخير تشغيل صوت الأذان. يمكنك السماح به من إعدادات التطبيق.</string>
     <string name="dialog_perm_ok">موافق</string>
     <string name="dialog_perm_grant">فتح الإعدادات</string>
     <string name="dialog_perm_cancel">إلغاء</string>

@@ -258,12 +258,11 @@ fun PermissionsReminderDialog(
                 modifier = Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-//                Text(
-//                    text = "",
-//                    //text = stringResource(R.string.dialog_permissions_message),
-//                    fontFamily = MainFont,
-//                    style = MaterialTheme.typography.bodyMedium
-//                )
+                Text(
+                    text = stringResource(R.string.dialog_permissions_message),
+                    fontFamily = MainFont,
+                    style = MaterialTheme.typography.bodyMedium
+                )
                 if (state.locationMissing) {
                     PermissionRow(
                         title = stringResource(R.string.dialog_permissions_location),
