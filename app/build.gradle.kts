@@ -28,8 +28,15 @@ android {
         applicationId = "com.islamnotify"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "2.1"
+        // Semantic version — bump exactly one of these per release:
+        //   patch: bug fixes only · minor: new user-visible feature (patch→0)
+        //   major: redesign/breaking change (minor,patch→0)
+        // versionCode is derived so it always increases with the name; never set it by hand.
+        val major = 2
+        val minor = 2
+        val patch = 0
+        versionName = "$major.$minor.$patch"
+        versionCode = major * 10000 + minor * 100 + patch
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
