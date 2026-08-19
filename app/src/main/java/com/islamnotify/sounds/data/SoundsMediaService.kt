@@ -37,6 +37,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import com.islamnotify.R
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
+import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
 import com.islamnotify.sounds.domain.SoundsConfig
 import com.islamnotify.sounds.utils.SoundsUtils
@@ -132,6 +133,17 @@ class SoundsMediaService() : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
+        // Tap opens the app (same intent as the prayer notification); the azan keeps
+        // playing — stopping it stays on the explicit cancel action below.
+        // this.flags: onStartCommand's `flags` parameter shadows the Intent property here.
+        val openAppIntent = Intent(this, MainActivity::class.java).apply {
+            this.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val openAppPendingIntent = PendingIntent.getActivity(
+            this, 0, openAppIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val builder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, AppUtils.SOUNDS_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -149,6 +161,9 @@ class SoundsMediaService() : Service() {
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
+                .setContentIntent(openAppPendingIntent)
+                // Own group key, no summary: exempt from system auto-bundling.
+                .setGroup(AppUtils.GROUP_AZAN)
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {

@@ -1,6 +1,7 @@
 package com.islamnotify.android
 
 import android.Manifest
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -27,6 +28,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import com.islamnotify.R
+import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.notification.data.NotificationWorkImpl.Companion.TAG_ONE_TIME_WORK_REQUEST
 import com.islamnotify.notification.data.NotificationWorker
 import com.islamnotify.sounds.data.SoundsMediaService
@@ -217,6 +219,15 @@ class AlarmReceiver : BroadcastReceiver() {
                         .setBigContentTitle(title)
                         .bigText(subtitle)
 
+                    // Tap opens the app (same intent as the prayer notification).
+                    val openAppIntent = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    val openAppPendingIntent = PendingIntent.getActivity(
+                        context, 0, openAppIntent,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
+
                     builder.setSmallIcon(R.drawable.notification_icon)
                         .setColor(ContextCompat.getColor(context, R.color.light_green))
                         .setStyle(bigTextStyle)
@@ -224,6 +235,11 @@ class AlarmReceiver : BroadcastReceiver() {
                         .setWhen(System.currentTimeMillis())
                         .setContentTitle(title)
                         .setContentText(subtitle)
+                        .setContentIntent(openAppPendingIntent)
+                        .setAutoCancel(true)
+                        // App-defined group with no summary: events display individually
+                        // and are exempt from system auto-bundling.
+                        .setGroup(AppUtils.GROUP_EVENTS)
 
                     val notificationManager = NotificationManagerCompat.from(context)
 

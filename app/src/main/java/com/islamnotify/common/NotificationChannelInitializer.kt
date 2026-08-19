@@ -91,8 +91,8 @@ class NotificationChannelInitializer @Inject constructor(
                         prayersChannel,
                         eventsChannel,
                         mediaChannel,
-                        othersChannel,
-                        alarmChannel
+                        othersChannel
+                        //,alarmChannel
                     )
                 )
             }

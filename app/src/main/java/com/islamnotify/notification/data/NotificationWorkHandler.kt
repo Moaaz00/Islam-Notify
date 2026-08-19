@@ -361,6 +361,9 @@ class NotificationWorkHandler(
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true)
             .setOnlyAlertOnce(true)
+            // Sole member of its own group, no summary posted: keeps the system's
+            // auto-bundling from folding this into a group with other notifications.
+            .setGroup(AppUtils.GROUP_PRAYER)
 
         val notificationManager = NotificationManagerCompat.from(context)
 

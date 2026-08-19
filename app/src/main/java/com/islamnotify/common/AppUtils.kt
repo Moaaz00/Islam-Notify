@@ -40,6 +40,15 @@ object AppUtils {
 
     const val ALARM_NOTIFICATION_CHANNEL = "ALARM_NOTIFICATION_CHANNEL"
 
+    // App-defined notification group keys. A notification with its own group key (and no
+    // posted summary) is exempt from the system's auto-bundling (GroupHelper.isAppGroup),
+    // which otherwise force-merges 4+ ungrouped notifications — hiding the ongoing prayer
+    // notification inside the bundle on Android ≤ 11.
+    const val GROUP_PRAYER = "com.islamnotify.group.PRAYER"
+    const val GROUP_AZAN = "com.islamnotify.group.AZAN"
+    const val GROUP_EVENTS = "com.islamnotify.group.EVENTS"
+    const val GROUP_OTHERS = "com.islamnotify.group.OTHERS"
+
     fun Context.getLocalizedContext(): Context {
         val locales: LocaleListCompat = AppCompatDelegate.getApplicationLocales()
         if (locales.isEmpty) return this

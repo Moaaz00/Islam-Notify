@@ -1,7 +1,9 @@
 package com.islamnotify.notification.data
 
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -14,6 +16,7 @@ import com.islamnotify.R
 import com.islamnotify.common.AppUtils
 import com.islamnotify.common.AppUtils.getLocalizedContext
 import com.islamnotify.common.domain.CrashReporter
+import com.islamnotify.main.presentation.MainActivity
 import com.islamnotify.notification.domain.NotificationWorkResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -54,6 +57,15 @@ class NotificationWorker @AssistedInject constructor(
     }
 
     override suspend fun getForegroundInfo(): ForegroundInfo {
+        // Tap opens the app (same intent as the prayer notification).
+        val openAppIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val openAppPendingIntent = PendingIntent.getActivity(
+            context, 0, openAppIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val notification =
             NotificationCompat.Builder(context, AppUtils.OTHERS_NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -61,7 +73,13 @@ class NotificationWorker @AssistedInject constructor(
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setContentTitle(
                     context.getLocalizedContext().getString(R.string.notification_update_string)
-                ).build()
+                )
+                .setContentIntent(openAppPendingIntent)
+                // Own group key, no summary: exempt from system auto-bundling. This
+                // notification is user-visible on API < 31, where expedited work runs
+                // as a foreground service.
+                .setGroup(AppUtils.GROUP_OTHERS)
+                .build()
 
         return ForegroundInfo(
             2222,
