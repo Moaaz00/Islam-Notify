@@ -12,8 +12,9 @@
     <color name="intro_dark_green">#59794E</color>
     <color name="notification_hero_bg_color">#F5F7F6</color>
     <color name="notification_hero_border">#1A000000</color>
-    <color name="notification_divider">#1A000000</color>
-    <color name="transparent">#00000000</color>
+    <!-- Progress bar track in the prayer notification. Neutral grey: the bar drawable draws it at
+         30% opacity, so it reads light on light notifications and dark on dark ones. -->
+    <color name="notification_progress_track">#9E9E9E</color>
 
     <color name="prayer_bg">#F1EEE7</color>
     <color name="primary_text">#2C2C2C</color>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Collapsed prayer notification (inside DecoratedCustomViewStyle). Only RemoteViews-supported
+     views. Colours and fonts come from the device's own notification styles, so they follow
+     light/dark mode and each manufacturer's look. Sizes are the Material notification roles
+     (text line 14sp, hero one step up at 16sp), because some manufacturers (Samsung) set the
+     notification styles smaller than the text they draw in other notifications. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/CollapsedRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:orientation="vertical">
+
+    <!-- ① Hijri date • city, in the table rows' style. The dot is faded with android:alpha in the
+         layout so it follows light/dark mode. The date is measured first: the city is cut with
+         "…" first, then the date. -->
+    <LinearLayout
+        android:id="@+id/Context"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ContextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/ContextDot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:alpha="0.7"
+            android:maxLines="1"
+            android:text="•"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/ContextCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <!-- ② Hero: "Asr  2:34:12". The wrap_content row with a 0dp weighted name keeps the
+         countdown right after the name, and only the name would shrink. -->
+    <LinearLayout
+        android:id="@+id/HeroInline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/HeroName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Chronometer
+            android:id="@+id/HeroCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>

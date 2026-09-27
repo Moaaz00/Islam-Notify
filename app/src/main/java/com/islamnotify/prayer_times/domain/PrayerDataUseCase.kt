@@ -10,6 +10,7 @@ import com.islamnotify.prayer_times.domain.model.PrayerConfig
 import com.islamnotify.prayer_times.domain.model.PrayerData
 import com.islamnotify.prayer_times.domain.model.PrayerEntities
 import com.islamnotify.prayer_times.domain.model.PrayerTypes
+import com.islamnotify.prayer_times.domain.model.nextEventTypes
 import com.islamnotify.prayer_times.util.PrayerUtils.toPrayersEntities
 import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
@@ -129,19 +130,16 @@ class PrayerDataUseCase @Inject constructor(
 
     private suspend fun PrayerEntities.toPrayerDataList(): List<PrayerData> {
         val config = prayerDataRepository.getPrayerConfig(null)
-        return buildList {
-            addAll(listOf(fajr, zuhr, asr, sunset, isha))
-
-            if (config.showNextIqama) {
-                addAll(listOf(iqamaFajr, iqamaZuhr, iqamaAsr, iqamaSunset, iqamaIsha))
-            }
-
-            if (config.showNextLastThird) add(lastThird)
-            if (config.showNextMidnight) add(midnight)
-            if (config.showNextDuha) add(duha)
-            if (config.showNextSunrise) add(sunrise)
-        }
+        val byType = listOf(
+            fajr, iqamaFajr, sunrise, duha, zuhr, iqamaZuhr, asr, iqamaAsr,
+            sunset, iqamaSunset, isha, iqamaIsha, midnight, lastThird
+        ).associateBy { it.type }
+        return config.nextEventTypes().mapNotNull { byType[it] }
     }
+
+    /** The events the user wants counted down to, in tie-breaking order. */
+    suspend fun getNextEventTypes(): List<PrayerTypes> =
+        prayerDataRepository.getPrayerConfig(null).nextEventTypes()
 
     suspend fun savePrayerConfig(transform: (PrayerConfig) -> PrayerConfig) {
         val config = getPrayerConfig()

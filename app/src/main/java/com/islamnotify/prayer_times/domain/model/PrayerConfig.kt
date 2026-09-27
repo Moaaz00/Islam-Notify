@@ -32,3 +32,28 @@ data class PrayerConfig(
     var showNextIqama: Boolean = true,
     var isAutoCalculationMethodEnabled: Boolean = true
  )
+
+/**
+ * The events counted down to ("next prayer"), filtered by the user's settings. The order breaks
+ * ties between events at the same minute, so every "next event" calculation must use this list.
+ */
+fun PrayerConfig.nextEventTypes(): List<PrayerTypes> = buildList {
+    addAll(listOf(PrayerTypes.FAJR, PrayerTypes.ZUHR, PrayerTypes.ASR, PrayerTypes.SUNSET, PrayerTypes.ISHA))
+
+    if (showNextIqama) {
+        addAll(
+            listOf(
+                PrayerTypes.IQAMA_FAJR,
+                PrayerTypes.IQAMA_ZUHR,
+                PrayerTypes.IQAMA_ASR,
+                PrayerTypes.IQAMA_SUNSET,
+                PrayerTypes.IQAMA_ISHA
+            )
+        )
+    }
+
+    if (showNextLastThird) add(PrayerTypes.LAST_THIRD)
+    if (showNextMidnight) add(PrayerTypes.MIDNIGHT)
+    if (showNextDuha) add(PrayerTypes.DUHA)
+    if (showNextSunrise) add(PrayerTypes.SUNRISE)
+}

@@ -13,6 +13,9 @@ interface NotificationWork {
      * receivers from starting restricted foreground service types.
      */
     suspend fun startWorkInBackground(expedited: Boolean = true)
+
+    /** Re-sends the showing notification from cached data so its progress bar moves. */
+    suspend fun refreshNotification()
     suspend fun cancel()
     fun isEnabled(): Flow<Boolean>
 }

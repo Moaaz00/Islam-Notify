@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: a screen that posts the prayer notification for fake moments. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <!-- Exported so tests can open it from adb:
+             adb shell am start -n com.islamnotify/.debug.NotificationDebugActivity -e scenario midday -->
+        <activity
+            android:name=".debug.NotificationDebugActivity"
+            android:exported="true"
+            android:label="Notification debug"
+            android:theme="@style/Theme.IslamNotify" />
+    </application>
+</manifest>

@@ -1,0 +1,418 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Expanded prayer notification (inside DecoratedCustomViewStyle). Only RemoteViews-supported
+     views; text uses the device's own notification styles. Spacing: date ↔ city · 12dp · hero ·
+     6dp · bar (4dp) · 16dp · table (rows 6dp apart). Three groups: header + date, hero + its
+     progress bar, table. The gaps between groups are about double the gap inside one. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ExpandedRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ⑤ Hijri date at the start, city at the end, in the table rows' style. The city is cut with "…" first, then the
+         date. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ExpandedDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/ExpandedCity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewEnd"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <!-- ④ Hero: same words as the collapsed line 2, at 18sp: the focal point, a clear step above
+         the 14sp date row and table without overpowering them. -->
+    <LinearLayout
+        android:id="@+id/HeroInline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/HeroName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Chronometer
+            android:id="@+id/HeroCountdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- ⑥ Previous event → hero. The platform's own notification progress style: a 4dp bar
+         centred in a 12dp view, so the margins give 6dp above the bar and 16dp below it. -->
+    <ProgressBar
+        android:id="@+id/Progress"
+        style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="12dp"
+        android:max="1000"
+        android:progressBackgroundTint="@color/notification_progress_track"
+        android:progressTint="@color/light_green" />
+
+    <!-- ⑦ Table, 2 × 3. Fajr, Sunrise, Dhuhr | Asr, Maghrib, Isha. Each cell has a "Past" twin
+         faded with android:alpha, shown instead of it once the prayer has passed. The fading is
+         in the layout, not a colour set from code, so it follows light/dark mode when Android
+         redraws the notification (RemoteViews can only call setAlpha from Android 12). -->
+    <LinearLayout
+        android:id="@+id/TableTwoColumns"
+        android:layout_width="match_parent"
+        android:baselineAligned="false"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name0"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name0Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time0Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name1Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time1Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name2Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time2Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="24dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name3Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time3Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name4Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time4Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/T2Name5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Name5Past"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/T2Time5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/T2Time5Past"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:alpha="0.5"
+                    android:layout_marginStart="8dp"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textStyle="normal"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

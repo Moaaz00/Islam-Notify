@@ -147,6 +147,10 @@ class NotificationWorkImpl @Inject constructor(
 //            }
 //        }
 //    }
+    override suspend fun refreshNotification() {
+        notificationWorkHandler.refreshNotification()
+    }
+
 //
 
     override suspend fun cancel() {
@@ -154,6 +158,7 @@ class NotificationWorkImpl @Inject constructor(
         cancelNotification()
         cancelPrayerAlarms()
         cancelMidnightAlarm()
+        cancelProgressAlarm()
         cancelWorkManagerTasks()
     }
 
@@ -201,6 +206,25 @@ class NotificationWorkImpl @Inject constructor(
         val pendingIntent = PendingIntent.getBroadcast(
             context,
             NotificationUtils.NOTIFICATION_MIDNIGHT_REQUEST_CODE,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
+        )
+
+        pendingIntent?.let {
+            alarmManager.cancel(it)
+            it.cancel()
+        }
+    }
+
+
+    private fun cancelProgressAlarm() {
+        val intent = Intent(context, AlarmReceiver::class.java).apply {
+            action = AppUtils.NOTIFICATION_PROGRESS_ALARM_ACTION
+        }
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            NotificationUtils.NOTIFICATION_PROGRESS_REQUEST_CODE,
             intent,
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_NO_CREATE
         )

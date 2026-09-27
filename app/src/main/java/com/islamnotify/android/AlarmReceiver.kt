@@ -174,6 +174,22 @@ class AlarmReceiver : BroadcastReceiver() {
             }
         }
 
+        if (intent?.action.equals(AppUtils.NOTIFICATION_PROGRESS_ALARM_ACTION)) {
+            val pendingResult = goAsync()
+            scope.launch {
+                try {
+                    if (notificationWork.isEnabled().first()) {
+                        notificationWork.refreshNotification()
+                    }
+                } catch (e: Exception) {
+                    Log.e("NotificationFlow", "AlarmReceiver onReceive: progress refresh failed", e)
+                    crashReporter.recordNonFatal(e)
+                } finally {
+                    pendingResult.finish()
+                }
+            }
+        }
+
         if (intent?.action.equals(AppUtils.NOTIFICATION_MIDNIGHT_ALARM_ACTION)) {
             val pendingResult = goAsync()
             scope.launch {
