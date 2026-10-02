@@ -13,8 +13,9 @@
     android:orientation="vertical">
 
     <!-- ① Hijri date • city, in the table rows' style. The dot is faded with android:alpha in the
-         layout so it follows light/dark mode. The date is measured first: the city is cut with
-         "…" first, then the date. -->
+         layout so it follows light/dark mode; its 4dp margins plus the glyph's own side space
+         give ~6dp each side, a step above the expanded header's ~4dp to suit the larger 14sp text.
+         The date is measured first: the city is cut with "…" first, then the date. -->
     <LinearLayout
         android:id="@+id/Context"
         android:layout_width="match_parent"
@@ -35,8 +36,8 @@
             android:id="@+id/ContextDot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:alpha="0.7"
             android:maxLines="1"
             android:text="•"

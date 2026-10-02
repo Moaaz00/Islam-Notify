@@ -17,6 +17,9 @@
     <string name="iqama_isha_name">إقامة العشاء</string>
     <string name="midnight_name">منتصف الليل</string>
     <string name="last_third_name">قيام الليل</string>
+    <!-- Prayer notification, line under the next event: the event after it, e.g. "Then Iqama al-Asr" + "at 3:50 PM". -->
+    <string name="notification_following_name">ثم %s</string>
+    <string name="notification_following_time">الساعة %s</string>
 
     <string name="remaining_string">متبقي</string>
     <string name="remaining_hour_symbol">س</string>

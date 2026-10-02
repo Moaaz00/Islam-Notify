@@ -1,52 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Expanded prayer notification (inside DecoratedCustomViewStyle). Only RemoteViews-supported
-     views; text uses the device's own notification styles. Spacing: date ↔ city · 12dp · hero ·
-     6dp · bar (4dp) · 16dp · table (rows 6dp apart). Three groups: header + date, hero + its
-     progress bar, table. The gaps between groups are about double the gap inside one. -->
+     views; text uses the device's own notification styles. The Hijri date • city is in the system
+     header (subtext). Spacing: 2.8dp · hero · following event · 4dp · bar (16dp view, 4dp bar)
+     · 4dp · table (rows 6dp apart). The hero and the following-event line read as one unit; the
+     bar sits closer to them than to the table. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ExpandedRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <!-- ⑤ Hijri date at the start, city at the end, in the table rows' style. The city is cut with "…" first, then the
-         date. -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/ExpandedDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="14sp"
-            android:textStyle="normal" />
-
-        <TextView
-            android:id="@+id/ExpandedCity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textAlignment="viewEnd"
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="14sp"
-            android:textStyle="normal" />
-    </LinearLayout>
-
-    <!-- ④ Hero: same words as the collapsed line 2, at 18sp: the focal point, a clear step above
-         the 14sp date row and table without overpowering them. -->
+    <!-- ④ Hero: same words as the collapsed line 2, at 18.7sp (14sp × 4/3): the focal point, a
+         clear step above the 14sp table without overpowering it. -->
     <LinearLayout
         android:id="@+id/HeroInline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2.8dp"
         android:orientation="horizontal">
 
         <TextView
@@ -58,7 +28,7 @@
             android:maxLines="1"
             android:textAlignment="viewStart"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="18sp"
+            android:textSize="18.7sp"
             android:textStyle="bold" />
 
         <Chronometer
@@ -68,19 +38,54 @@
             android:layout_marginStart="12dp"
             android:maxLines="1"
             android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-            android:textSize="18sp"
+            android:textSize="18.7sp"
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- ⑥ Previous event → hero. The platform's own notification progress style: a 4dp bar
-         centred in a 12dp view, so the margins give 6dp above the bar and 16dp below it. -->
+    <!-- ⑤ The event after the hero: "Then Iqama al-Asr" + "at 3:50 PM". Secondary to the hero
+         (11sp regular, faded with android:alpha so it follows light/dark mode) and a clock time,
+         so only the hero's countdown moves. Only the name can be cut, never the time. -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:alpha="0.7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/FollowingName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="11sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/FollowingTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="11sp"
+            android:textStyle="normal" />
+    </LinearLayout>
+
+    <!-- ⑥ Previous event → hero. The platform's own notification progress style. Its drawable is
+         a 4dp bar centred in the view (gravity center_vertical), and the style makes the view 16dp
+         tall (minHeight/maxHeight), so 6dp of empty view lies above and below the bar and adds to
+         the margins. -->
     <ProgressBar
         android:id="@+id/Progress"
         style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="12dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
         android:max="1000"
         android:progressBackgroundTint="@color/notification_progress_track"
         android:progressTint="@color/light_green" />

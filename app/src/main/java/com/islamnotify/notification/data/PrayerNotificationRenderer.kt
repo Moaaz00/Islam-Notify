@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
+import android.os.Build
 import android.os.SystemClock
 import android.text.SpannableString
 import android.text.Spanned
@@ -34,8 +35,8 @@ import java.util.Locale
  * Builds the prayer notification (Figma "Final Version") from a [PrayerNotificationState].
  *
  * Collapsed: ① Hijri date • city, ② "Asr  2:34:12".
- * Expanded: ⑤ Hijri date ↔ city, ④ hero, ⑥ progress bar, ⑦ 2 × 3 table. The system header
- * above shows only the app name.
+ * Expanded: header subtext ③ (Hijri date • city, drawn by the system), ④ hero, ⑤ the event
+ * after it ("Then Iqama al-Asr at 3:50 PM"), ⑥ progress bar, ⑦ 2 × 3 table.
  *
  * Every line stays one line (the notification has a fixed height too): times and the countdown
  * are never cut; names are cut with "…", and in the date/city lines the city goes first.
@@ -72,15 +73,28 @@ class PrayerNotificationRenderer(private val context: Context) {
         val cityVisibility = if (locationName.isBlank()) View.GONE else View.VISIBLE
         collapsed.setViewVisibility(R.id.ContextDot, cityVisibility)
         collapsed.setViewVisibility(R.id.ContextCity, cityVisibility)
+        // Below Android 12 the collapsed view has the system header too, which already shows the
+        // date and city (subtext), so the line would repeat them.
+        val hasOwnHeader = Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+        collapsed.setViewVisibility(R.id.Context, if (hasOwnHeader) View.GONE else View.VISIBLE)
         bindHero(collapsed, heroName, countdownBase)
 
         // Expanded
         val expanded = RemoteViews(context.packageName, R.layout.notification_prayer_expanded)
         expanded.setInt(R.id.ExpandedRoot, "setLayoutDirection", layoutDirection)
         bindHero(expanded, heroName, countdownBase)
+        expanded.setTextViewText(
+            R.id.FollowingName,
+            localized.getString(
+                R.string.notification_following_name,
+                eventName(localized, state.following.type, state.following.dateTime)
+            )
+        )
+        expanded.setTextViewText(
+            R.id.FollowingTime,
+            localized.getString(R.string.notification_following_time, times.withPeriod(state.following))
+        )
 
-        expanded.setTextViewText(R.id.ExpandedDate, hijriDate)
-        expanded.setTextViewText(R.id.ExpandedCity, locationName)
         expanded.setProgressBar(
             R.id.Progress, PrayerNotificationCalculator.PROGRESS_MAX, state.progress, false
         )
@@ -103,6 +117,12 @@ class PrayerNotificationRenderer(private val context: Context) {
             // Plain-text copy for places that can't show custom views (watches, screen readers).
             .setContentTitle(heroName)
             .setContentText(times.withPeriod(state.hero))
+            // ③ Shown in the system header next to the app name. Joined the way the system joins
+            // header items (plain "•", no colour span, so it follows light/dark mode); a long
+            // city is cut first.
+            .setSubText(
+                if (locationName.isBlank()) hijriDate else "$hijriDate$SUBTEXT_SEPARATOR$locationName"
+            )
             // The post time next to the app name looked like a prayer time.
             .setShowWhen(false)
             .setWhen(nowMillis)
@@ -191,7 +211,7 @@ class PrayerNotificationRenderer(private val context: Context) {
         /** Table: "3:24". */
         fun short(dateTime: ZonedDateTime): String = shortFormat.format(dateTime)
 
-        /** Plain-text copy: "3:44 PM". */
+        /** Following-event line and plain-text copy: "3:44 PM". */
         fun withPeriod(event: EventOccurrence): String = periodFormat.format(event.dateTime)
     }
 
@@ -199,6 +219,8 @@ class PrayerNotificationRenderer(private val context: Context) {
     private data class TableCell(val name: Int, val time: Int, val namePast: Int, val timePast: Int)
 
     private companion object {
+        const val SUBTEXT_SEPARATOR = " • "
+
         // Fajr, Sunrise, Dhuhr | Asr, Maghrib, Isha.
         val TABLE_CELLS = listOf(
             TableCell(R.id.T2Name0, R.id.T2Time0, R.id.T2Name0Past, R.id.T2Time0Past),

@@ -16,6 +16,9 @@
     <string name="iqama_isha_name">Iqama al-Isha</string>
     <string name="midnight_name">Midnight</string>
     <string name="last_third_name">Last third</string>
+    <!-- Prayer notification, line under the next event: the event after it, e.g. "Then Iqama al-Asr" + "at 3:50 PM". -->
+    <string name="notification_following_name">Then %s</string>
+    <string name="notification_following_time">at %s</string>
     <string name="locating_string">Locating...</string>
     <string name="locating_unknown_string">Unknown</string>
 
